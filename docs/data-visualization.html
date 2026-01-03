@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Data Visualization | R Tutorial for MKT 4320</title>
+  <meta name="description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Data Visualization | R Tutorial for MKT 4320" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Data Visualization | R Tutorial for MKT 4320" />
+  
+  <meta name="twitter:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+<meta name="author" content="Jeffrey Meyer, Ph.D., Bowling Green State University" />
+
+
+<meta name="date" content="2025-01-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="descriptive-analysis.html"/>
+<link rel="next" href="linear-regression.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/tabwid-1.1.3/tabwid.css" rel="stylesheet" />
+<script src="libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">MKT 4320 R Tutorial</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i><b>1</b> Setup</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="setup.html"><a href="setup.html#what-you-need"><i class="fa fa-check"></i><b>1.1</b> What you need</a></li>
+<li class="chapter" data-level="1.2" data-path="setup.html"><a href="setup.html#r-and-rstudio-quick-overview"><i class="fa fa-check"></i><b>1.2</b> R and RStudio (quick overview)</a></li>
+<li class="chapter" data-level="1.3" data-path="setup.html"><a href="setup.html#navigating-rstudio"><i class="fa fa-check"></i><b>1.3</b> Navigating RStudio</a></li>
+<li class="chapter" data-level="1.4" data-path="setup.html"><a href="setup.html#installing-and-loading-packages"><i class="fa fa-check"></i><b>1.4</b> Installing and loading packages</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="setup.html"><a href="setup.html#install-packages-one-time"><i class="fa fa-check"></i><b>1.4.1</b> Install packages (one-time)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="setup.html"><a href="setup.html#load-packages-each-session"><i class="fa fa-check"></i><b>1.4.2</b> Load packages (each session)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="setup.html"><a href="setup.html#installing-the-mkt4320bgsu-package"><i class="fa fa-check"></i><b>1.5</b> Installing the MKT4320BGSU package</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="setup.html"><a href="setup.html#install-from-github"><i class="fa fa-check"></i><b>1.5.1</b> Install from GitHub</a></li>
+<li class="chapter" data-level="1.5.2" data-path="setup.html"><a href="setup.html#load-the-package"><i class="fa fa-check"></i><b>1.5.2</b> Load the package</a></li>
+<li class="chapter" data-level="1.5.3" data-path="setup.html"><a href="setup.html#verify-everything-works"><i class="fa fa-check"></i><b>1.5.3</b> Verify everything works</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="setup.html"><a href="setup.html#getting-help-when-youre-stuck"><i class="fa fa-check"></i><b>1.6</b> Getting help when you’re stuck</a></li>
+<li class="chapter" data-level="1.7" data-path="setup.html"><a href="setup.html#how-youll-use-this-book"><i class="fa fa-check"></i><b>1.7</b> How you’ll use this book</a></li>
+<li class="chapter" data-level="1.8" data-path="setup.html"><a href="setup.html#whats-next-1"><i class="fa fa-check"></i><b>1.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="r-basics.html"><a href="r-basics.html"><i class="fa fa-check"></i><b>2</b> R Basics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="r-basics.html"><a href="r-basics.html#basics-of-r-commands"><i class="fa fa-check"></i><b>2.1</b> Basics of R Commands</a></li>
+<li class="chapter" data-level="2.2" data-path="r-basics.html"><a href="r-basics.html#operators"><i class="fa fa-check"></i><b>2.2</b> Operators</a></li>
+<li class="chapter" data-level="2.3" data-path="r-basics.html"><a href="r-basics.html#objects-and-assignment"><i class="fa fa-check"></i><b>2.3</b> Objects and assignment</a></li>
+<li class="chapter" data-level="2.4" data-path="r-basics.html"><a href="r-basics.html#vectors"><i class="fa fa-check"></i><b>2.4</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="r-basics.html"><a href="r-basics.html#creating-vectors"><i class="fa fa-check"></i><b>2.4.1</b> Creating vectors</a></li>
+<li class="chapter" data-level="2.4.2" data-path="r-basics.html"><a href="r-basics.html#vectorized-operations"><i class="fa fa-check"></i><b>2.4.2</b> Vectorized operations</a></li>
+<li class="chapter" data-level="2.4.3" data-path="r-basics.html"><a href="r-basics.html#vector-length"><i class="fa fa-check"></i><b>2.4.3</b> Vector Length</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="r-basics.html"><a href="r-basics.html#data-frames"><i class="fa fa-check"></i><b>2.5</b> Data frames</a></li>
+<li class="chapter" data-level="2.6" data-path="r-basics.html"><a href="r-basics.html#indexing-and-sequencing"><i class="fa fa-check"></i><b>2.6</b> Indexing and sequencing</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="r-basics.html"><a href="r-basics.html#indexing-vectors"><i class="fa fa-check"></i><b>2.6.1</b> Indexing vectors</a></li>
+<li class="chapter" data-level="2.6.2" data-path="r-basics.html"><a href="r-basics.html#sequencing"><i class="fa fa-check"></i><b>2.6.2</b> Sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="r-basics.html"><a href="r-basics.html#common-functions"><i class="fa fa-check"></i><b>2.7</b> Common functions</a></li>
+<li class="chapter" data-level="2.8" data-path="r-basics.html"><a href="r-basics.html#missing-and-other-interesting-values"><i class="fa fa-check"></i><b>2.8</b> Missing (and Other Interesting) Values</a></li>
+<li class="chapter" data-level="2.9" data-path="r-basics.html"><a href="r-basics.html#factors"><i class="fa fa-check"></i><b>2.9</b> Factors</a></li>
+<li class="chapter" data-level="2.10" data-path="r-basics.html"><a href="r-basics.html#whats-next-2"><i class="fa fa-check"></i><b>2.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="functions-in-r.html"><a href="functions-in-r.html"><i class="fa fa-check"></i><b>3</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="functions-in-r.html"><a href="functions-in-r.html#function-arguments"><i class="fa fa-check"></i><b>3.1</b> Function arguments</a></li>
+<li class="chapter" data-level="3.2" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-vs-named-arguments"><i class="fa fa-check"></i><b>3.2</b> Positional vs named arguments</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-arguments"><i class="fa fa-check"></i><b>3.2.1</b> Positional arguments</a></li>
+<li class="chapter" data-level="3.2.2" data-path="functions-in-r.html"><a href="functions-in-r.html#named-arguments-recommended"><i class="fa fa-check"></i><b>3.2.2</b> Named arguments (recommended)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="functions-in-r.html"><a href="functions-in-r.html#default-argument-values"><i class="fa fa-check"></i><b>3.3</b> Default argument values</a></li>
+<li class="chapter" data-level="3.4" data-path="functions-in-r.html"><a href="functions-in-r.html#mixing-positional-and-named-arguments"><i class="fa fa-check"></i><b>3.4</b> Mixing positional and named arguments</a></li>
+<li class="chapter" data-level="3.5" data-path="functions-in-r.html"><a href="functions-in-r.html#viewing-function-documentation"><i class="fa fa-check"></i><b>3.5</b> Viewing function documentation</a></li>
+<li class="chapter" data-level="3.6" data-path="functions-in-r.html"><a href="functions-in-r.html#common-mistakes-to-avoid"><i class="fa fa-check"></i><b>3.6</b> Common mistakes to avoid</a></li>
+<li class="chapter" data-level="3.7" data-path="functions-in-r.html"><a href="functions-in-r.html#key-takeaway"><i class="fa fa-check"></i><b>3.7</b> Key takeaway</a></li>
+<li class="chapter" data-level="3.8" data-path="functions-in-r.html"><a href="functions-in-r.html#whats-next-3"><i class="fa fa-check"></i><b>3.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="working-with-data.html"><a href="working-with-data.html"><i class="fa fa-check"></i><b>4</b> Working with Data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="working-with-data.html"><a href="working-with-data.html#course-data-vs-importing-data"><i class="fa fa-check"></i><b>4.1</b> Course data vs importing data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="working-with-data.html"><a href="working-with-data.html#importing-external-data"><i class="fa fa-check"></i><b>4.1.1</b> Importing external data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="working-with-data.html"><a href="working-with-data.html#inspecting-datasets-and-variables"><i class="fa fa-check"></i><b>4.2</b> Inspecting datasets and variables</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="working-with-data.html"><a href="working-with-data.html#viewing-the-data"><i class="fa fa-check"></i><b>4.2.1</b> Viewing the data</a></li>
+<li class="chapter" data-level="4.2.2" data-path="working-with-data.html"><a href="working-with-data.html#dataset-structure"><i class="fa fa-check"></i><b>4.2.2</b> Dataset structure</a></li>
+<li class="chapter" data-level="4.2.3" data-path="working-with-data.html"><a href="working-with-data.html#variable-summaries"><i class="fa fa-check"></i><b>4.2.3</b> Variable summaries</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="working-with-data.html"><a href="working-with-data.html#data-frames-variables-and-indexing"><i class="fa fa-check"></i><b>4.3</b> Data frames, variables, and indexing</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="working-with-data.html"><a href="working-with-data.html#accessing-a-variable-a-column"><i class="fa fa-check"></i><b>4.3.1</b> Accessing a variable (a column)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="working-with-data.html"><a href="working-with-data.html#indexing-a-data-frame"><i class="fa fa-check"></i><b>4.3.2</b> Indexing a data frame</a></li>
+<li class="chapter" data-level="4.3.3" data-path="working-with-data.html"><a href="working-with-data.html#filtering-rows-using-a-condition-base-r"><i class="fa fa-check"></i><b>4.3.3</b> Filtering rows using a condition (base R)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="working-with-data.html"><a href="working-with-data.html#specific-variable-summaries-base-r"><i class="fa fa-check"></i><b>4.3.4</b> Specific variable summaries (base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="working-with-data.html"><a href="working-with-data.html#data-transformations-base-r"><i class="fa fa-check"></i><b>4.4</b> Data transformations (base R)</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="working-with-data.html"><a href="working-with-data.html#creating-a-new-variable"><i class="fa fa-check"></i><b>4.4.1</b> Creating a new variable</a></li>
+<li class="chapter" data-level="4.4.2" data-path="working-with-data.html"><a href="working-with-data.html#recoding-with-ifelse"><i class="fa fa-check"></i><b>4.4.2</b> Recoding with <code>ifelse()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="working-with-data.html"><a href="working-with-data.html#whats-next-4"><i class="fa fa-check"></i><b>4.5</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dplyr-package.html"><a href="dplyr-package.html"><i class="fa fa-check"></i><b>5</b> <em>dplyr</em> Package</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dplyr-package.html"><a href="dplyr-package.html#the-dplyr-workflow"><i class="fa fa-check"></i><b>5.1</b> The <em>dplyr</em> workflow</a></li>
+<li class="chapter" data-level="5.2" data-path="dplyr-package.html"><a href="dplyr-package.html#selecting-variables"><i class="fa fa-check"></i><b>5.2</b> Selecting variables</a></li>
+<li class="chapter" data-level="5.3" data-path="dplyr-package.html"><a href="dplyr-package.html#filtering-observations"><i class="fa fa-check"></i><b>5.3</b> Filtering observations</a></li>
+<li class="chapter" data-level="5.4" data-path="dplyr-package.html"><a href="dplyr-package.html#creating-new-variables"><i class="fa fa-check"></i><b>5.4</b> Creating new variables</a></li>
+<li class="chapter" data-level="5.5" data-path="dplyr-package.html"><a href="dplyr-package.html#summaries-with-summarise"><i class="fa fa-check"></i><b>5.5</b> Summaries with <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.6" data-path="dplyr-package.html"><a href="dplyr-package.html#grouped-summaries-with-group_by-and-summarise"><i class="fa fa-check"></i><b>5.6</b> Grouped summaries with <code>group_by()</code> and <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.7" data-path="dplyr-package.html"><a href="dplyr-package.html#connecting-summarize-to-base-r"><i class="fa fa-check"></i><b>5.7</b> Connecting <code>summarize()</code> to base R</a></li>
+<li class="chapter" data-level="5.8" data-path="dplyr-package.html"><a href="dplyr-package.html#combining-transformations"><i class="fa fa-check"></i><b>5.8</b> Combining transformations</a></li>
+<li class="chapter" data-level="5.9" data-path="dplyr-package.html"><a href="dplyr-package.html#key-takeaway-1"><i class="fa fa-check"></i><b>5.9</b> Key takeaway</a></li>
+<li class="chapter" data-level="5.10" data-path="dplyr-package.html"><a href="dplyr-package.html#whats-next-5"><i class="fa fa-check"></i><b>5.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html"><i class="fa fa-check"></i><b>6</b> Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#descriptive-analysis-1"><i class="fa fa-check"></i><b>6.1</b> Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#inspecting-the-dataset"><i class="fa fa-check"></i><b>6.1.1</b> Inspecting the dataset</a></li>
+<li class="chapter" data-level="6.1.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#missing-values-quick-checks"><i class="fa fa-check"></i><b>6.1.2</b> Missing values (quick checks)</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#frequency-tables"><i class="fa fa-check"></i><b>6.2</b> Frequency Tables</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#one-way-frequency-table"><i class="fa fa-check"></i><b>6.2.1</b> One-way frequency table</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#crosstabs"><i class="fa fa-check"></i><b>6.3</b> Crosstabs</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r"><i class="fa fa-check"></i><b>6.3.1</b> Base R</a></li>
+<li class="chapter" data-level="6.3.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-sjplot"><i class="fa fa-check"></i><b>6.3.2</b> Using package <em>sjPlot</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#measures-of-central-tendency-and-dispersion"><i class="fa fa-check"></i><b>6.4</b> Measures of Central Tendency and Dispersion</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r-1"><i class="fa fa-check"></i><b>6.4.1</b> Base R</a></li>
+<li class="chapter" data-level="6.4.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-dplyr"><i class="fa fa-check"></i><b>6.4.2</b> Using package <em>dplyr</em></a></li>
+<li class="chapter" data-level="6.4.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-vtable"><i class="fa fa-check"></i><b>6.4.3</b> Using package <em>vtable</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#correlation"><i class="fa fa-check"></i><b>6.5</b> Correlation</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r-2"><i class="fa fa-check"></i><b>6.5.1</b> Base R</a></li>
+<li class="chapter" data-level="6.5.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-hmisc"><i class="fa fa-check"></i><b>6.5.2</b> Using package <em>Hmisc</em></a></li>
+<li class="chapter" data-level="6.5.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-sjplot-1"><i class="fa fa-check"></i><b>6.5.3</b> Using package <em>sjPlot</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#why-descriptive-analysis-matters"><i class="fa fa-check"></i><b>6.6</b> Why descriptive analysis matters</a></li>
+<li class="chapter" data-level="6.7" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#whats-next-6"><i class="fa fa-check"></i><b>6.7</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>7</b> Data Visualization</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-visualization.html"><a href="data-visualization.html#base-r-visualizations"><i class="fa fa-check"></i><b>7.1</b> Base R Visualizations</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="data-visualization.html"><a href="data-visualization.html#histogram-base-r"><i class="fa fa-check"></i><b>7.1.1</b> Histogram (Base R)</a></li>
+<li class="chapter" data-level="7.1.2" data-path="data-visualization.html"><a href="data-visualization.html#box-and-whisker-plot-base-r"><i class="fa fa-check"></i><b>7.1.2</b> Box-and-Whisker Plot (Base R)</a></li>
+<li class="chapter" data-level="7.1.3" data-path="data-visualization.html"><a href="data-visualization.html#scatterplot-base-r"><i class="fa fa-check"></i><b>7.1.3</b> Scatterplot (Base R)</a></li>
+<li class="chapter" data-level="7.1.4" data-path="data-visualization.html"><a href="data-visualization.html#line-chart-base-r"><i class="fa fa-check"></i><b>7.1.4</b> Line Chart (Base R)</a></li>
+<li class="chapter" data-level="7.1.5" data-path="data-visualization.html"><a href="data-visualization.html#bar-chart-base-r"><i class="fa fa-check"></i><b>7.1.5</b> Bar Chart (Base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="data-visualization.html"><a href="data-visualization.html#moving-beyond-base-r"><i class="fa fa-check"></i><b>7.2</b> Moving Beyond Base R</a></li>
+<li class="chapter" data-level="7.3" data-path="data-visualization.html"><a href="data-visualization.html#introduction-to-ggplot2"><i class="fa fa-check"></i><b>7.3</b> Introduction to <em>ggplot2</em></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="data-visualization.html"><a href="data-visualization.html#histogram"><i class="fa fa-check"></i><b>7.3.1</b> Histogram</a></li>
+<li class="chapter" data-level="7.3.2" data-path="data-visualization.html"><a href="data-visualization.html#box-and-whiskers-plot"><i class="fa fa-check"></i><b>7.3.2</b> Box-and-Whiskers Plot</a></li>
+<li class="chapter" data-level="7.3.3" data-path="data-visualization.html"><a href="data-visualization.html#scatterplot"><i class="fa fa-check"></i><b>7.3.3</b> Scatterplot</a></li>
+<li class="chapter" data-level="7.3.4" data-path="data-visualization.html"><a href="data-visualization.html#line-chart"><i class="fa fa-check"></i><b>7.3.4</b> Line Chart</a></li>
+<li class="chapter" data-level="7.3.5" data-path="data-visualization.html"><a href="data-visualization.html#bar-chart"><i class="fa fa-check"></i><b>7.3.5</b> Bar Chart</a></li>
+<li class="chapter" data-level="7.3.6" data-path="data-visualization.html"><a href="data-visualization.html#grouped-bar-chart"><i class="fa fa-check"></i><b>7.3.6</b> Grouped Bar Chart</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="data-visualization.html"><a href="data-visualization.html#summary"><i class="fa fa-check"></i><b>7.4</b> Summary</a></li>
+<li class="chapter" data-level="7.5" data-path="data-visualization.html"><a href="data-visualization.html#whats-next-7"><i class="fa fa-check"></i><b>7.5</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>8</b> Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="linear-regression.html"><a href="linear-regression.html#the-linear-regression-model"><i class="fa fa-check"></i><b>8.1</b> The Linear Regression Model</a></li>
+<li class="chapter" data-level="8.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>8.2</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="linear-regression.html"><a href="linear-regression.html#nice-output"><i class="fa fa-check"></i><b>8.2.1</b> “Nice” Output</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>8.3</b> Multiple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="linear-regression.html"><a href="linear-regression.html#adding-additional-variables"><i class="fa fa-check"></i><b>8.3.1</b> Adding Additional Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors-and-reference-groups"><i class="fa fa-check"></i><b>8.4</b> Categorical Predictors and Reference Groups</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="linear-regression.html"><a href="linear-regression.html#example-flight-class"><i class="fa fa-check"></i><b>8.4.1</b> Example: Flight Class</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="linear-regression.html"><a href="linear-regression.html#interaction-effects"><i class="fa fa-check"></i><b>8.5</b> Interaction Effects</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="linear-regression.html"><a href="linear-regression.html#example-flights-and-frequent-flier-status"><i class="fa fa-check"></i><b>8.5.1</b> Example: Flights and Frequent Flier Status</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="linear-regression.html"><a href="linear-regression.html#sec-margin-plots"><i class="fa fa-check"></i><b>8.6</b> Margin Plots with <code>easy_mp</code></a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="linear-regression.html"><a href="linear-regression.html#the-easy_mp-function"><i class="fa fa-check"></i><b>8.6.1</b> The <code>easy_mp()</code> Function</a></li>
+<li class="chapter" data-level="8.6.2" data-path="linear-regression.html"><a href="linear-regression.html#without-interactions"><i class="fa fa-check"></i><b>8.6.2</b> WITHOUT Interactions</a></li>
+<li class="chapter" data-level="8.6.3" data-path="linear-regression.html"><a href="linear-regression.html#with-interactions"><i class="fa fa-check"></i><b>8.6.3</b> WITH Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="linear-regression.html"><a href="linear-regression.html#prediction"><i class="fa fa-check"></i><b>8.7</b> Prediction</a></li>
+<li class="chapter" data-level="8.8" data-path="linear-regression.html"><a href="linear-regression.html#whats-next-8"><i class="fa fa-check"></i><b>8.8</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html"><i class="fa fa-check"></i><b>9</b> Binary Logistic Regression</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#why-logistic-regression-in-marketing-analytics"><i class="fa fa-check"></i><b>9.1</b> Why Logistic Regression in Marketing Analytics</a></li>
+<li class="chapter" data-level="9.2" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#the-direct-marketing-data"><i class="fa fa-check"></i><b>9.2</b> The Direct Marketing Data</a></li>
+<li class="chapter" data-level="9.3" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#splitting-data-into-training-and-test-samples"><i class="fa fa-check"></i><b>9.3</b> Splitting Data into Training and Test Samples</a></li>
+<li class="chapter" data-level="9.4" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#estimating-a-binary-logistic-regression-model"><i class="fa fa-check"></i><b>9.4</b> Estimating a Binary Logistic Regression Model</a></li>
+<li class="chapter" data-level="9.5" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#interpreting-odds-ratios"><i class="fa fa-check"></i><b>9.5</b> Interpreting Odds Ratios</a></li>
+<li class="chapter" data-level="9.6" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#predicted-probabilities"><i class="fa fa-check"></i><b>9.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="9.7" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#classification-and-cutoff-values"><i class="fa fa-check"></i><b>9.7</b> Classification and Cutoff Values</a></li>
+<li class="chapter" data-level="9.8" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#choosing-a-cutoff"><i class="fa fa-check"></i><b>9.8</b> Choosing a Cutoff</a></li>
+<li class="chapter" data-level="9.9" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#roc-curve-and-auc"><i class="fa fa-check"></i><b>9.9</b> ROC Curve and AUC</a></li>
+<li class="chapter" data-level="9.10" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#gain-and-lift-charts"><i class="fa fa-check"></i><b>9.10</b> Gain and Lift Charts</a></li>
+<li class="chapter" data-level="9.11" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#margin-plots-with-easy_mp"><i class="fa fa-check"></i><b>9.11</b> Margin Plots with <code>easy_mp()</code></a></li>
+<li class="chapter" data-level="9.12" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#putting-it-all-together"><i class="fa fa-check"></i><b>9.12</b> Putting It All Together</a></li>
+<li class="chapter" data-level="9.13" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#whats-next-9"><i class="fa fa-check"></i><b>9.13</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="cluster-analysis.html"><a href="cluster-analysis.html"><i class="fa fa-check"></i><b>10</b> Cluster Analysis</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#why-cluster-analysis-matters-in-marketing"><i class="fa fa-check"></i><b>10.1</b> Why Cluster Analysis Matters in Marketing</a></li>
+<li class="chapter" data-level="10.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#the-ffseg-dataset"><i class="fa fa-check"></i><b>10.2</b> The <code>ffseg</code> Dataset</a></li>
+<li class="chapter" data-level="10.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#hierarchical-agglomerative-clustering"><i class="fa fa-check"></i><b>10.3</b> Hierarchical Agglomerative Clustering</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#conceptual-overview"><i class="fa fa-check"></i><b>10.3.1</b> Conceptual Overview</a></li>
+<li class="chapter" data-level="10.3.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#initial-hierarchical-clustering-fit"><i class="fa fa-check"></i><b>10.3.2</b> Initial Hierarchical Clustering Fit</a></li>
+<li class="chapter" data-level="10.3.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#selecting-the-number-of-clusters"><i class="fa fa-check"></i><b>10.3.3</b> Selecting the Number of Clusters</a></li>
+<li class="chapter" data-level="10.3.4" data-path="cluster-analysis.html"><a href="cluster-analysis.html#final-hierarchical-clustering-solution"><i class="fa fa-check"></i><b>10.3.4</b> Final Hierarchical Clustering Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="cluster-analysis.html"><a href="cluster-analysis.html#sec-describe-clusters"><i class="fa fa-check"></i><b>10.4</b> Describing and Labeling Hierarchical Clusters</a></li>
+<li class="chapter" data-level="10.5" data-path="cluster-analysis.html"><a href="cluster-analysis.html#k-means-clustering"><i class="fa fa-check"></i><b>10.5</b> K-Means Clustering</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#conceptual-overview-1"><i class="fa fa-check"></i><b>10.5.1</b> Conceptual Overview</a></li>
+<li class="chapter" data-level="10.5.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#initial-k-means-clustering-fit"><i class="fa fa-check"></i><b>10.5.2</b> Initial K-Means Clustering Fit</a></li>
+<li class="chapter" data-level="10.5.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#final-k-means-clustering-solution"><i class="fa fa-check"></i><b>10.5.3</b> Final K-Means Clustering Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="cluster-analysis.html"><a href="cluster-analysis.html#describing-and-labeling-k-means-clusters"><i class="fa fa-check"></i><b>10.6</b> Describing and Labeling <em>k</em>-Means Clusters</a></li>
+<li class="chapter" data-level="10.7" data-path="cluster-analysis.html"><a href="cluster-analysis.html#comparing-clustering-approaches"><i class="fa fa-check"></i><b>10.7</b> Comparing Clustering Approaches</a></li>
+<li class="chapter" data-level="10.8" data-path="cluster-analysis.html"><a href="cluster-analysis.html#chapter-summary"><i class="fa fa-check"></i><b>10.8</b> Chapter Summary</a></li>
+<li class="chapter" data-level="10.9" data-path="cluster-analysis.html"><a href="cluster-analysis.html#whats-next-10"><i class="fa fa-check"></i><b>10.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html"><i class="fa fa-check"></i><b>11</b> PCA and Perceptual Maps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#introduction-why-pca-matters-in-marketing-analytics"><i class="fa fa-check"></i><b>11.1</b> Introduction: Why PCA Matters in Marketing Analytics</a></li>
+<li class="chapter" data-level="11.2" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#the-greekbrands-dataset"><i class="fa fa-check"></i><b>11.2</b> The <code>greekbrands</code> Dataset</a></li>
+<li class="chapter" data-level="11.3" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#preparing-for-pca-in-a-marketing-context"><i class="fa fa-check"></i><b>11.3</b> Preparing for PCA in a Marketing Context</a></li>
+<li class="chapter" data-level="11.4" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#pca-modeling"><i class="fa fa-check"></i><b>11.4</b> PCA Modeling</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#fitting-an-initial-pca-model"><i class="fa fa-check"></i><b>11.4.1</b> Fitting an Initial PCA Model</a></li>
+<li class="chapter" data-level="11.4.2" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#final-pca-solution"><i class="fa fa-check"></i><b>11.4.2</b> Final PCA Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#from-pca-to-perceptual-maps"><i class="fa fa-check"></i><b>11.5</b> From PCA to Perceptual Maps</a></li>
+<li class="chapter" data-level="11.6" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#attribute-based-perceptual-maps-using-pca"><i class="fa fa-check"></i><b>11.6</b> Attribute-Based Perceptual Maps Using PCA</a>
+<ul>
+<li class="chapter" data-level="11.6.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#creating-pca-based-maps"><i class="fa fa-check"></i><b>11.6.1</b> Creating PCA-Based Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="11.7" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#managerial-interpretation-and-strategic-insights"><i class="fa fa-check"></i><b>11.7</b> Managerial Interpretation and Strategic Insights</a></li>
+<li class="chapter" data-level="11.8" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#chapter-summary-1"><i class="fa fa-check"></i><b>11.8</b> Chapter Summary</a></li>
+<li class="chapter" data-level="11.9" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#whats-next-11"><i class="fa fa-check"></i><b>11.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html"><i class="fa fa-check"></i><b>12</b> A/B Testing and Uplift Modeling</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#introduction-from-average-effects-to-targeted-marketing"><i class="fa fa-check"></i><b>12.1</b> Introduction: From Average Effects to Targeted Marketing</a></li>
+<li class="chapter" data-level="12.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#the-email-campaign-experiment"><i class="fa fa-check"></i><b>12.2</b> The Email Campaign Experiment</a></li>
+<li class="chapter" data-level="12.3" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#checking-the-randomization-assumption"><i class="fa fa-check"></i><b>12.3</b> Checking the Randomization Assumption</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-balance-checks-matter"><i class="fa fa-check"></i><b>12.3.1</b> Why Balance Checks Matter</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#randomization-check-using-rand_check"><i class="fa fa-check"></i><b>12.3.2</b> Randomization Check Using <code>rand_check()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#estimating-the-average-treatment-effect-ate"><i class="fa fa-check"></i><b>12.4</b> Estimating the Average Treatment Effect (ATE)</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#what-is-the-ate"><i class="fa fa-check"></i><b>12.4.1</b> What Is the ATE?</a></li>
+<li class="chapter" data-level="12.4.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#ate-via-regression"><i class="fa fa-check"></i><b>12.4.2</b> ATE via Regression</a></li>
+<li class="chapter" data-level="12.4.3" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#using-easy_ab_ate"><i class="fa fa-check"></i><b>12.4.3</b> Using <code>easy_ab_ate()</code></a></li>
+<li class="chapter" data-level="12.4.4" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-average-effects-are-not-enough"><i class="fa fa-check"></i><b>12.4.4</b> Why Average Effects Are Not Enough</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#introduction-to-uplift-modeling"><i class="fa fa-check"></i><b>12.5</b> Introduction to Uplift Modeling</a>
+<ul>
+<li class="chapter" data-level="12.5.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#what-is-uplift"><i class="fa fa-check"></i><b>12.5.1</b> What Is Uplift?</a></li>
+<li class="chapter" data-level="12.5.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#two-model-indirect-approach"><i class="fa fa-check"></i><b>12.5.2</b> Two-Model (Indirect) Approach</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#estimating-uplift-with-easy_uplift"><i class="fa fa-check"></i><b>12.6</b> Estimating Uplift with <code>easy_uplift()</code></a>
+<ul>
+<li class="chapter" data-level="12.6.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#model-specification"><i class="fa fa-check"></i><b>12.6.1</b> Model Specification</a></li>
+<li class="chapter" data-level="12.6.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#interpreting-core-outputs"><i class="fa fa-check"></i><b>12.6.2</b> Interpreting Core Outputs</a></li>
+</ul></li>
+<li class="chapter" data-level="12.7" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#diagnosing-uplift-with-lift-plots"><i class="fa fa-check"></i><b>12.7</b> Diagnosing Uplift with Lift Plots</a>
+<ul>
+<li class="chapter" data-level="12.7.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-lift-diagnostics-matter"><i class="fa fa-check"></i><b>12.7.1</b> Why Lift Diagnostics Matter</a></li>
+<li class="chapter" data-level="12.7.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#using-easy_liftplots"><i class="fa fa-check"></i><b>12.7.2</b> Using <code>easy_liftplots()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#from-analysis-to-action"><i class="fa fa-check"></i><b>12.8</b> From Analysis to Action</a></li>
+<li class="chapter" data-level="12.9" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#summary-1"><i class="fa fa-check"></i><b>12.9</b> Summary</a></li>
+<li class="chapter" data-level="12.10" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#whats-next-12"><i class="fa fa-check"></i><b>12.10</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html"><i class="fa fa-check"></i><b>13</b> Standard Multinomial Logit Models</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#introduction-to-multinomial-choice-in-marketing"><i class="fa fa-check"></i><b>13.1</b> Introduction to Multinomial Choice in Marketing</a></li>
+<li class="chapter" data-level="13.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#the-bfast-dataset"><i class="fa fa-check"></i><b>13.2</b> The <code>bfast</code> Dataset</a></li>
+<li class="chapter" data-level="13.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#training-and-test-samples"><i class="fa fa-check"></i><b>13.3</b> Training and Test Samples</a></li>
+<li class="chapter" data-level="13.4" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#estimating-a-standard-multinomial-logit-model"><i class="fa fa-check"></i><b>13.4</b> Estimating a Standard Multinomial Logit Model</a></li>
+<li class="chapter" data-level="13.5" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#evaluating-model-fit"><i class="fa fa-check"></i><b>13.5</b> Evaluating Model Fit</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#interpreting-coefficients"><i class="fa fa-check"></i><b>13.5.1</b> Interpreting Coefficients</a></li>
+<li class="chapter" data-level="13.5.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#classification-performance"><i class="fa fa-check"></i><b>13.5.2</b> Classification Performance</a></li>
+<li class="chapter" data-level="13.5.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#holdout-sample-evaluation"><i class="fa fa-check"></i><b>13.5.3</b> Holdout Sample Evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#predicted-probabilities-1"><i class="fa fa-check"></i><b>13.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="13.7" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#marketing-interpretation"><i class="fa fa-check"></i><b>13.7</b> Marketing Interpretation</a></li>
+<li class="chapter" data-level="13.8" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#summary-2"><i class="fa fa-check"></i><b>13.8</b> Summary</a></li>
+<li class="chapter" data-level="13.9" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#whats-next-13"><i class="fa fa-check"></i><b>13.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html"><i class="fa fa-check"></i><b>14</b> Alternative-Specific Multinomial Logit Models</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#introduction-why-alternative-specific-mnl"><i class="fa fa-check"></i><b>14.1</b> Introduction: Why Alternative-Specific MNL?</a></li>
+<li class="chapter" data-level="14.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#the-yogurt-choice-data"><i class="fa fa-check"></i><b>14.2</b> The Yogurt Choice Data</a></li>
+<li class="chapter" data-level="14.3" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#preparing-the-data-for-modeling"><i class="fa fa-check"></i><b>14.3</b> Preparing the Data for Modeling</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-splitting-is-different-for-choice-data"><i class="fa fa-check"></i><b>14.3.1</b> Why Splitting Is Different for Choice Data</a></li>
+<li class="chapter" data-level="14.3.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#creating-training-and-test-samples"><i class="fa fa-check"></i><b>14.3.2</b> Creating Training and Test Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#specifying-an-alternative-specific-mnl-model"><i class="fa fa-check"></i><b>14.4</b> Specifying an Alternative-Specific MNL Model</a></li>
+<li class="chapter" data-level="14.5" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#evaluating-model-performance"><i class="fa fa-check"></i><b>14.5</b> Evaluating Model Performance</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#model-fit-and-coefficients"><i class="fa fa-check"></i><b>14.5.1</b> Model Fit and Coefficients</a></li>
+<li class="chapter" data-level="14.5.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#classification-performance-1"><i class="fa fa-check"></i><b>14.5.2</b> Classification Performance</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#predicted-probabilities-and-marginal-effects"><i class="fa fa-check"></i><b>14.6</b> Predicted Probabilities and Marginal Effects</a>
+<ul>
+<li class="chapter" data-level="14.6.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-predicted-probabilities-matter"><i class="fa fa-check"></i><b>14.6.1</b> Why Predicted Probabilities Matter</a></li>
+<li class="chapter" data-level="14.6.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-marginal-effects-are-useful"><i class="fa fa-check"></i><b>14.6.2</b> Why Marginal Effects Are Useful</a></li>
+<li class="chapter" data-level="14.6.3" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#the-pp_as_mnl-function"><i class="fa fa-check"></i><b>14.6.3</b> The <code>pp_as_mnl()</code> Function</a></li>
+<li class="chapter" data-level="14.6.4" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#case-specific-predictors"><i class="fa fa-check"></i><b>14.6.4</b> Case-Specific Predictors</a></li>
+<li class="chapter" data-level="14.6.5" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#alternative-specific-predictors"><i class="fa fa-check"></i><b>14.6.5</b> Alternative-Specific Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#managerial-insights"><i class="fa fa-check"></i><b>14.7</b> Managerial Insights</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/jdmeyer73/MKT4320RTutorial" target="_blank">Source on GitHub</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Tutorial for MKT 4320</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-visualization" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Data Visualization<a href="data-visualization.html#data-visualization" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Descriptive statistics summarize data numerically, but visualizations often reveal patterns, trends, and anomalies more quickly. This chapter introduces basic data visualization techniques in R. We begin with Base R graphics to understand core plotting concepts, then move to ggplot2, which provides a more flexible and powerful system for creating graphics.</p>
+<hr />
+<div id="base-r-visualizations" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Base R Visualizations<a href="data-visualization.html#base-r-visualizations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Base R graphics are built into R and require no additional packages. They are
+useful for quick exploratory analysis and for understanding how plotting works
+at a fundamental level.</p>
+<div id="histogram-base-r" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Histogram (Base R)<a href="data-visualization.html#histogram-base-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A histogram shows the distribution of a numeric variable. Histograms are useful for assessing the shape, spread, and potential outliers in a numeric variable.</p>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="data-visualization.html#cb228-1" tabindex="-1"></a><span class="fu">hist</span>(airlinesat_small<span class="sc">$</span>age,</span>
+<span id="cb228-2"><a href="data-visualization.html#cb228-2" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Number of Age&quot;</span>,</span>
+<span id="cb228-3"><a href="data-visualization.html#cb228-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Number of Age&quot;</span>,</span>
+<span id="cb228-4"><a href="data-visualization.html#cb228-4" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;lightgray&quot;</span>,</span>
+<span id="cb228-5"><a href="data-visualization.html#cb228-5" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;white&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/base-histogram-1.png" alt="" width="672" /></p>
+</div>
+<div id="box-and-whisker-plot-base-r" class="section level3 hasAnchor" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Box-and-Whisker Plot (Base R)<a href="data-visualization.html#box-and-whisker-plot-base-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A box-and-whisker plot (often called a boxplot) summarizes the distribution of a numeric variable using five key values:</p>
+<ul>
+<li>Minimum</li>
+<li>First quartile (25th percentile)</li>
+<li>Median</li>
+<li>Third quartile (75th percentile)</li>
+<li>Maximum</li>
+</ul>
+<p>Boxplots are especially useful for:</p>
+<ul>
+<li>Comparing distributions across groups</li>
+<li>Identifying skewness</li>
+<li>Detecting potential outliers</li>
+</ul>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="data-visualization.html#cb229-1" tabindex="-1"></a><span class="fu">boxplot</span>(airlinesat_small<span class="sc">$</span>age,</span>
+<span id="cb229-2"><a href="data-visualization.html#cb229-2" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;Distribution of Age&quot;</span>,</span>
+<span id="cb229-3"><a href="data-visualization.html#cb229-3" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb229-4"><a href="data-visualization.html#cb229-4" tabindex="-1"></a>        <span class="at">col  =</span> <span class="st">&quot;lightgray&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/boxplot_base_r-1.png" alt="" width="672" /></p>
+</div>
+<div id="scatterplot-base-r" class="section level3 hasAnchor" number="7.1.3">
+<h3><span class="header-section-number">7.1.3</span> Scatterplot (Base R)<a href="data-visualization.html#scatterplot-base-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A scatterplot displays the relationship between two numeric variables. Scatterplots are commonly used to detect relationships, nonlinear patterns, and outliers.</p>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="data-visualization.html#cb230-1" tabindex="-1"></a><span class="fu">plot</span>(airlinesat_small<span class="sc">$</span>age,</span>
+<span id="cb230-2"><a href="data-visualization.html#cb230-2" tabindex="-1"></a>     airlinesat_small<span class="sc">$</span>nflights,</span>
+<span id="cb230-3"><a href="data-visualization.html#cb230-3" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Age vs Number of Flights&quot;</span>,</span>
+<span id="cb230-4"><a href="data-visualization.html#cb230-4" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb230-5"><a href="data-visualization.html#cb230-5" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of Flights&quot;</span>,</span>
+<span id="cb230-6"><a href="data-visualization.html#cb230-6" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb230-7"><a href="data-visualization.html#cb230-7" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;darkgray&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/base-scatterplot-1.png" alt="" width="672" /></p>
+</div>
+<div id="line-chart-base-r" class="section level3 hasAnchor" number="7.1.4">
+<h3><span class="header-section-number">7.1.4</span> Line Chart (Base R)<a href="data-visualization.html#line-chart-base-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Line charts are typically used for ordered data, such as time series or values summarized across an ordered variable. Line charts emphasize change across an ordered dimension rather than individual observations.</p>
+<p>First, we’ll simulate some time series data, and then we’ll create the line chart.</p>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="data-visualization.html#cb231-1" tabindex="-1"></a><span class="co"># Simulate monthly flight data</span></span>
+<span id="cb231-2"><a href="data-visualization.html#cb231-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb231-3"><a href="data-visualization.html#cb231-3" tabindex="-1"></a>months <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2022-01-01&quot;</span>), <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2023-12-01&quot;</span>), <span class="at">by =</span> <span class="st">&quot;month&quot;</span>)</span>
+<span id="cb231-4"><a href="data-visualization.html#cb231-4" tabindex="-1"></a>n_months <span class="ot">&lt;-</span> <span class="fu">length</span>(months)</span>
+<span id="cb231-5"><a href="data-visualization.html#cb231-5" tabindex="-1"></a>flights <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="dv">800</span> <span class="sc">+</span></span>
+<span id="cb231-6"><a href="data-visualization.html#cb231-6" tabindex="-1"></a>    <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">length.out =</span> n_months) <span class="sc">+</span>          <span class="co"># upward trend</span></span>
+<span id="cb231-7"><a href="data-visualization.html#cb231-7" tabindex="-1"></a>    <span class="dv">80</span> <span class="sc">*</span> <span class="fu">sin</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> (<span class="dv">1</span><span class="sc">:</span>n_months) <span class="sc">/</span> <span class="dv">12</span>) <span class="sc">+</span>         <span class="co"># seasonality</span></span>
+<span id="cb231-8"><a href="data-visualization.html#cb231-8" tabindex="-1"></a>    <span class="fu">rnorm</span>(n_months, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">40</span>))              <span class="co"># random noise</span></span>
+<span id="cb231-9"><a href="data-visualization.html#cb231-9" tabindex="-1"></a></span>
+<span id="cb231-10"><a href="data-visualization.html#cb231-10" tabindex="-1"></a>flight_ts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">month =</span> months, <span class="at">flights =</span> flights)</span>
+<span id="cb231-11"><a href="data-visualization.html#cb231-11" tabindex="-1"></a></span>
+<span id="cb231-12"><a href="data-visualization.html#cb231-12" tabindex="-1"></a><span class="co"># Line chart of flights by month</span></span>
+<span id="cb231-13"><a href="data-visualization.html#cb231-13" tabindex="-1"></a><span class="fu">plot</span>(flight_ts<span class="sc">$</span>month,</span>
+<span id="cb231-14"><a href="data-visualization.html#cb231-14" tabindex="-1"></a>     flight_ts<span class="sc">$</span>flights,</span>
+<span id="cb231-15"><a href="data-visualization.html#cb231-15" tabindex="-1"></a>     <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb231-16"><a href="data-visualization.html#cb231-16" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Number of Flights by Month&quot;</span>,</span>
+<span id="cb231-17"><a href="data-visualization.html#cb231-17" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Month&quot;</span>,</span>
+<span id="cb231-18"><a href="data-visualization.html#cb231-18" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of Flights&quot;</span>,</span>
+<span id="cb231-19"><a href="data-visualization.html#cb231-19" tabindex="-1"></a>     <span class="at">col  =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
+<span id="cb231-20"><a href="data-visualization.html#cb231-20" tabindex="-1"></a>     <span class="at">lwd  =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/base-linechart-1.png" alt="" width="672" /></p>
+</div>
+<div id="bar-chart-base-r" class="section level3 hasAnchor" number="7.1.5">
+<h3><span class="header-section-number">7.1.5</span> Bar Chart (Base R)<a href="data-visualization.html#bar-chart-base-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bar charts are used for categorical variables. They are useful for comparing counts or proportions across categories. They can also show results for different categories of another variable (i.e., a side-by-side bar chart).</p>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="data-visualization.html#cb232-1" tabindex="-1"></a>status_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(airlinesat_small<span class="sc">$</span>status)</span>
+<span id="cb232-2"><a href="data-visualization.html#cb232-2" tabindex="-1"></a></span>
+<span id="cb232-3"><a href="data-visualization.html#cb232-3" tabindex="-1"></a><span class="fu">barplot</span>(</span>
+<span id="cb232-4"><a href="data-visualization.html#cb232-4" tabindex="-1"></a>  status_counts,</span>
+<span id="cb232-5"><a href="data-visualization.html#cb232-5" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Loyalty Status&quot;</span>,</span>
+<span id="cb232-6"><a href="data-visualization.html#cb232-6" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Frequency&quot;</span>,</span>
+<span id="cb232-7"><a href="data-visualization.html#cb232-7" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">&quot;lightblue&quot;</span></span>
+<span id="cb232-8"><a href="data-visualization.html#cb232-8" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/base-barchart-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="data-visualization.html#cb233-1" tabindex="-1"></a>status_gender_tab <span class="ot">&lt;-</span> <span class="fu">table</span>(airlinesat_small<span class="sc">$</span>status, airlinesat_small<span class="sc">$</span>gender)</span>
+<span id="cb233-2"><a href="data-visualization.html#cb233-2" tabindex="-1"></a><span class="fu">barplot</span>(status_gender_tab,</span>
+<span id="cb233-3"><a href="data-visualization.html#cb233-3" tabindex="-1"></a>        <span class="at">beside =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb233-4"><a href="data-visualization.html#cb233-4" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;steelblue&quot;</span>, <span class="st">&quot;darkorange&quot;</span>),</span>
+<span id="cb233-5"><a href="data-visualization.html#cb233-5" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;Loyalty Status by Gender&quot;</span>,</span>
+<span id="cb233-6"><a href="data-visualization.html#cb233-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Loyalty Status&quot;</span>,</span>
+<span id="cb233-7"><a href="data-visualization.html#cb233-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;Number of Customers&quot;</span>,</span>
+<span id="cb233-8"><a href="data-visualization.html#cb233-8" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb233-9"><a href="data-visualization.html#cb233-9" tabindex="-1"></a>        <span class="at">args.legend =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">&quot;Gender&quot;</span>, <span class="at">x =</span> <span class="st">&quot;topright&quot;</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>))</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/base-barchart-2.png" alt="" width="672" /></p>
+<hr />
+</div>
+</div>
+<div id="moving-beyond-base-r" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Moving Beyond Base R<a href="data-visualization.html#moving-beyond-base-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>While Base R graphics are useful, they can become cumbersome when creating more complex plots or when consistent styling is needed. The <code>ggplot2</code> package provides a structured approach to visualization based on the <strong>g</strong>rammar of <strong>g</strong>raphics.</p>
+<hr />
+</div>
+<div id="introduction-to-ggplot2" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Introduction to <em>ggplot2</em><a href="data-visualization.html#introduction-to-ggplot2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In <code>ggplot2</code>, plots are built in layers from three main components: data, aesthetic mappings (i.e., a coordinate system identifying <code>x</code> and <code>y</code> variables), and geometric objects (i.e., how the data should be displayed). In addition, the plot can be enhanced by adding additional layers using the <code>+</code> operator. <code>ggplot2</code> also works very well with <code>dplyr</code> when data manipulation is needed prior to creating the plot.</p>
+<div id="histogram" class="section level3 hasAnchor" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> Histogram<a href="data-visualization.html#histogram" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Histograms in <code>ggplot</code> use the <code>geom_histogram()</code> layer. As with many geoms in <code>ggplot2</code>, no options are <em>required</em> in the geom. Here is a basic histogram.</p>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="data-visualization.html#cb234-1" tabindex="-1"></a><span class="fu">ggplot</span>(airlinesat_small, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb234-2"><a href="data-visualization.html#cb234-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-histogram_basic-1.png" alt="" width="672" /></p>
+<p>One of the benefits of <code>ggplot2</code> is the ease of making the plot look more visually appealing often more informative. Here is the histogram with additional options for <code>bins</code>, the <code>fill</code> color, and the outline <code>color</code>, along with labels using the <code>labs</code> layer.</p>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="data-visualization.html#cb236-1" tabindex="-1"></a><span class="fu">ggplot</span>(airlinesat_small, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb236-2"><a href="data-visualization.html#cb236-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>,</span>
+<span id="cb236-3"><a href="data-visualization.html#cb236-3" tabindex="-1"></a>                 <span class="at">fill =</span> <span class="st">&quot;orange&quot;</span>,</span>
+<span id="cb236-4"><a href="data-visualization.html#cb236-4" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb236-5"><a href="data-visualization.html#cb236-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Histogram of Age&quot;</span>,</span>
+<span id="cb236-6"><a href="data-visualization.html#cb236-6" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb236-7"><a href="data-visualization.html#cb236-7" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">&quot;Count&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-histogram_nice-1.png" alt="" width="672" /></p>
+</div>
+<div id="box-and-whiskers-plot" class="section level3 hasAnchor" number="7.3.2">
+<h3><span class="header-section-number">7.3.2</span> Box-and-Whiskers Plot<a href="data-visualization.html#box-and-whiskers-plot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Box Plots are drawn with the <code>geom_boxplot()</code> geom, which by default creates a box plot for a continuous <code>y</code> variable, but for each level of a discrete <code>x</code> variable. In addition, the standard box plot does not contain “whiskers”. To get a box plot for only the continuous <code>y</code> variable, use <code>x = ""</code> as the discrete <code>x</code> variable. To add whiskers, include a <code>staplewidth = 1</code> within the <code>geom_boxplot()</code>.</p>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="data-visualization.html#cb237-1" tabindex="-1"></a><span class="fu">ggplot</span>(airlinesat_small, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y=</span>age)) <span class="sc">+</span></span>
+<span id="cb237-2"><a href="data-visualization.html#cb237-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">staplewidth =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb237-3"><a href="data-visualization.html#cb237-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Boxplot for Age&quot;</span>,</span>
+<span id="cb237-4"><a href="data-visualization.html#cb237-4" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb237-5"><a href="data-visualization.html#cb237-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Age&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-boxplot_1-1.png" alt="" width="672" /></p>
+<div id="side-by-side-boxplot" class="section level4 hasAnchor" number="7.3.2.1">
+<h4><span class="header-section-number">7.3.2.1</span> Side-by-Side Boxplot<a href="data-visualization.html#side-by-side-boxplot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To create side-by-side boxplots for a discrete variable, simply repace the <code>x = ""</code> with a variable name.</p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="data-visualization.html#cb238-1" tabindex="-1"></a><span class="fu">ggplot</span>(airlinesat_small, <span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y=</span>age)) <span class="sc">+</span></span>
+<span id="cb238-2"><a href="data-visualization.html#cb238-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">staplewidth =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb238-3"><a href="data-visualization.html#cb238-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Boxplot for Age by Gender&quot;</span>,</span>
+<span id="cb238-4"><a href="data-visualization.html#cb238-4" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb238-5"><a href="data-visualization.html#cb238-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Age&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-boxplot_2-1.png" alt="" width="672" /></p>
+</div>
+</div>
+<div id="scatterplot" class="section level3 hasAnchor" number="7.3.3">
+<h3><span class="header-section-number">7.3.3</span> Scatterplot<a href="data-visualization.html#scatterplot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Scatterplots are drawn with the <code>geom_point()</code> geom and are used to show the relationship between two continuous variables.</p>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="data-visualization.html#cb239-1" tabindex="-1"></a><span class="fu">ggplot</span>(airlinesat_small, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> nflights)) <span class="sc">+</span></span>
+<span id="cb239-2"><a href="data-visualization.html#cb239-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb239-3"><a href="data-visualization.html#cb239-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Age vs Number of Flights&quot;</span>,</span>
+<span id="cb239-4"><a href="data-visualization.html#cb239-4" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb239-5"><a href="data-visualization.html#cb239-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Flights&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-scatterplot_1-1.png" alt="" width="672" /></p>
+<div id="scatterplot-with-a-categorical-variable" class="section level4 hasAnchor" number="7.3.3.1">
+<h4><span class="header-section-number">7.3.3.1</span> Scatterplot with a Categorical Variable<a href="data-visualization.html#scatterplot-with-a-categorical-variable" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>More interesting scatterplots can be created by changing the color of the points by a third, discrete variable. This means adding a new aesthetic in the <code>aes()</code> part.</p>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="data-visualization.html#cb240-1" tabindex="-1"></a><span class="fu">ggplot</span>(airlinesat_small, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> nflights, <span class="at">color=</span>status)) <span class="sc">+</span></span>
+<span id="cb240-2"><a href="data-visualization.html#cb240-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb240-3"><a href="data-visualization.html#cb240-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Age vs Number of Flights by Loyalty Status&quot;</span>,</span>
+<span id="cb240-4"><a href="data-visualization.html#cb240-4" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb240-5"><a href="data-visualization.html#cb240-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Flights&quot;</span>,</span>
+<span id="cb240-6"><a href="data-visualization.html#cb240-6" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Loyalty Status&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-scatterplot_2-1.png" alt="" width="672" /></p>
+</div>
+<div id="scatterplot-with-a-trendline" class="section level4 hasAnchor" number="7.3.3.2">
+<h4><span class="header-section-number">7.3.3.2</span> Scatterplot with a Trendline<a href="data-visualization.html#scatterplot-with-a-trendline" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Scatterplots become more helpful when we add a trend line. The most common trend line is a simple regression line, although others can be used. Use <code>geom_smooth(method = "lm", se = FALSE)</code> to add a linear trend line.</p>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="data-visualization.html#cb241-1" tabindex="-1"></a><span class="fu">ggplot</span>(airlinesat_small, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> nps)) <span class="sc">+</span></span>
+<span id="cb241-2"><a href="data-visualization.html#cb241-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb241-3"><a href="data-visualization.html#cb241-3" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb241-4"><a href="data-visualization.html#cb241-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Age vs Number of Flights&quot;</span>,</span>
+<span id="cb241-5"><a href="data-visualization.html#cb241-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb241-6"><a href="data-visualization.html#cb241-6" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Flights&quot;</span>)</span></code></pre></div>
+<pre><code>`geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-scatterplot_3-1.png" alt="" width="672" /></p>
+</div>
+</div>
+<div id="line-chart" class="section level3 hasAnchor" number="7.3.4">
+<h3><span class="header-section-number">7.3.4</span> Line Chart<a href="data-visualization.html#line-chart" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Line charts are drawn with the <code>geom_line()</code> geom and are used to emphasize change across an ordered dimension rather than individual observations. We’ll use the simulated data from the line chart in base R created above.</p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="data-visualization.html#cb243-1" tabindex="-1"></a><span class="fu">ggplot</span>(flight_ts, <span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> flights)) <span class="sc">+</span></span>
+<span id="cb243-2"><a href="data-visualization.html#cb243-2" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-linechart-1.png" alt="" width="672" /></p>
+</div>
+<div id="bar-chart" class="section level3 hasAnchor" number="7.3.5">
+<h3><span class="header-section-number">7.3.5</span> Bar Chart<a href="data-visualization.html#bar-chart" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In <code>ggplot2</code>, bar charts, <code>geom_bar()</code>, are often used for plotting a single discrete variable, while column charts, <code>geom_col()</code>, are used for plotting a discrete variable on the x axis and a continuous variable on the y axis. However, <code>geom_col()</code> can be used for both if the data is “preformatted”, which is easy with <code>dplyr</code>. Other than the first example below, all other examples use <code>geom_col()</code> as it tends to be more flexible when combined with <code>dplyr</code>.</p>
+<p>The second example below first organizes the data using <code>dplyr</code> and then passes that result to <code>ggplot</code>.</p>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="data-visualization.html#cb244-1" tabindex="-1"></a><span class="fu">ggplot</span>(airlinesat_small, <span class="fu">aes</span>(<span class="at">x =</span> gender)) <span class="sc">+</span></span>
+<span id="cb244-2"><a href="data-visualization.html#cb244-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">&quot;lightblue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb244-3"><a href="data-visualization.html#cb244-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb244-4"><a href="data-visualization.html#cb244-4" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb244-5"><a href="data-visualization.html#cb244-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-barchart-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="data-visualization.html#cb245-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb245-2"><a href="data-visualization.html#cb245-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span></span>
+<span id="cb245-3"><a href="data-visualization.html#cb245-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb245-4"><a href="data-visualization.html#cb245-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> n)) <span class="sc">+</span> </span>
+<span id="cb245-5"><a href="data-visualization.html#cb245-5" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;lightblue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb245-6"><a href="data-visualization.html#cb245-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb245-7"><a href="data-visualization.html#cb245-7" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb245-8"><a href="data-visualization.html#cb245-8" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-barchart-2.png" alt="" width="672" /></p>
+<div id="bar-charts-for-continuous-variables" class="section level4 hasAnchor" number="7.3.5.1">
+<h4><span class="header-section-number">7.3.5.1</span> Bar Charts for Continuous Variables<a href="data-visualization.html#bar-charts-for-continuous-variables" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Bar charts can be used to show a summary statistic (e.g., mean, median, etc.) of a continuous variable. This is easily done with <code>dplyr</code>. We can also add labels using the <code>geom_text()</code> or <code>geom_label()</code> geoms. <code>geom_text()</code> tends to be more flexible. By default, <code>ggplot</code> places the label at the exact height of the value, but that will overlap with the bar itself. Use the <code>vjust =</code> option to change the position of the label vertically. Usually <code>vjust = 0.95</code> puts the label just inside the top of the bar, while <code>vjust = -.05</code> puts the label just outside the top of the bar. You can also change the color of the label with <code>color =</code>, the size of the label with <code>size =</code>, and you can round the label to a specific number of digits with <code>round()</code>.</p>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="data-visualization.html#cb246-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb246-2"><a href="data-visualization.html#cb246-2" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age=</span><span class="fu">mean</span>(age)) <span class="sc">%&gt;%</span></span>
+<span id="cb246-3"><a href="data-visualization.html#cb246-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> mean_age)) <span class="sc">+</span> </span>
+<span id="cb246-4"><a href="data-visualization.html#cb246-4" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;navyblue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb246-5"><a href="data-visualization.html#cb246-5" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(mean_age,<span class="dv">2</span>)),</span>
+<span id="cb246-6"><a href="data-visualization.html#cb246-6" tabindex="-1"></a>            <span class="at">vjust =</span> .<span class="dv">95</span>,</span>
+<span id="cb246-7"><a href="data-visualization.html#cb246-7" tabindex="-1"></a>            <span class="at">color=</span><span class="st">&quot;white&quot;</span>,</span>
+<span id="cb246-8"><a href="data-visualization.html#cb246-8" tabindex="-1"></a>            <span class="at">size=</span><span class="dv">8</span>) <span class="sc">+</span></span>
+<span id="cb246-9"><a href="data-visualization.html#cb246-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Mean Age&quot;</span>,</span>
+<span id="cb246-10"><a href="data-visualization.html#cb246-10" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb246-11"><a href="data-visualization.html#cb246-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Mean&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-barchart_cont-1.png" alt="" width="672" /></p>
+</div>
+</div>
+<div id="grouped-bar-chart" class="section level3 hasAnchor" number="7.3.6">
+<h3><span class="header-section-number">7.3.6</span> Grouped Bar Chart<a href="data-visualization.html#grouped-bar-chart" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When used with <code>dplyr</code>, it is easy to create side-by-side or stacked bar charts. In the code below, first a table is created and displayed using <code>dplyr</code>. Ultimately, we want to take those results pass them to a <code>ggplot</code> to create the chart.</p>
+<div id="stacked-bar-chart-with-counts" class="section level4 hasAnchor" number="7.3.6.1">
+<h4><span class="header-section-number">7.3.6.1</span> Stacked Bar Chart with Counts<a href="data-visualization.html#stacked-bar-chart-with-counts" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The default is to “stack” the counts.</p>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="data-visualization.html#cb247-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb247-2"><a href="data-visualization.html#cb247-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender, status) <span class="sc">%&gt;%</span></span>
+<span id="cb247-3"><a href="data-visualization.html#cb247-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n=</span><span class="fu">n</span>())</span></code></pre></div>
+<pre><code># A tibble: 6 × 3
+# Groups:   gender [2]
+  gender status     n
+  &lt;fct&gt;  &lt;fct&gt;  &lt;int&gt;
+1 female Blue     225
+2 female Gold      16
+3 female Silver    39
+4 male   Blue     452
+5 male   Gold     127
+6 male   Silver   206</code></pre>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="data-visualization.html#cb249-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb249-2"><a href="data-visualization.html#cb249-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender, status) <span class="sc">%&gt;%</span></span>
+<span id="cb249-3"><a href="data-visualization.html#cb249-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb249-4"><a href="data-visualization.html#cb249-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> n, <span class="at">fill =</span> status)) <span class="sc">+</span></span>
+<span id="cb249-5"><a href="data-visualization.html#cb249-5" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
+<span id="cb249-6"><a href="data-visualization.html#cb249-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Loyalty Status by Gender (Stacked Count)&quot;</span>,</span>
+<span id="cb249-7"><a href="data-visualization.html#cb249-7" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb249-8"><a href="data-visualization.html#cb249-8" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>,</span>
+<span id="cb249-9"><a href="data-visualization.html#cb249-9" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Status&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-stacked-barchart_01-1.png" alt="" width="672" /></p>
+</div>
+<div id="stacked-bar-chart-with-percentages" class="section level4 hasAnchor" number="7.3.6.2">
+<h4><span class="header-section-number">7.3.6.2</span> Stacked Bar Chart with Percentages<a href="data-visualization.html#stacked-bar-chart-with-percentages" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>We can create “100%” stacked bar charts by calculating the percentages in the <code>dplyr</code> code. With the code below, the percentages will add up to 100% for the first <code>group_by</code> variable.</p>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="data-visualization.html#cb250-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb250-2"><a href="data-visualization.html#cb250-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender, status) <span class="sc">%&gt;%</span></span>
+<span id="cb250-3"><a href="data-visualization.html#cb250-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb250-4"><a href="data-visualization.html#cb250-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> <span class="dv">100</span> <span class="sc">*</span> n<span class="sc">/</span><span class="fu">sum</span>(n))</span></code></pre></div>
+<pre><code># A tibble: 6 × 4
+# Groups:   gender [2]
+  gender status     n  perc
+  &lt;fct&gt;  &lt;fct&gt;  &lt;int&gt; &lt;dbl&gt;
+1 female Blue     225 80.4 
+2 female Gold      16  5.71
+3 female Silver    39 13.9 
+4 male   Blue     452 57.6 
+5 male   Gold     127 16.2 
+6 male   Silver   206 26.2 </code></pre>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="data-visualization.html#cb252-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb252-2"><a href="data-visualization.html#cb252-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender, status) <span class="sc">%&gt;%</span></span>
+<span id="cb252-3"><a href="data-visualization.html#cb252-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb252-4"><a href="data-visualization.html#cb252-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> <span class="dv">100</span> <span class="sc">*</span> n<span class="sc">/</span><span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb252-5"><a href="data-visualization.html#cb252-5" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> perc, <span class="at">fill =</span> status)) <span class="sc">+</span></span>
+<span id="cb252-6"><a href="data-visualization.html#cb252-6" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
+<span id="cb252-7"><a href="data-visualization.html#cb252-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Loyalty Status by Gender (Stacked Percent)&quot;</span>,</span>
+<span id="cb252-8"><a href="data-visualization.html#cb252-8" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb252-9"><a href="data-visualization.html#cb252-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Percent&quot;</span>,</span>
+<span id="cb252-10"><a href="data-visualization.html#cb252-10" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Status&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-stacked-barchart_02-1.png" alt="" width="672" /></p>
+</div>
+<div id="side-by-side-bar-chart-with-countspercentages" class="section level4 hasAnchor" number="7.3.6.3">
+<h4><span class="header-section-number">7.3.6.3</span> Side-by-Side Bar Chart with Counts/Percentages<a href="data-visualization.html#side-by-side-bar-chart-with-countspercentages" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To create side-by-side bar charts (vs. stacked), use the <code>position = position_dodge(width=.9)</code> option within the <code>geom_col()</code>. If you add labels, you need to use <code>position = position_dodge(width=.9)</code> in the <code>geom_text</code>, otherwise the labels will be on top of each other.</p>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="data-visualization.html#cb253-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb253-2"><a href="data-visualization.html#cb253-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender, status) <span class="sc">%&gt;%</span></span>
+<span id="cb253-3"><a href="data-visualization.html#cb253-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb253-4"><a href="data-visualization.html#cb253-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> n, <span class="at">fill =</span> status)) <span class="sc">+</span></span>
+<span id="cb253-5"><a href="data-visualization.html#cb253-5" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width=</span>.<span class="dv">9</span>)) <span class="sc">+</span></span>
+<span id="cb253-6"><a href="data-visualization.html#cb253-6" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> n),</span>
+<span id="cb253-7"><a href="data-visualization.html#cb253-7" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width=</span>.<span class="dv">9</span>),</span>
+<span id="cb253-8"><a href="data-visualization.html#cb253-8" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span>.<span class="dv">05</span>) <span class="sc">+</span></span>
+<span id="cb253-9"><a href="data-visualization.html#cb253-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Loyalty Status by Gender (Side-by-Side Count)&quot;</span>,</span>
+<span id="cb253-10"><a href="data-visualization.html#cb253-10" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb253-11"><a href="data-visualization.html#cb253-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>,</span>
+<span id="cb253-12"><a href="data-visualization.html#cb253-12" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Status&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-sidebyside-barchart_01-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="data-visualization.html#cb254-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb254-2"><a href="data-visualization.html#cb254-2" tabindex="-1"></a>  <span class="fu">group_by</span>(status, flight_purpose) <span class="sc">%&gt;%</span></span>
+<span id="cb254-3"><a href="data-visualization.html#cb254-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb254-4"><a href="data-visualization.html#cb254-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> <span class="dv">100</span><span class="sc">*</span>n<span class="sc">/</span><span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb254-5"><a href="data-visualization.html#cb254-5" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> status, <span class="at">y =</span> perc, <span class="at">fill =</span> flight_purpose)) <span class="sc">+</span></span>
+<span id="cb254-6"><a href="data-visualization.html#cb254-6" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width=</span>.<span class="dv">9</span>)) <span class="sc">+</span></span>
+<span id="cb254-7"><a href="data-visualization.html#cb254-7" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(perc, <span class="dv">2</span>)),</span>
+<span id="cb254-8"><a href="data-visualization.html#cb254-8" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width=</span>.<span class="dv">9</span>),</span>
+<span id="cb254-9"><a href="data-visualization.html#cb254-9" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span>.<span class="dv">05</span>) <span class="sc">+</span></span>
+<span id="cb254-10"><a href="data-visualization.html#cb254-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Flight Purpose by Loyalty Status (Side-by-Side Percent)&quot;</span>,</span>
+<span id="cb254-11"><a href="data-visualization.html#cb254-11" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Loyalty Status&quot;</span>,</span>
+<span id="cb254-12"><a href="data-visualization.html#cb254-12" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Percent&quot;</span>,</span>
+<span id="cb254-13"><a href="data-visualization.html#cb254-13" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Flight Purpose&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-sidebyside-barchart_01-2.png" alt="" width="672" /></p>
+</div>
+<div id="side-by-side-bar-chart-with-continuous-variable" class="section level4 hasAnchor" number="7.3.6.4">
+<h4><span class="header-section-number">7.3.6.4</span> Side-by-Side Bar Chart with Continuous Variable<a href="data-visualization.html#side-by-side-bar-chart-with-continuous-variable" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>We can also calculate a summary statistic (e.g., mean, median, etc.) for a continuous variable and use that to create a side-by-side bar chart of a discrete variable or two discrete variables.</p>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="data-visualization.html#cb255-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb255-2"><a href="data-visualization.html#cb255-2" tabindex="-1"></a>  <span class="fu">group_by</span>(status) <span class="sc">%&gt;%</span></span>
+<span id="cb255-3"><a href="data-visualization.html#cb255-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean=</span><span class="fu">mean</span>(nflights)) <span class="sc">%&gt;%</span></span>
+<span id="cb255-4"><a href="data-visualization.html#cb255-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> status, <span class="at">y =</span> mean)) <span class="sc">+</span></span>
+<span id="cb255-5"><a href="data-visualization.html#cb255-5" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width=</span>.<span class="dv">9</span>)) <span class="sc">+</span></span>
+<span id="cb255-6"><a href="data-visualization.html#cb255-6" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(mean, <span class="dv">2</span>)),</span>
+<span id="cb255-7"><a href="data-visualization.html#cb255-7" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width=</span>.<span class="dv">9</span>),</span>
+<span id="cb255-8"><a href="data-visualization.html#cb255-8" tabindex="-1"></a>            <span class="at">vjust =</span> .<span class="dv">95</span>,</span>
+<span id="cb255-9"><a href="data-visualization.html#cb255-9" tabindex="-1"></a>            <span class="at">color=</span><span class="st">&quot;white&quot;</span>,</span>
+<span id="cb255-10"><a href="data-visualization.html#cb255-10" tabindex="-1"></a>            <span class="at">size=</span><span class="dv">8</span>) <span class="sc">+</span></span>
+<span id="cb255-11"><a href="data-visualization.html#cb255-11" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Mean Number Flights by Loyalty Status&quot;</span>,</span>
+<span id="cb255-12"><a href="data-visualization.html#cb255-12" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Loyalty Status&quot;</span>,</span>
+<span id="cb255-13"><a href="data-visualization.html#cb255-13" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Mean Number of Flights&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-sidebyside-barchart_02-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="data-visualization.html#cb256-1" tabindex="-1"></a>airlinesat_small <span class="sc">%&gt;%</span></span>
+<span id="cb256-2"><a href="data-visualization.html#cb256-2" tabindex="-1"></a>  <span class="fu">group_by</span>(status, flight_purpose) <span class="sc">%&gt;%</span></span>
+<span id="cb256-3"><a href="data-visualization.html#cb256-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(nflights)) <span class="sc">%&gt;%</span></span>
+<span id="cb256-4"><a href="data-visualization.html#cb256-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> status, <span class="at">y =</span> mean, <span class="at">fill =</span> flight_purpose)) <span class="sc">+</span></span>
+<span id="cb256-5"><a href="data-visualization.html#cb256-5" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width=</span>.<span class="dv">9</span>)) <span class="sc">+</span></span>
+<span id="cb256-6"><a href="data-visualization.html#cb256-6" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(mean, <span class="dv">2</span>)),</span>
+<span id="cb256-7"><a href="data-visualization.html#cb256-7" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width=</span>.<span class="dv">9</span>),</span>
+<span id="cb256-8"><a href="data-visualization.html#cb256-8" tabindex="-1"></a>            <span class="at">vjust =</span> .<span class="dv">95</span>,</span>
+<span id="cb256-9"><a href="data-visualization.html#cb256-9" tabindex="-1"></a>            <span class="at">color=</span><span class="st">&quot;white&quot;</span>,</span>
+<span id="cb256-10"><a href="data-visualization.html#cb256-10" tabindex="-1"></a>            <span class="at">size=</span><span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb256-11"><a href="data-visualization.html#cb256-11" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Flight Number of Flights by Loyalty Status and Flight Purpose&quot;</span>,</span>
+<span id="cb256-12"><a href="data-visualization.html#cb256-12" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Loyalty Status&quot;</span>,</span>
+<span id="cb256-13"><a href="data-visualization.html#cb256-13" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Mean Number of Flights&quot;</span>,</span>
+<span id="cb256-14"><a href="data-visualization.html#cb256-14" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Flight Purpose&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/ggplot-sidebyside-barchart_02-2.png" alt="" width="672" /></p>
+<hr />
+</div>
+</div>
+</div>
+<div id="summary" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Summary<a href="data-visualization.html#summary" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Base R graphics provide a simple way to create quick plots, while <code>ggplot2</code> offers
+a more flexible and extensible framework for data visualization. In practice,
+Base R is useful for fast checks, and <code>ggplot2</code> is preferred for exploratory
+analysis and communication.</p>
+<hr />
+</div>
+<div id="whats-next-7" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> What’s Next<a href="data-visualization.html#whats-next-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the next chapter, we move from visual summaries to formal modeling. You will learn how to use linear regression to quantify relationships between variables, estimate marginal effects, and make predictions while holding other factors constant.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="descriptive-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="linear-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/jdmeyer73/MKT4320RTutorial/edit/main/07-visualizations.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

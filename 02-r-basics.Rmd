@@ -1,9 +1,3 @@
-```{css, echo=FALSE}
-li p {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-```
 # R Basics
 
 This chapter introduces the core R concepts you will use throughout the course. The goal is not to be exhaustive, but to give you enough familiarity with R’s basic building blocks so that later analytical methods make sense.
@@ -21,14 +15,14 @@ By the end of this chapter, you should be comfortable creating objects, working 
 - When using the text editor/script file, the "#" symbol signifies a comment
   - Everything after is ignored
   - It can be on the same line:
-    ```{r, eval=FALSE}
-    x <- 100   # Assign 100 to x
-    ```
+```{r assign01, eval=FALSE}
+x <- 100   # Assign 100 to x
+```
   - It can be on separate lines:  
-    ```{r, eval=FALSE}
-    # Assign 100 to x
-    x <- 100
-    ```
+```{r assign02, eval=FALSE}
+# Assign 100 to x
+x <- 100
+```
 
 ---
 
@@ -63,9 +57,9 @@ x
 ```
 
 As stated before, object names are case sensitive
-```{r, comment=NA, error=TRUE}
-    x <- 100
-    X
+```{r casesens, comment=NA, error=TRUE}
+x <- 100
+X
 ```
 
 ---
@@ -104,7 +98,7 @@ class(passed)
 
 Vectors can only hold a single class/type of value. When multiple classes are included, the values are coerced to the most general type.
 
-```{r}
+```{r vector-mixed}
 mixed <- c(1, FALSE, 3.5, "Hello!")
 mixed
 class(mixed)
@@ -112,7 +106,7 @@ class(mixed)
 
 The `c()` function can be used to add to existing vectors, or combine vectors. Type coercion will be applied as needed.
 
-```{r}
+```{r vector-combine}
 ages2 <- c(ages, 29, 24)
 ages
 ages2
@@ -228,7 +222,7 @@ In R, missing values are assigned a special constant, <span style="font-family: 
 
 <span style="font-family: Courier;">NA</span> is not a character value, but a type of its own. Any math performed on a value of <span style="font-family: Courier;">NA</span> becomes <span style="font-family: Courier;">NA</span>.
 
-``` {r missing01}
+```{r missing01}
 ages_missing <- c(ages, NA, NA)
 ages_missing
 mean(ages_missing)

@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Linear Regression | R Tutorial for MKT 4320</title>
+  <meta name="description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Linear Regression | R Tutorial for MKT 4320" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Linear Regression | R Tutorial for MKT 4320" />
+  
+  <meta name="twitter:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+<meta name="author" content="Jeffrey Meyer, Ph.D., Bowling Green State University" />
+
+
+<meta name="date" content="2025-01-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-visualization.html"/>
+<link rel="next" href="binary-logistic-regression.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/tabwid-1.1.3/tabwid.css" rel="stylesheet" />
+<script src="libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">MKT 4320 R Tutorial</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i><b>1</b> Setup</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="setup.html"><a href="setup.html#what-you-need"><i class="fa fa-check"></i><b>1.1</b> What you need</a></li>
+<li class="chapter" data-level="1.2" data-path="setup.html"><a href="setup.html#r-and-rstudio-quick-overview"><i class="fa fa-check"></i><b>1.2</b> R and RStudio (quick overview)</a></li>
+<li class="chapter" data-level="1.3" data-path="setup.html"><a href="setup.html#navigating-rstudio"><i class="fa fa-check"></i><b>1.3</b> Navigating RStudio</a></li>
+<li class="chapter" data-level="1.4" data-path="setup.html"><a href="setup.html#installing-and-loading-packages"><i class="fa fa-check"></i><b>1.4</b> Installing and loading packages</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="setup.html"><a href="setup.html#install-packages-one-time"><i class="fa fa-check"></i><b>1.4.1</b> Install packages (one-time)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="setup.html"><a href="setup.html#load-packages-each-session"><i class="fa fa-check"></i><b>1.4.2</b> Load packages (each session)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="setup.html"><a href="setup.html#installing-the-mkt4320bgsu-package"><i class="fa fa-check"></i><b>1.5</b> Installing the MKT4320BGSU package</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="setup.html"><a href="setup.html#install-from-github"><i class="fa fa-check"></i><b>1.5.1</b> Install from GitHub</a></li>
+<li class="chapter" data-level="1.5.2" data-path="setup.html"><a href="setup.html#load-the-package"><i class="fa fa-check"></i><b>1.5.2</b> Load the package</a></li>
+<li class="chapter" data-level="1.5.3" data-path="setup.html"><a href="setup.html#verify-everything-works"><i class="fa fa-check"></i><b>1.5.3</b> Verify everything works</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="setup.html"><a href="setup.html#getting-help-when-youre-stuck"><i class="fa fa-check"></i><b>1.6</b> Getting help when you’re stuck</a></li>
+<li class="chapter" data-level="1.7" data-path="setup.html"><a href="setup.html#how-youll-use-this-book"><i class="fa fa-check"></i><b>1.7</b> How you’ll use this book</a></li>
+<li class="chapter" data-level="1.8" data-path="setup.html"><a href="setup.html#whats-next-1"><i class="fa fa-check"></i><b>1.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="r-basics.html"><a href="r-basics.html"><i class="fa fa-check"></i><b>2</b> R Basics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="r-basics.html"><a href="r-basics.html#basics-of-r-commands"><i class="fa fa-check"></i><b>2.1</b> Basics of R Commands</a></li>
+<li class="chapter" data-level="2.2" data-path="r-basics.html"><a href="r-basics.html#operators"><i class="fa fa-check"></i><b>2.2</b> Operators</a></li>
+<li class="chapter" data-level="2.3" data-path="r-basics.html"><a href="r-basics.html#objects-and-assignment"><i class="fa fa-check"></i><b>2.3</b> Objects and assignment</a></li>
+<li class="chapter" data-level="2.4" data-path="r-basics.html"><a href="r-basics.html#vectors"><i class="fa fa-check"></i><b>2.4</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="r-basics.html"><a href="r-basics.html#creating-vectors"><i class="fa fa-check"></i><b>2.4.1</b> Creating vectors</a></li>
+<li class="chapter" data-level="2.4.2" data-path="r-basics.html"><a href="r-basics.html#vectorized-operations"><i class="fa fa-check"></i><b>2.4.2</b> Vectorized operations</a></li>
+<li class="chapter" data-level="2.4.3" data-path="r-basics.html"><a href="r-basics.html#vector-length"><i class="fa fa-check"></i><b>2.4.3</b> Vector Length</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="r-basics.html"><a href="r-basics.html#data-frames"><i class="fa fa-check"></i><b>2.5</b> Data frames</a></li>
+<li class="chapter" data-level="2.6" data-path="r-basics.html"><a href="r-basics.html#indexing-and-sequencing"><i class="fa fa-check"></i><b>2.6</b> Indexing and sequencing</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="r-basics.html"><a href="r-basics.html#indexing-vectors"><i class="fa fa-check"></i><b>2.6.1</b> Indexing vectors</a></li>
+<li class="chapter" data-level="2.6.2" data-path="r-basics.html"><a href="r-basics.html#sequencing"><i class="fa fa-check"></i><b>2.6.2</b> Sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="r-basics.html"><a href="r-basics.html#common-functions"><i class="fa fa-check"></i><b>2.7</b> Common functions</a></li>
+<li class="chapter" data-level="2.8" data-path="r-basics.html"><a href="r-basics.html#missing-and-other-interesting-values"><i class="fa fa-check"></i><b>2.8</b> Missing (and Other Interesting) Values</a></li>
+<li class="chapter" data-level="2.9" data-path="r-basics.html"><a href="r-basics.html#factors"><i class="fa fa-check"></i><b>2.9</b> Factors</a></li>
+<li class="chapter" data-level="2.10" data-path="r-basics.html"><a href="r-basics.html#whats-next-2"><i class="fa fa-check"></i><b>2.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="functions-in-r.html"><a href="functions-in-r.html"><i class="fa fa-check"></i><b>3</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="functions-in-r.html"><a href="functions-in-r.html#function-arguments"><i class="fa fa-check"></i><b>3.1</b> Function arguments</a></li>
+<li class="chapter" data-level="3.2" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-vs-named-arguments"><i class="fa fa-check"></i><b>3.2</b> Positional vs named arguments</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-arguments"><i class="fa fa-check"></i><b>3.2.1</b> Positional arguments</a></li>
+<li class="chapter" data-level="3.2.2" data-path="functions-in-r.html"><a href="functions-in-r.html#named-arguments-recommended"><i class="fa fa-check"></i><b>3.2.2</b> Named arguments (recommended)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="functions-in-r.html"><a href="functions-in-r.html#default-argument-values"><i class="fa fa-check"></i><b>3.3</b> Default argument values</a></li>
+<li class="chapter" data-level="3.4" data-path="functions-in-r.html"><a href="functions-in-r.html#mixing-positional-and-named-arguments"><i class="fa fa-check"></i><b>3.4</b> Mixing positional and named arguments</a></li>
+<li class="chapter" data-level="3.5" data-path="functions-in-r.html"><a href="functions-in-r.html#viewing-function-documentation"><i class="fa fa-check"></i><b>3.5</b> Viewing function documentation</a></li>
+<li class="chapter" data-level="3.6" data-path="functions-in-r.html"><a href="functions-in-r.html#common-mistakes-to-avoid"><i class="fa fa-check"></i><b>3.6</b> Common mistakes to avoid</a></li>
+<li class="chapter" data-level="3.7" data-path="functions-in-r.html"><a href="functions-in-r.html#key-takeaway"><i class="fa fa-check"></i><b>3.7</b> Key takeaway</a></li>
+<li class="chapter" data-level="3.8" data-path="functions-in-r.html"><a href="functions-in-r.html#whats-next-3"><i class="fa fa-check"></i><b>3.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="working-with-data.html"><a href="working-with-data.html"><i class="fa fa-check"></i><b>4</b> Working with Data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="working-with-data.html"><a href="working-with-data.html#course-data-vs-importing-data"><i class="fa fa-check"></i><b>4.1</b> Course data vs importing data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="working-with-data.html"><a href="working-with-data.html#importing-external-data"><i class="fa fa-check"></i><b>4.1.1</b> Importing external data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="working-with-data.html"><a href="working-with-data.html#inspecting-datasets-and-variables"><i class="fa fa-check"></i><b>4.2</b> Inspecting datasets and variables</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="working-with-data.html"><a href="working-with-data.html#viewing-the-data"><i class="fa fa-check"></i><b>4.2.1</b> Viewing the data</a></li>
+<li class="chapter" data-level="4.2.2" data-path="working-with-data.html"><a href="working-with-data.html#dataset-structure"><i class="fa fa-check"></i><b>4.2.2</b> Dataset structure</a></li>
+<li class="chapter" data-level="4.2.3" data-path="working-with-data.html"><a href="working-with-data.html#variable-summaries"><i class="fa fa-check"></i><b>4.2.3</b> Variable summaries</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="working-with-data.html"><a href="working-with-data.html#data-frames-variables-and-indexing"><i class="fa fa-check"></i><b>4.3</b> Data frames, variables, and indexing</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="working-with-data.html"><a href="working-with-data.html#accessing-a-variable-a-column"><i class="fa fa-check"></i><b>4.3.1</b> Accessing a variable (a column)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="working-with-data.html"><a href="working-with-data.html#indexing-a-data-frame"><i class="fa fa-check"></i><b>4.3.2</b> Indexing a data frame</a></li>
+<li class="chapter" data-level="4.3.3" data-path="working-with-data.html"><a href="working-with-data.html#filtering-rows-using-a-condition-base-r"><i class="fa fa-check"></i><b>4.3.3</b> Filtering rows using a condition (base R)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="working-with-data.html"><a href="working-with-data.html#specific-variable-summaries-base-r"><i class="fa fa-check"></i><b>4.3.4</b> Specific variable summaries (base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="working-with-data.html"><a href="working-with-data.html#data-transformations-base-r"><i class="fa fa-check"></i><b>4.4</b> Data transformations (base R)</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="working-with-data.html"><a href="working-with-data.html#creating-a-new-variable"><i class="fa fa-check"></i><b>4.4.1</b> Creating a new variable</a></li>
+<li class="chapter" data-level="4.4.2" data-path="working-with-data.html"><a href="working-with-data.html#recoding-with-ifelse"><i class="fa fa-check"></i><b>4.4.2</b> Recoding with <code>ifelse()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="working-with-data.html"><a href="working-with-data.html#whats-next-4"><i class="fa fa-check"></i><b>4.5</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dplyr-package.html"><a href="dplyr-package.html"><i class="fa fa-check"></i><b>5</b> <em>dplyr</em> Package</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dplyr-package.html"><a href="dplyr-package.html#the-dplyr-workflow"><i class="fa fa-check"></i><b>5.1</b> The <em>dplyr</em> workflow</a></li>
+<li class="chapter" data-level="5.2" data-path="dplyr-package.html"><a href="dplyr-package.html#selecting-variables"><i class="fa fa-check"></i><b>5.2</b> Selecting variables</a></li>
+<li class="chapter" data-level="5.3" data-path="dplyr-package.html"><a href="dplyr-package.html#filtering-observations"><i class="fa fa-check"></i><b>5.3</b> Filtering observations</a></li>
+<li class="chapter" data-level="5.4" data-path="dplyr-package.html"><a href="dplyr-package.html#creating-new-variables"><i class="fa fa-check"></i><b>5.4</b> Creating new variables</a></li>
+<li class="chapter" data-level="5.5" data-path="dplyr-package.html"><a href="dplyr-package.html#summaries-with-summarise"><i class="fa fa-check"></i><b>5.5</b> Summaries with <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.6" data-path="dplyr-package.html"><a href="dplyr-package.html#grouped-summaries-with-group_by-and-summarise"><i class="fa fa-check"></i><b>5.6</b> Grouped summaries with <code>group_by()</code> and <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.7" data-path="dplyr-package.html"><a href="dplyr-package.html#connecting-summarize-to-base-r"><i class="fa fa-check"></i><b>5.7</b> Connecting <code>summarize()</code> to base R</a></li>
+<li class="chapter" data-level="5.8" data-path="dplyr-package.html"><a href="dplyr-package.html#combining-transformations"><i class="fa fa-check"></i><b>5.8</b> Combining transformations</a></li>
+<li class="chapter" data-level="5.9" data-path="dplyr-package.html"><a href="dplyr-package.html#key-takeaway-1"><i class="fa fa-check"></i><b>5.9</b> Key takeaway</a></li>
+<li class="chapter" data-level="5.10" data-path="dplyr-package.html"><a href="dplyr-package.html#whats-next-5"><i class="fa fa-check"></i><b>5.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html"><i class="fa fa-check"></i><b>6</b> Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#descriptive-analysis-1"><i class="fa fa-check"></i><b>6.1</b> Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#inspecting-the-dataset"><i class="fa fa-check"></i><b>6.1.1</b> Inspecting the dataset</a></li>
+<li class="chapter" data-level="6.1.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#missing-values-quick-checks"><i class="fa fa-check"></i><b>6.1.2</b> Missing values (quick checks)</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#frequency-tables"><i class="fa fa-check"></i><b>6.2</b> Frequency Tables</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#one-way-frequency-table"><i class="fa fa-check"></i><b>6.2.1</b> One-way frequency table</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#crosstabs"><i class="fa fa-check"></i><b>6.3</b> Crosstabs</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r"><i class="fa fa-check"></i><b>6.3.1</b> Base R</a></li>
+<li class="chapter" data-level="6.3.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-sjplot"><i class="fa fa-check"></i><b>6.3.2</b> Using package <em>sjPlot</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#measures-of-central-tendency-and-dispersion"><i class="fa fa-check"></i><b>6.4</b> Measures of Central Tendency and Dispersion</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r-1"><i class="fa fa-check"></i><b>6.4.1</b> Base R</a></li>
+<li class="chapter" data-level="6.4.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-dplyr"><i class="fa fa-check"></i><b>6.4.2</b> Using package <em>dplyr</em></a></li>
+<li class="chapter" data-level="6.4.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-vtable"><i class="fa fa-check"></i><b>6.4.3</b> Using package <em>vtable</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#correlation"><i class="fa fa-check"></i><b>6.5</b> Correlation</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r-2"><i class="fa fa-check"></i><b>6.5.1</b> Base R</a></li>
+<li class="chapter" data-level="6.5.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-hmisc"><i class="fa fa-check"></i><b>6.5.2</b> Using package <em>Hmisc</em></a></li>
+<li class="chapter" data-level="6.5.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-sjplot-1"><i class="fa fa-check"></i><b>6.5.3</b> Using package <em>sjPlot</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#why-descriptive-analysis-matters"><i class="fa fa-check"></i><b>6.6</b> Why descriptive analysis matters</a></li>
+<li class="chapter" data-level="6.7" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#whats-next-6"><i class="fa fa-check"></i><b>6.7</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>7</b> Data Visualization</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-visualization.html"><a href="data-visualization.html#base-r-visualizations"><i class="fa fa-check"></i><b>7.1</b> Base R Visualizations</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="data-visualization.html"><a href="data-visualization.html#histogram-base-r"><i class="fa fa-check"></i><b>7.1.1</b> Histogram (Base R)</a></li>
+<li class="chapter" data-level="7.1.2" data-path="data-visualization.html"><a href="data-visualization.html#box-and-whisker-plot-base-r"><i class="fa fa-check"></i><b>7.1.2</b> Box-and-Whisker Plot (Base R)</a></li>
+<li class="chapter" data-level="7.1.3" data-path="data-visualization.html"><a href="data-visualization.html#scatterplot-base-r"><i class="fa fa-check"></i><b>7.1.3</b> Scatterplot (Base R)</a></li>
+<li class="chapter" data-level="7.1.4" data-path="data-visualization.html"><a href="data-visualization.html#line-chart-base-r"><i class="fa fa-check"></i><b>7.1.4</b> Line Chart (Base R)</a></li>
+<li class="chapter" data-level="7.1.5" data-path="data-visualization.html"><a href="data-visualization.html#bar-chart-base-r"><i class="fa fa-check"></i><b>7.1.5</b> Bar Chart (Base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="data-visualization.html"><a href="data-visualization.html#moving-beyond-base-r"><i class="fa fa-check"></i><b>7.2</b> Moving Beyond Base R</a></li>
+<li class="chapter" data-level="7.3" data-path="data-visualization.html"><a href="data-visualization.html#introduction-to-ggplot2"><i class="fa fa-check"></i><b>7.3</b> Introduction to <em>ggplot2</em></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="data-visualization.html"><a href="data-visualization.html#histogram"><i class="fa fa-check"></i><b>7.3.1</b> Histogram</a></li>
+<li class="chapter" data-level="7.3.2" data-path="data-visualization.html"><a href="data-visualization.html#box-and-whiskers-plot"><i class="fa fa-check"></i><b>7.3.2</b> Box-and-Whiskers Plot</a></li>
+<li class="chapter" data-level="7.3.3" data-path="data-visualization.html"><a href="data-visualization.html#scatterplot"><i class="fa fa-check"></i><b>7.3.3</b> Scatterplot</a></li>
+<li class="chapter" data-level="7.3.4" data-path="data-visualization.html"><a href="data-visualization.html#line-chart"><i class="fa fa-check"></i><b>7.3.4</b> Line Chart</a></li>
+<li class="chapter" data-level="7.3.5" data-path="data-visualization.html"><a href="data-visualization.html#bar-chart"><i class="fa fa-check"></i><b>7.3.5</b> Bar Chart</a></li>
+<li class="chapter" data-level="7.3.6" data-path="data-visualization.html"><a href="data-visualization.html#grouped-bar-chart"><i class="fa fa-check"></i><b>7.3.6</b> Grouped Bar Chart</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="data-visualization.html"><a href="data-visualization.html#summary"><i class="fa fa-check"></i><b>7.4</b> Summary</a></li>
+<li class="chapter" data-level="7.5" data-path="data-visualization.html"><a href="data-visualization.html#whats-next-7"><i class="fa fa-check"></i><b>7.5</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>8</b> Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="linear-regression.html"><a href="linear-regression.html#the-linear-regression-model"><i class="fa fa-check"></i><b>8.1</b> The Linear Regression Model</a></li>
+<li class="chapter" data-level="8.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>8.2</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="linear-regression.html"><a href="linear-regression.html#nice-output"><i class="fa fa-check"></i><b>8.2.1</b> “Nice” Output</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>8.3</b> Multiple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="linear-regression.html"><a href="linear-regression.html#adding-additional-variables"><i class="fa fa-check"></i><b>8.3.1</b> Adding Additional Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors-and-reference-groups"><i class="fa fa-check"></i><b>8.4</b> Categorical Predictors and Reference Groups</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="linear-regression.html"><a href="linear-regression.html#example-flight-class"><i class="fa fa-check"></i><b>8.4.1</b> Example: Flight Class</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="linear-regression.html"><a href="linear-regression.html#interaction-effects"><i class="fa fa-check"></i><b>8.5</b> Interaction Effects</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="linear-regression.html"><a href="linear-regression.html#example-flights-and-frequent-flier-status"><i class="fa fa-check"></i><b>8.5.1</b> Example: Flights and Frequent Flier Status</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="linear-regression.html"><a href="linear-regression.html#sec-margin-plots"><i class="fa fa-check"></i><b>8.6</b> Margin Plots with <code>easy_mp</code></a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="linear-regression.html"><a href="linear-regression.html#the-easy_mp-function"><i class="fa fa-check"></i><b>8.6.1</b> The <code>easy_mp()</code> Function</a></li>
+<li class="chapter" data-level="8.6.2" data-path="linear-regression.html"><a href="linear-regression.html#without-interactions"><i class="fa fa-check"></i><b>8.6.2</b> WITHOUT Interactions</a></li>
+<li class="chapter" data-level="8.6.3" data-path="linear-regression.html"><a href="linear-regression.html#with-interactions"><i class="fa fa-check"></i><b>8.6.3</b> WITH Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="linear-regression.html"><a href="linear-regression.html#prediction"><i class="fa fa-check"></i><b>8.7</b> Prediction</a></li>
+<li class="chapter" data-level="8.8" data-path="linear-regression.html"><a href="linear-regression.html#whats-next-8"><i class="fa fa-check"></i><b>8.8</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html"><i class="fa fa-check"></i><b>9</b> Binary Logistic Regression</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#why-logistic-regression-in-marketing-analytics"><i class="fa fa-check"></i><b>9.1</b> Why Logistic Regression in Marketing Analytics</a></li>
+<li class="chapter" data-level="9.2" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#the-direct-marketing-data"><i class="fa fa-check"></i><b>9.2</b> The Direct Marketing Data</a></li>
+<li class="chapter" data-level="9.3" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#splitting-data-into-training-and-test-samples"><i class="fa fa-check"></i><b>9.3</b> Splitting Data into Training and Test Samples</a></li>
+<li class="chapter" data-level="9.4" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#estimating-a-binary-logistic-regression-model"><i class="fa fa-check"></i><b>9.4</b> Estimating a Binary Logistic Regression Model</a></li>
+<li class="chapter" data-level="9.5" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#interpreting-odds-ratios"><i class="fa fa-check"></i><b>9.5</b> Interpreting Odds Ratios</a></li>
+<li class="chapter" data-level="9.6" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#predicted-probabilities"><i class="fa fa-check"></i><b>9.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="9.7" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#classification-and-cutoff-values"><i class="fa fa-check"></i><b>9.7</b> Classification and Cutoff Values</a></li>
+<li class="chapter" data-level="9.8" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#choosing-a-cutoff"><i class="fa fa-check"></i><b>9.8</b> Choosing a Cutoff</a></li>
+<li class="chapter" data-level="9.9" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#roc-curve-and-auc"><i class="fa fa-check"></i><b>9.9</b> ROC Curve and AUC</a></li>
+<li class="chapter" data-level="9.10" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#gain-and-lift-charts"><i class="fa fa-check"></i><b>9.10</b> Gain and Lift Charts</a></li>
+<li class="chapter" data-level="9.11" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#margin-plots-with-easy_mp"><i class="fa fa-check"></i><b>9.11</b> Margin Plots with <code>easy_mp()</code></a></li>
+<li class="chapter" data-level="9.12" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#putting-it-all-together"><i class="fa fa-check"></i><b>9.12</b> Putting It All Together</a></li>
+<li class="chapter" data-level="9.13" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#whats-next-9"><i class="fa fa-check"></i><b>9.13</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="cluster-analysis.html"><a href="cluster-analysis.html"><i class="fa fa-check"></i><b>10</b> Cluster Analysis</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#why-cluster-analysis-matters-in-marketing"><i class="fa fa-check"></i><b>10.1</b> Why Cluster Analysis Matters in Marketing</a></li>
+<li class="chapter" data-level="10.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#the-ffseg-dataset"><i class="fa fa-check"></i><b>10.2</b> The <code>ffseg</code> Dataset</a></li>
+<li class="chapter" data-level="10.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#hierarchical-agglomerative-clustering"><i class="fa fa-check"></i><b>10.3</b> Hierarchical Agglomerative Clustering</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#conceptual-overview"><i class="fa fa-check"></i><b>10.3.1</b> Conceptual Overview</a></li>
+<li class="chapter" data-level="10.3.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#initial-hierarchical-clustering-fit"><i class="fa fa-check"></i><b>10.3.2</b> Initial Hierarchical Clustering Fit</a></li>
+<li class="chapter" data-level="10.3.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#selecting-the-number-of-clusters"><i class="fa fa-check"></i><b>10.3.3</b> Selecting the Number of Clusters</a></li>
+<li class="chapter" data-level="10.3.4" data-path="cluster-analysis.html"><a href="cluster-analysis.html#final-hierarchical-clustering-solution"><i class="fa fa-check"></i><b>10.3.4</b> Final Hierarchical Clustering Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="cluster-analysis.html"><a href="cluster-analysis.html#sec-describe-clusters"><i class="fa fa-check"></i><b>10.4</b> Describing and Labeling Hierarchical Clusters</a></li>
+<li class="chapter" data-level="10.5" data-path="cluster-analysis.html"><a href="cluster-analysis.html#k-means-clustering"><i class="fa fa-check"></i><b>10.5</b> K-Means Clustering</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#conceptual-overview-1"><i class="fa fa-check"></i><b>10.5.1</b> Conceptual Overview</a></li>
+<li class="chapter" data-level="10.5.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#initial-k-means-clustering-fit"><i class="fa fa-check"></i><b>10.5.2</b> Initial K-Means Clustering Fit</a></li>
+<li class="chapter" data-level="10.5.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#final-k-means-clustering-solution"><i class="fa fa-check"></i><b>10.5.3</b> Final K-Means Clustering Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="cluster-analysis.html"><a href="cluster-analysis.html#describing-and-labeling-k-means-clusters"><i class="fa fa-check"></i><b>10.6</b> Describing and Labeling <em>k</em>-Means Clusters</a></li>
+<li class="chapter" data-level="10.7" data-path="cluster-analysis.html"><a href="cluster-analysis.html#comparing-clustering-approaches"><i class="fa fa-check"></i><b>10.7</b> Comparing Clustering Approaches</a></li>
+<li class="chapter" data-level="10.8" data-path="cluster-analysis.html"><a href="cluster-analysis.html#chapter-summary"><i class="fa fa-check"></i><b>10.8</b> Chapter Summary</a></li>
+<li class="chapter" data-level="10.9" data-path="cluster-analysis.html"><a href="cluster-analysis.html#whats-next-10"><i class="fa fa-check"></i><b>10.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html"><i class="fa fa-check"></i><b>11</b> PCA and Perceptual Maps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#introduction-why-pca-matters-in-marketing-analytics"><i class="fa fa-check"></i><b>11.1</b> Introduction: Why PCA Matters in Marketing Analytics</a></li>
+<li class="chapter" data-level="11.2" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#the-greekbrands-dataset"><i class="fa fa-check"></i><b>11.2</b> The <code>greekbrands</code> Dataset</a></li>
+<li class="chapter" data-level="11.3" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#preparing-for-pca-in-a-marketing-context"><i class="fa fa-check"></i><b>11.3</b> Preparing for PCA in a Marketing Context</a></li>
+<li class="chapter" data-level="11.4" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#pca-modeling"><i class="fa fa-check"></i><b>11.4</b> PCA Modeling</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#fitting-an-initial-pca-model"><i class="fa fa-check"></i><b>11.4.1</b> Fitting an Initial PCA Model</a></li>
+<li class="chapter" data-level="11.4.2" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#final-pca-solution"><i class="fa fa-check"></i><b>11.4.2</b> Final PCA Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#from-pca-to-perceptual-maps"><i class="fa fa-check"></i><b>11.5</b> From PCA to Perceptual Maps</a></li>
+<li class="chapter" data-level="11.6" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#attribute-based-perceptual-maps-using-pca"><i class="fa fa-check"></i><b>11.6</b> Attribute-Based Perceptual Maps Using PCA</a>
+<ul>
+<li class="chapter" data-level="11.6.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#creating-pca-based-maps"><i class="fa fa-check"></i><b>11.6.1</b> Creating PCA-Based Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="11.7" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#managerial-interpretation-and-strategic-insights"><i class="fa fa-check"></i><b>11.7</b> Managerial Interpretation and Strategic Insights</a></li>
+<li class="chapter" data-level="11.8" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#chapter-summary-1"><i class="fa fa-check"></i><b>11.8</b> Chapter Summary</a></li>
+<li class="chapter" data-level="11.9" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#whats-next-11"><i class="fa fa-check"></i><b>11.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html"><i class="fa fa-check"></i><b>12</b> A/B Testing and Uplift Modeling</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#introduction-from-average-effects-to-targeted-marketing"><i class="fa fa-check"></i><b>12.1</b> Introduction: From Average Effects to Targeted Marketing</a></li>
+<li class="chapter" data-level="12.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#the-email-campaign-experiment"><i class="fa fa-check"></i><b>12.2</b> The Email Campaign Experiment</a></li>
+<li class="chapter" data-level="12.3" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#checking-the-randomization-assumption"><i class="fa fa-check"></i><b>12.3</b> Checking the Randomization Assumption</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-balance-checks-matter"><i class="fa fa-check"></i><b>12.3.1</b> Why Balance Checks Matter</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#randomization-check-using-rand_check"><i class="fa fa-check"></i><b>12.3.2</b> Randomization Check Using <code>rand_check()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#estimating-the-average-treatment-effect-ate"><i class="fa fa-check"></i><b>12.4</b> Estimating the Average Treatment Effect (ATE)</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#what-is-the-ate"><i class="fa fa-check"></i><b>12.4.1</b> What Is the ATE?</a></li>
+<li class="chapter" data-level="12.4.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#ate-via-regression"><i class="fa fa-check"></i><b>12.4.2</b> ATE via Regression</a></li>
+<li class="chapter" data-level="12.4.3" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#using-easy_ab_ate"><i class="fa fa-check"></i><b>12.4.3</b> Using <code>easy_ab_ate()</code></a></li>
+<li class="chapter" data-level="12.4.4" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-average-effects-are-not-enough"><i class="fa fa-check"></i><b>12.4.4</b> Why Average Effects Are Not Enough</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#introduction-to-uplift-modeling"><i class="fa fa-check"></i><b>12.5</b> Introduction to Uplift Modeling</a>
+<ul>
+<li class="chapter" data-level="12.5.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#what-is-uplift"><i class="fa fa-check"></i><b>12.5.1</b> What Is Uplift?</a></li>
+<li class="chapter" data-level="12.5.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#two-model-indirect-approach"><i class="fa fa-check"></i><b>12.5.2</b> Two-Model (Indirect) Approach</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#estimating-uplift-with-easy_uplift"><i class="fa fa-check"></i><b>12.6</b> Estimating Uplift with <code>easy_uplift()</code></a>
+<ul>
+<li class="chapter" data-level="12.6.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#model-specification"><i class="fa fa-check"></i><b>12.6.1</b> Model Specification</a></li>
+<li class="chapter" data-level="12.6.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#interpreting-core-outputs"><i class="fa fa-check"></i><b>12.6.2</b> Interpreting Core Outputs</a></li>
+</ul></li>
+<li class="chapter" data-level="12.7" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#diagnosing-uplift-with-lift-plots"><i class="fa fa-check"></i><b>12.7</b> Diagnosing Uplift with Lift Plots</a>
+<ul>
+<li class="chapter" data-level="12.7.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-lift-diagnostics-matter"><i class="fa fa-check"></i><b>12.7.1</b> Why Lift Diagnostics Matter</a></li>
+<li class="chapter" data-level="12.7.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#using-easy_liftplots"><i class="fa fa-check"></i><b>12.7.2</b> Using <code>easy_liftplots()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#from-analysis-to-action"><i class="fa fa-check"></i><b>12.8</b> From Analysis to Action</a></li>
+<li class="chapter" data-level="12.9" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#summary-1"><i class="fa fa-check"></i><b>12.9</b> Summary</a></li>
+<li class="chapter" data-level="12.10" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#whats-next-12"><i class="fa fa-check"></i><b>12.10</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html"><i class="fa fa-check"></i><b>13</b> Standard Multinomial Logit Models</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#introduction-to-multinomial-choice-in-marketing"><i class="fa fa-check"></i><b>13.1</b> Introduction to Multinomial Choice in Marketing</a></li>
+<li class="chapter" data-level="13.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#the-bfast-dataset"><i class="fa fa-check"></i><b>13.2</b> The <code>bfast</code> Dataset</a></li>
+<li class="chapter" data-level="13.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#training-and-test-samples"><i class="fa fa-check"></i><b>13.3</b> Training and Test Samples</a></li>
+<li class="chapter" data-level="13.4" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#estimating-a-standard-multinomial-logit-model"><i class="fa fa-check"></i><b>13.4</b> Estimating a Standard Multinomial Logit Model</a></li>
+<li class="chapter" data-level="13.5" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#evaluating-model-fit"><i class="fa fa-check"></i><b>13.5</b> Evaluating Model Fit</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#interpreting-coefficients"><i class="fa fa-check"></i><b>13.5.1</b> Interpreting Coefficients</a></li>
+<li class="chapter" data-level="13.5.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#classification-performance"><i class="fa fa-check"></i><b>13.5.2</b> Classification Performance</a></li>
+<li class="chapter" data-level="13.5.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#holdout-sample-evaluation"><i class="fa fa-check"></i><b>13.5.3</b> Holdout Sample Evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#predicted-probabilities-1"><i class="fa fa-check"></i><b>13.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="13.7" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#marketing-interpretation"><i class="fa fa-check"></i><b>13.7</b> Marketing Interpretation</a></li>
+<li class="chapter" data-level="13.8" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#summary-2"><i class="fa fa-check"></i><b>13.8</b> Summary</a></li>
+<li class="chapter" data-level="13.9" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#whats-next-13"><i class="fa fa-check"></i><b>13.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html"><i class="fa fa-check"></i><b>14</b> Alternative-Specific Multinomial Logit Models</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#introduction-why-alternative-specific-mnl"><i class="fa fa-check"></i><b>14.1</b> Introduction: Why Alternative-Specific MNL?</a></li>
+<li class="chapter" data-level="14.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#the-yogurt-choice-data"><i class="fa fa-check"></i><b>14.2</b> The Yogurt Choice Data</a></li>
+<li class="chapter" data-level="14.3" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#preparing-the-data-for-modeling"><i class="fa fa-check"></i><b>14.3</b> Preparing the Data for Modeling</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-splitting-is-different-for-choice-data"><i class="fa fa-check"></i><b>14.3.1</b> Why Splitting Is Different for Choice Data</a></li>
+<li class="chapter" data-level="14.3.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#creating-training-and-test-samples"><i class="fa fa-check"></i><b>14.3.2</b> Creating Training and Test Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#specifying-an-alternative-specific-mnl-model"><i class="fa fa-check"></i><b>14.4</b> Specifying an Alternative-Specific MNL Model</a></li>
+<li class="chapter" data-level="14.5" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#evaluating-model-performance"><i class="fa fa-check"></i><b>14.5</b> Evaluating Model Performance</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#model-fit-and-coefficients"><i class="fa fa-check"></i><b>14.5.1</b> Model Fit and Coefficients</a></li>
+<li class="chapter" data-level="14.5.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#classification-performance-1"><i class="fa fa-check"></i><b>14.5.2</b> Classification Performance</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#predicted-probabilities-and-marginal-effects"><i class="fa fa-check"></i><b>14.6</b> Predicted Probabilities and Marginal Effects</a>
+<ul>
+<li class="chapter" data-level="14.6.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-predicted-probabilities-matter"><i class="fa fa-check"></i><b>14.6.1</b> Why Predicted Probabilities Matter</a></li>
+<li class="chapter" data-level="14.6.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-marginal-effects-are-useful"><i class="fa fa-check"></i><b>14.6.2</b> Why Marginal Effects Are Useful</a></li>
+<li class="chapter" data-level="14.6.3" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#the-pp_as_mnl-function"><i class="fa fa-check"></i><b>14.6.3</b> The <code>pp_as_mnl()</code> Function</a></li>
+<li class="chapter" data-level="14.6.4" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#case-specific-predictors"><i class="fa fa-check"></i><b>14.6.4</b> Case-Specific Predictors</a></li>
+<li class="chapter" data-level="14.6.5" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#alternative-specific-predictors"><i class="fa fa-check"></i><b>14.6.5</b> Alternative-Specific Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#managerial-insights"><i class="fa fa-check"></i><b>14.7</b> Managerial Insights</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/jdmeyer73/MKT4320RTutorial" target="_blank">Source on GitHub</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Tutorial for MKT 4320</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="linear-regression" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Linear Regression<a href="linear-regression.html#linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Linear regression is one of the most widely used tools in marketing analytics.
+It allows us to quantify relationships between an outcome variable and one or
+more predictors, helping us explain variation, estimate marginal effects, and
+generate predictions.</p>
+<p>In earlier chapters, we summarized data numerically and visually. In this
+chapter, we move beyond description to modeling relationships between variables.</p>
+<p>Throughout this chapter, we use the <code>airlinesat_small</code> dataset and focus on
+interpretation rather than mathematical derivation.</p>
+<hr />
+<div id="the-linear-regression-model" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> The Linear Regression Model<a href="linear-regression.html#the-linear-regression-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A linear regression model relates an outcome variable to one or more predictors.
+In R, linear regression models are estimated using the <code>lm()</code> function.</p>
+<p>The general structure is:</p>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="linear-regression.html#cb257-1" tabindex="-1"></a><span class="fu">lm</span>(outcome <span class="sc">~</span> predictors, <span class="at">data =</span> dataset)</span></code></pre></div>
+<hr />
+</div>
+<div id="simple-linear-regression" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Simple Linear Regression<a href="linear-regression.html#simple-linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We begin with a simple linear regression model containing a single predictor.</p>
+<p>In this example, we model Net Promoter Score (<code>nps</code>) as a function of the number
+of flights taken (<code>nflights</code>). If we don’t ask for a summary we <strong>only</strong> get the coefficients. If we save the result as an object and then ask for a summary, we get the full, expected results.</p>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="linear-regression.html#cb258-1" tabindex="-1"></a><span class="fu">lm</span>(nps <span class="sc">~</span> nflights, <span class="at">data =</span> airlinesat_small)</span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = nps ~ nflights, data = airlinesat_small)
+
+Coefficients:
+(Intercept)     nflights  
+    7.65848     -0.01031  </code></pre>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="linear-regression.html#cb260-1" tabindex="-1"></a>model_simple <span class="ot">&lt;-</span> <span class="fu">lm</span>(nps <span class="sc">~</span> nflights, <span class="at">data =</span> airlinesat_small)</span>
+<span id="cb260-2"><a href="linear-regression.html#cb260-2" tabindex="-1"></a><span class="fu">summary</span>(model_simple)</span></code></pre></div>
+<pre><code>
+Call:
+lm(formula = nps ~ nflights, data = airlinesat_small)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.6482 -1.4318  0.4137  1.5476  8.0512 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  7.658478   0.085356   89.72  &lt; 2e-16 ***
+nflights    -0.010306   0.003518   -2.93  0.00347 ** 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 2.321 on 1063 degrees of freedom
+Multiple R-squared:  0.00801,   Adjusted R-squared:  0.007077 
+F-statistic: 8.583 on 1 and 1063 DF,  p-value: 0.003465</code></pre>
+<p>Interpretation focuses on:</p>
+<ul>
+<li>The intercept: the predicted net promoter score (NPS) when the number of flights is zero</li>
+<li>The slope on <code>nflights</code>: the expected change in NPS for one additional flight</li>
+<li>R-squared: the proportion of variation in NPS explained by the model</li>
+</ul>
+<div id="nice-output" class="section level3 hasAnchor" number="8.2.1">
+<h3><span class="header-section-number">8.2.1</span> “Nice” Output<a href="linear-regression.html#nice-output" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For nicer looking output, we can use either the <code>summ</code> function from the <code>jtools</code> package. It easily allows us to adjust the number of digits shown (<code>digits = #</code> option). It can also show the standardized beta coefficients by using the <code>scale=TRUE</code> and <code>transform.response=TRUE</code> options together.</p>
+<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="linear-regression.html#cb262-1" tabindex="-1"></a><span class="fu">summ</span>(model_simple, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Observations
+</td>
+<td style="text-align:right;">
+1065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Dependent variable
+</td>
+<td style="text-align:right;">
+nps
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Type
+</td>
+<td style="text-align:right;">
+OLS linear regression
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+F(1,1063)
+</td>
+<td style="text-align:right;">
+8.5832
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+R²
+</td>
+<td style="text-align:right;">
+0.0080
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Adj. R²
+</td>
+<td style="text-align:right;">
+0.0071
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Est.
+</th>
+<th style="text-align:right;">
+S.E.
+</th>
+<th style="text-align:right;">
+t val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+7.6585
+</td>
+<td style="text-align:right;">
+0.0854
+</td>
+<td style="text-align:right;">
+89.7243
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+nflights
+</td>
+<td style="text-align:right;">
+-0.0103
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+<td style="text-align:right;">
+-2.9297
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: OLS
+</td>
+</tr>
+</tfoot>
+</table>
+<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb263-1"><a href="linear-regression.html#cb263-1" tabindex="-1"></a><span class="fu">summ</span>(model_simple, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>, <span class="at">transform.response =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Observations
+</td>
+<td style="text-align:right;">
+1065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Dependent variable
+</td>
+<td style="text-align:right;">
+nps
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Type
+</td>
+<td style="text-align:right;">
+OLS linear regression
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+F(1,1063)
+</td>
+<td style="text-align:right;">
+8.5832
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+R²
+</td>
+<td style="text-align:right;">
+0.0080
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Adj. R²
+</td>
+<td style="text-align:right;">
+0.0071
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Est.
+</th>
+<th style="text-align:right;">
+S.E.
+</th>
+<th style="text-align:right;">
+t val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+0.0305
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+nflights
+</td>
+<td style="text-align:right;">
+-0.0895
+</td>
+<td style="text-align:right;">
+0.0305
+</td>
+<td style="text-align:right;">
+-2.9297
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: OLS; Continuous variables are mean-centered and scaled by 1 s.d.
+</td>
+</tr>
+</tfoot>
+</table>
+<hr />
+</div>
+</div>
+<div id="multiple-linear-regression" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Multiple Linear Regression<a href="linear-regression.html#multiple-linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In practice, outcomes are influenced by more than one factor. Multiple linear
+regression allows us to include additional predictors to control for other
+characteristics.</p>
+<div id="adding-additional-variables" class="section level3 hasAnchor" number="8.3.1">
+<h3><span class="header-section-number">8.3.1</span> Adding Additional Variables<a href="linear-regression.html#adding-additional-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="linear-regression.html#cb264-1" tabindex="-1"></a>model_multi <span class="ot">&lt;-</span> <span class="fu">lm</span>(nps <span class="sc">~</span> nflights <span class="sc">+</span> age, <span class="at">data =</span> airlinesat_small)</span>
+<span id="cb264-2"><a href="linear-regression.html#cb264-2" tabindex="-1"></a><span class="fu">summ</span>(model_multi, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Observations
+</td>
+<td style="text-align:right;">
+1065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Dependent variable
+</td>
+<td style="text-align:right;">
+nps
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Type
+</td>
+<td style="text-align:right;">
+OLS linear regression
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+F(2,1062)
+</td>
+<td style="text-align:right;">
+8.5875
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+R²
+</td>
+<td style="text-align:right;">
+0.0159
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Adj. R²
+</td>
+<td style="text-align:right;">
+0.0141
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Est.
+</th>
+<th style="text-align:right;">
+S.E.
+</th>
+<th style="text-align:right;">
+t val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+6.7861
+</td>
+<td style="text-align:right;">
+0.3106
+</td>
+<td style="text-align:right;">
+21.8516
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+nflights
+</td>
+<td style="text-align:right;">
+-0.0091
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+<td style="text-align:right;">
+-2.5822
+</td>
+<td style="text-align:right;">
+0.0100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+age
+</td>
+<td style="text-align:right;">
+0.0170
+</td>
+<td style="text-align:right;">
+0.0058
+</td>
+<td style="text-align:right;">
+2.9208
+</td>
+<td style="text-align:right;">
+0.0036
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: OLS
+</td>
+</tr>
+</tfoot>
+</table>
+<p>When additional predictors are included, coefficients are interpreted as
+marginal effects holding other variables constant.</p>
+<hr />
+</div>
+</div>
+<div id="categorical-predictors-and-reference-groups" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Categorical Predictors and Reference Groups<a href="linear-regression.html#categorical-predictors-and-reference-groups" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Regression models can include categorical predictors. In R, factor variables
+are automatically converted into indicator (dummy) variables.</p>
+<div id="example-flight-class" class="section level3 hasAnchor" number="8.4.1">
+<h3><span class="header-section-number">8.4.1</span> Example: Flight Class<a href="linear-regression.html#example-flight-class" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="linear-regression.html#cb265-1" tabindex="-1"></a>model_cat <span class="ot">&lt;-</span> <span class="fu">lm</span>(nps <span class="sc">~</span> nflights <span class="sc">+</span> flight_class,  <span class="at">data =</span> airlinesat_small)</span>
+<span id="cb265-2"><a href="linear-regression.html#cb265-2" tabindex="-1"></a><span class="fu">summ</span>(model_cat, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Observations
+</td>
+<td style="text-align:right;">
+1065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Dependent variable
+</td>
+<td style="text-align:right;">
+nps
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Type
+</td>
+<td style="text-align:right;">
+OLS linear regression
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+F(3,1061)
+</td>
+<td style="text-align:right;">
+4.1443
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+R²
+</td>
+<td style="text-align:right;">
+0.0116
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Adj. R²
+</td>
+<td style="text-align:right;">
+0.0088
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Est.
+</th>
+<th style="text-align:right;">
+S.E.
+</th>
+<th style="text-align:right;">
+t val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+7.7273
+</td>
+<td style="text-align:right;">
+0.1793
+</td>
+<td style="text-align:right;">
+43.0949
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+nflights
+</td>
+<td style="text-align:right;">
+-0.0108
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+<td style="text-align:right;">
+-3.0691
+</td>
+<td style="text-align:right;">
+0.0022
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+flight_classEconomy
+</td>
+<td style="text-align:right;">
+-0.0946
+</td>
+<td style="text-align:right;">
+0.1881
+</td>
+<td style="text-align:right;">
+-0.5029
+</td>
+<td style="text-align:right;">
+0.6151
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+flight_classFirst
+</td>
+<td style="text-align:right;">
+1.0666
+</td>
+<td style="text-align:right;">
+0.6232
+</td>
+<td style="text-align:right;">
+1.7115
+</td>
+<td style="text-align:right;">
+0.0873
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: OLS
+</td>
+</tr>
+</tfoot>
+</table>
+<p>One category is treated as the reference group. Coefficients for other categories
+represent differences relative to that reference. In the example above, “Business” is treated as the reference group.</p>
+<p>To change the reference group, use <code>relevel()</code>. It can be changed temporarily within the call to <code>lm()</code>, or it can be changed permanently in the dataframe.</p>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="linear-regression.html#cb266-1" tabindex="-1"></a><span class="co"># Temporary level chance in formula</span></span>
+<span id="cb266-2"><a href="linear-regression.html#cb266-2" tabindex="-1"></a>model_cat_relevel <span class="ot">&lt;-</span> <span class="fu">lm</span>(nps <span class="sc">~</span> nflights <span class="sc">+</span> <span class="fu">relevel</span>(flight_class, <span class="at">ref=</span><span class="st">&quot;Economy&quot;</span>),  </span>
+<span id="cb266-3"><a href="linear-regression.html#cb266-3" tabindex="-1"></a>                        <span class="at">data =</span> airlinesat_small)</span>
+<span id="cb266-4"><a href="linear-regression.html#cb266-4" tabindex="-1"></a><span class="fu">summ</span>(model_cat_relevel, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Observations
+</td>
+<td style="text-align:right;">
+1065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Dependent variable
+</td>
+<td style="text-align:right;">
+nps
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Type
+</td>
+<td style="text-align:right;">
+OLS linear regression
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+F(3,1061)
+</td>
+<td style="text-align:right;">
+4.1443
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+R²
+</td>
+<td style="text-align:right;">
+0.0116
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Adj. R²
+</td>
+<td style="text-align:right;">
+0.0088
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Est.
+</th>
+<th style="text-align:right;">
+S.E.
+</th>
+<th style="text-align:right;">
+t val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+7.6327
+</td>
+<td style="text-align:right;">
+0.0907
+</td>
+<td style="text-align:right;">
+84.1145
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+nflights
+</td>
+<td style="text-align:right;">
+-0.0108
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+<td style="text-align:right;">
+-3.0691
+</td>
+<td style="text-align:right;">
+0.0022
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+relevel(flight_class, ref = “Economy”)Business
+</td>
+<td style="text-align:right;">
+0.0946
+</td>
+<td style="text-align:right;">
+0.1881
+</td>
+<td style="text-align:right;">
+0.5029
+</td>
+<td style="text-align:right;">
+0.6151
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+relevel(flight_class, ref = “Economy”)First
+</td>
+<td style="text-align:right;">
+1.1612
+</td>
+<td style="text-align:right;">
+0.6052
+</td>
+<td style="text-align:right;">
+1.9187
+</td>
+<td style="text-align:right;">
+0.0553
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: OLS
+</td>
+</tr>
+</tfoot>
+</table>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="linear-regression.html#cb267-1" tabindex="-1"></a>airlinesat_small<span class="sc">$</span>flight_class <span class="ot">&lt;-</span> <span class="fu">relevel</span>(airlinesat_small<span class="sc">$</span>flight_class, </span>
+<span id="cb267-2"><a href="linear-regression.html#cb267-2" tabindex="-1"></a>                                         <span class="at">ref =</span> <span class="st">&quot;Economy&quot;</span>)</span></code></pre></div>
+<hr />
+</div>
+</div>
+<div id="interaction-effects" class="section level2 hasAnchor" number="8.5">
+<h2><span class="header-section-number">8.5</span> Interaction Effects<a href="linear-regression.html#interaction-effects" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An interaction allows the effect of one predictor to depend on the level of
+another predictor. Interactions can be included in the formula using <code>*</code> or <code>:</code></p>
+<ul>
+<li><code>*</code> will include the interaction term <strong>AND</strong> each main effect</li>
+<li><code>:</code> will include <strong>ONLY</strong> the interaction term</li>
+<li>Examples:
+<ul>
+<li><code>y ~ x1 + x2 * x3</code> is the same as:<br />
+<span class="math inline">\(y = x1 + x2 + x3 + (x2 \times x3)\)</span></li>
+<li><code>y ~ x1 + x2:x3 is the same as:   $y = x1 + (x2 \times x3)$ 0</code>y ~ x1 + x2 + x2:x3` is the same as:<br />
+<span class="math inline">\(y = x1 + x2 + (x2 \times x3)\)</span></li>
+</ul></li>
+</ul>
+<div id="example-flights-and-frequent-flier-status" class="section level3 hasAnchor" number="8.5.1">
+<h3><span class="header-section-number">8.5.1</span> Example: Flights and Frequent Flier Status<a href="linear-regression.html#example-flights-and-frequent-flier-status" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="linear-regression.html#cb268-1" tabindex="-1"></a>model_inter <span class="ot">&lt;-</span> <span class="fu">lm</span>(nps <span class="sc">~</span> age <span class="sc">+</span> nflights <span class="sc">*</span> status, <span class="at">data =</span> airlinesat_small)</span>
+<span id="cb268-2"><a href="linear-regression.html#cb268-2" tabindex="-1"></a><span class="fu">summ</span>(model_inter, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Observations
+</td>
+<td style="text-align:right;">
+1065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Dependent variable
+</td>
+<td style="text-align:right;">
+nps
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Type
+</td>
+<td style="text-align:right;">
+OLS linear regression
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+F(6,1058)
+</td>
+<td style="text-align:right;">
+5.0753
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+R²
+</td>
+<td style="text-align:right;">
+0.0280
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Adj. R²
+</td>
+<td style="text-align:right;">
+0.0225
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Est.
+</th>
+<th style="text-align:right;">
+S.E.
+</th>
+<th style="text-align:right;">
+t val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+6.8771
+</td>
+<td style="text-align:right;">
+0.3136
+</td>
+<td style="text-align:right;">
+21.9308
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+age
+</td>
+<td style="text-align:right;">
+0.0154
+</td>
+<td style="text-align:right;">
+0.0058
+</td>
+<td style="text-align:right;">
+2.6320
+</td>
+<td style="text-align:right;">
+0.0086
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+nflights
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:right;">
+0.0046
+</td>
+<td style="text-align:right;">
+0.0565
+</td>
+<td style="text-align:right;">
+0.9550
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+statusGold
+</td>
+<td style="text-align:right;">
+0.1997
+</td>
+<td style="text-align:right;">
+0.3155
+</td>
+<td style="text-align:right;">
+0.6330
+</td>
+<td style="text-align:right;">
+0.5269
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+statusSilver
+</td>
+<td style="text-align:right;">
+0.0803
+</td>
+<td style="text-align:right;">
+0.2528
+</td>
+<td style="text-align:right;">
+0.3178
+</td>
+<td style="text-align:right;">
+0.7507
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+nflights:statusGold
+</td>
+<td style="text-align:right;">
+-0.0158
+</td>
+<td style="text-align:right;">
+0.0104
+</td>
+<td style="text-align:right;">
+-1.5241
+</td>
+<td style="text-align:right;">
+0.1278
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+nflights:statusSilver
+</td>
+<td style="text-align:right;">
+-0.0266
+</td>
+<td style="text-align:right;">
+0.0097
+</td>
+<td style="text-align:right;">
+-2.7348
+</td>
+<td style="text-align:right;">
+0.0063
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: OLS
+</td>
+</tr>
+</tfoot>
+</table>
+<hr />
+</div>
+</div>
+<div id="sec-margin-plots" class="section level2 hasAnchor" number="8.6">
+<h2><span class="header-section-number">8.6</span> Margin Plots with <code>easy_mp</code><a href="linear-regression.html#sec-margin-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Rather than using exploratory plots or manually creating margin plots, we use the <code>easy_mp()</code> function from the
+<code>MKT4320BGSU</code> package to visualize predicted values and marginal effects.</p>
+<div id="the-easy_mp-function" class="section level3 hasAnchor" number="8.6.1">
+<h3><span class="header-section-number">8.6.1</span> The <code>easy_mp()</code> Function<a href="linear-regression.html#the-easy_mp-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This function creates marginal effects plots for a focal predictor (with or without an interaction) from a linear regression (<code>lm</code>) or binary logistic regression (<code>glm</code> with <code>family = "binomial"</code>).</p>
+<p>Usage: <code>easy_mp(model, focal, int = NULL)</code></p>
+<p>Arguments:</p>
+<ul>
+<li><code>model</code> is a fitted <code>lm</code> model or binary logistic <code>glm</code> model (<code>family = "binomial"</code>).</li>
+<li><code>focal</code> is the name of the focal predictor variable in quotations</li>
+<li><code>int</code> is the name of the interaction variable in quotations. Can be excluded if only the focal variable is wanted or no interaction exists.</li>
+</ul>
+<p>Returns:
+- <code>$plot</code> is the margin plot
+- <code>$ptable</code> is the marginal effects table used to produce the plot</p>
+</div>
+<div id="without-interactions" class="section level3 hasAnchor" number="8.6.2">
+<h3><span class="header-section-number">8.6.2</span> WITHOUT Interactions<a href="linear-regression.html#without-interactions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Below are examples of a margin plot for a continuous independent variable and for a categorical/factor independent variable. Note how the returned <code>$plot</code> object is a <code>ggplot</code> that can be modified by adding layers.</p>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="linear-regression.html#cb269-1" tabindex="-1"></a>model_mp_nointer <span class="ot">&lt;-</span> <span class="fu">lm</span>(nps <span class="sc">~</span> age <span class="sc">+</span> gender, <span class="at">data =</span> airlinesat_small)</span>
+<span id="cb269-2"><a href="linear-regression.html#cb269-2" tabindex="-1"></a></span>
+<span id="cb269-3"><a href="linear-regression.html#cb269-3" tabindex="-1"></a><span class="co"># Continuous Focal WITHOUT Interaction</span></span>
+<span id="cb269-4"><a href="linear-regression.html#cb269-4" tabindex="-1"></a>mp_age <span class="ot">&lt;-</span> <span class="fu">easy_mp</span>(model_mp_nointer, <span class="at">focal=</span><span class="st">&quot;age&quot;</span>)</span>
+<span id="cb269-5"><a href="linear-regression.html#cb269-5" tabindex="-1"></a>mp_age<span class="sc">$</span>plot <span class="sc">+</span></span>
+<span id="cb269-6"><a href="linear-regression.html#cb269-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;No Interaction: Continuous Variable&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/lr-easymp-main-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="linear-regression.html#cb270-1" tabindex="-1"></a><span class="co"># Factor Focal WITHOUT Interaction</span></span>
+<span id="cb270-2"><a href="linear-regression.html#cb270-2" tabindex="-1"></a>mp_gender <span class="ot">&lt;-</span> <span class="fu">easy_mp</span>(model_mp_nointer, <span class="at">focal=</span><span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb270-3"><a href="linear-regression.html#cb270-3" tabindex="-1"></a>mp_gender<span class="sc">$</span>plot <span class="sc">+</span></span>
+<span id="cb270-4"><a href="linear-regression.html#cb270-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;No Interaction: Factor Variable&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/lr-easymp-main-2.png" alt="" width="672" /></p>
+</div>
+<div id="with-interactions" class="section level3 hasAnchor" number="8.6.3">
+<h3><span class="header-section-number">8.6.3</span> WITH Interactions<a href="linear-regression.html#with-interactions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Ultimately, there are four types of margin plots that can be created depending on the focal variable type and the interaction variable type:</p>
+<ul>
+<li>Continuous Focal IV <span class="math inline">\(\times\)</span> Continuous Interaction IV</li>
+<li>Continuous Focal IV <span class="math inline">\(\times\)</span> Factor Interaction IV</li>
+<li>Factor Focal IV <span class="math inline">\(\times\)</span> Continuous Interaction IV</li>
+<li>Factor Focal IV <span class="math inline">\(\times\)</span> Factor Interaction IV</li>
+</ul>
+<p>When the interaction term is continuous, the plot is created with representative values of the continuous variable (roughly the 1st percentile, the 99th percentile, and two evenly spaced values between those two).</p>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="linear-regression.html#cb271-1" tabindex="-1"></a>model_mp_inter <span class="ot">&lt;-</span> <span class="fu">lm</span>(nps <span class="sc">~</span> age<span class="sc">*</span>gender <span class="sc">+</span> age<span class="sc">*</span>reputation <span class="sc">+</span> gender<span class="sc">*</span>status, <span class="at">data =</span> airlinesat_small)</span>
+<span id="cb271-2"><a href="linear-regression.html#cb271-2" tabindex="-1"></a></span>
+<span id="cb271-3"><a href="linear-regression.html#cb271-3" tabindex="-1"></a><span class="co"># Continuous Focal WITH Continuous Interaction</span></span>
+<span id="cb271-4"><a href="linear-regression.html#cb271-4" tabindex="-1"></a>mp_age_reputation <span class="ot">&lt;-</span> <span class="fu">easy_mp</span>(model_mp_inter, <span class="at">focal =</span> <span class="st">&quot;age&quot;</span>, <span class="at">int =</span> <span class="st">&quot;reputation&quot;</span>)</span>
+<span id="cb271-5"><a href="linear-regression.html#cb271-5" tabindex="-1"></a>mp_age_reputation<span class="sc">$</span>plot <span class="sc">+</span></span>
+<span id="cb271-6"><a href="linear-regression.html#cb271-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Interaction: Continuous Focal IV by Continuous Interaction IV&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/lr-easymp-interaction-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="linear-regression.html#cb272-1" tabindex="-1"></a><span class="co"># Continuous Focal WITH Factor Interaction</span></span>
+<span id="cb272-2"><a href="linear-regression.html#cb272-2" tabindex="-1"></a>mp_age_gender <span class="ot">&lt;-</span> <span class="fu">easy_mp</span>(model_mp_inter, <span class="at">focal =</span> <span class="st">&quot;age&quot;</span>, <span class="at">int =</span> <span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb272-3"><a href="linear-regression.html#cb272-3" tabindex="-1"></a>mp_age_gender<span class="sc">$</span>plot <span class="sc">+</span></span>
+<span id="cb272-4"><a href="linear-regression.html#cb272-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Interaction: Continuous Focal IV by Factor Interaction IV&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/lr-easymp-interaction-2.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="linear-regression.html#cb273-1" tabindex="-1"></a><span class="co"># Factor Focal WITH Continuous Interaction</span></span>
+<span id="cb273-2"><a href="linear-regression.html#cb273-2" tabindex="-1"></a>mp_gender_age <span class="ot">&lt;-</span> <span class="fu">easy_mp</span>(model_mp_inter, <span class="at">focal =</span> <span class="st">&quot;gender&quot;</span>, <span class="at">int =</span> <span class="st">&quot;age&quot;</span>)</span>
+<span id="cb273-3"><a href="linear-regression.html#cb273-3" tabindex="-1"></a>mp_gender_age<span class="sc">$</span>plot <span class="sc">+</span></span>
+<span id="cb273-4"><a href="linear-regression.html#cb273-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Interaction: Factor Focal IV by Continuous Interaction IV&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/lr-easymp-interaction-3.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="linear-regression.html#cb274-1" tabindex="-1"></a><span class="co"># Factor Focal WITH Factor Interaction</span></span>
+<span id="cb274-2"><a href="linear-regression.html#cb274-2" tabindex="-1"></a>mp_gender_status <span class="ot">&lt;-</span> <span class="fu">easy_mp</span>(model_mp_inter, <span class="at">focal =</span> <span class="st">&quot;gender&quot;</span>, <span class="at">int =</span> <span class="st">&quot;status&quot;</span>)</span>
+<span id="cb274-3"><a href="linear-regression.html#cb274-3" tabindex="-1"></a>mp_gender_status<span class="sc">$</span>plot <span class="sc">+</span></span>
+<span id="cb274-4"><a href="linear-regression.html#cb274-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Interaction: Factor Focal IV by Factor Interaction IV&quot;</span>)</span></code></pre></div>
+<p><img src="MKT4320_R_Tutorial_files/figure-html/lr-easymp-interaction-4.png" alt="" width="672" /></p>
+<hr />
+</div>
+</div>
+<div id="prediction" class="section level2 hasAnchor" number="8.7">
+<h2><span class="header-section-number">8.7</span> Prediction<a href="linear-regression.html#prediction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Regression models can also be used for prediction. The function <code>predict()</code> can be used to predict the DV based on values of the IVs. We can either: (1) predict the expected value of the DV for each observation in the data, or (2) predict the expected value of the DV for new values of the IV(s). To use this function for (2), we must pass a data frame of values to the function, where the data frame contains ALL of the IVs and the value for each IV that we want.</p>
+<p>Suppose we wanted to predict, with a confidence interval, the <code>nps</code> of someone that is 45 years old and had 25 flights on the airline, and also someone that is 25 years old and had 45 flights on the airline, based on our <code>model_multi &lt;- lm(nps ~ nflights + age, data = airlinesat_small)</code> from above. First, we create the data frame of values</p>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="linear-regression.html#cb275-1" tabindex="-1"></a>values <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">age=</span><span class="fu">c</span>(<span class="dv">45</span>, <span class="dv">25</span>), <span class="at">nflights=</span><span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">45</span>))</span>
+<span id="cb275-2"><a href="linear-regression.html#cb275-2" tabindex="-1"></a>values</span></code></pre></div>
+<pre><code>  age nflights
+1  45       25
+2  25       45</code></pre>
+<p>Second, the data frame is passed to the <code>predict()</code> function with confidence intervals requested.</p>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="linear-regression.html#cb277-1" tabindex="-1"></a><span class="fu">predict</span>(model_multi, values, <span class="at">interval=</span><span class="st">&quot;confidence&quot;</span>)</span></code></pre></div>
+<pre><code>       fit      lwr      upr
+1 7.322601 7.153951 7.491252
+2 6.800657 6.431058 7.170255</code></pre>
+<hr />
+</div>
+<div id="whats-next-8" class="section level2 hasAnchor" number="8.8">
+<h2><span class="header-section-number">8.8</span> What’s Next<a href="linear-regression.html#whats-next-8" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this chapter, you learned how to use linear regression to model relationships when the outcome variable is continuous, such as satisfaction or Net Promoter Score. Linear regression works well when predicted values can reasonably fall anywhere along a numeric scale.</p>
+<p>Many marketing outcomes, however, are binary—for example, purchase vs. no purchase, churn vs. retention, or click vs. no click. In these cases, linear regression is no longer appropriate.</p>
+<p>In the next chapter, we introduce binary logistic regression, a modeling approach designed specifically for yes/no outcomes. You will learn how to estimate probabilities, interpret coefficients and marginal effects, and evaluate model performance in a way that is well-suited to common marketing decision problems.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-visualization.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="binary-logistic-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/jdmeyer73/MKT4320RTutorial/edit/main/08-lin_reg.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

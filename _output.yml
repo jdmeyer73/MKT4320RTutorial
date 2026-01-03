@@ -4,11 +4,11 @@ bookdown::gitbook:
     toc:
       collapse: section
       before: |
-        <li><a href="./">A Minimal Book Example</a></li>
+        <li><a href="./">MKT 4320 R Tutorial</a></li>
       after: |
-        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
-    edit: https://github.com/USERNAME/REPO/edit/BRANCH/%s
-    download: ["pdf", "epub"]
+        <li><a href="https://github.com/jdmeyer73/MKT4320RTutorial" target="_blank">Source on GitHub</a></li>
+    edit: https://github.com/jdmeyer73/MKT4320RTutorial/edit/main/%s
+    download: null
 bookdown::pdf_book:
   includes:
     in_header: preamble.tex

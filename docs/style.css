@@ -1,0 +1,26 @@
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+ul li {
+  margin-bottom: 0px; /* Adjust as needed */
+  padding-bottom: 0px; /* Adjust as needed */
+}
+li > ul {
+  margin-bottom: 0px; /* Adjust as needed */
+}
+li p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+

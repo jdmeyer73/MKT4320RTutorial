@@ -1,0 +1,11 @@
+# RStudio project files (never commit)
+.Rproj.user/
+
+# Bookdown / knitr intermediate files
+_bookdown_files/
+*_cache/
+*_files/
+
+# OS junk
+.DS_Store
+Thumbs.db

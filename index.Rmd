@@ -22,6 +22,7 @@ library(vtable)
 library(Hmisc)
 load("Data/operators.rdata")
 knitr::opts_chunk$set(comment = "")
+options(knitr.duplicate.label = "force")
 ```
 
 # Preface {-}
