@@ -1,0 +1,3 @@
+"0","mnl_eval_rrr <- eval_std_mnl(OBJ = mnl_fit, exp = TRUE, "
+"0","                             newdata = test, ft=TRUE)"
+"0","mnl_eval_rrr$coef_table"

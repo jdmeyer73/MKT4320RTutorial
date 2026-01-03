@@ -1,0 +1,290 @@
+# Descriptive Analysis
+
+Descriptive analysis summarizes and helps you understand your data **numerically**. In marketing analytics, it is often your first “sanity check” before modeling or visualization.
+
+In this chapter you will learn how to:
+
+- inspect a dataset and its variables,
+- create frequency tables and crosstabs,
+- compute measures of central tendency and dispersion,
+- and compute and interpret correlations.
+
+For this chapter, we'll be using the `airlinesat_small` dataset from the `MKT4320BGSU`.
+
+```{r load_airlinesat_small}
+data(airlinesat_small)
+```
+
+```{r airlinesat_small_asdataframe, include=FALSE}
+airlinesat_small <- data.frame(airlinesat_small)
+```
+
+---
+
+## Descriptive Analysis
+
+A quick descriptive workflow often looks like:
+
+1) **Confirm the data structure** (rows/columns, variable types)
+2) **Look for missing values and odd ranges**
+3) **Summarize key variables** (categorical → counts; numeric → mean/SD, etc.)
+4) **Compare segments** (e.g., by treatment, gender, region, etc.)
+
+### Inspecting the dataset
+
+The following functions are useful for inspecting the dataset.
+
+- `str()` shows each variables' type, displays factor levels if present, and gives a compact preview of values for each variable
+- `dim()` returns the number of rows and columsn to quickly tell you sample size and number of variables
+- `names()` provides all column names, which helps with selecting variables for writing code or formulas
+- `head()` gives the first six rows of the dataset to allow for visual inspection of raw values
+
+```{r inspect_data}
+# Take a look at the data frame
+str(airlinesat_small)
+
+# Dimensions (rows, columns)
+dim(airlinesat_small)
+
+# Variable names
+names(airlinesat_small)
+
+# First few rows
+head(airlinesat_small)
+```
+
+### Missing values (quick checks)
+
+It is also important to check for missing values, because they can have an adverse effect on some analyses. The `is.na()` function is often used for this, which returns a `TRUE` if a value is `NA`. Ultimately, this will tell which values in the data are missing to help decide how to handle them. 
+
+```{r missing_values}
+# Missing values by variable
+colSums(is.na(airlinesat_small))
+
+# Total missing values in the dataset
+sum(is.na(airlinesat_small))
+```
+
+---
+
+## Frequency Tables
+
+Frequency tables summarize **categorical** variables (and sometimes binned numeric variables).
+
+### One-way frequency table
+
+To create a frequency table, use the `table()` function in R. Counts are often converted into proportions or rates to make results easier to interpret and compare.
+
+In R, the `proportions()` function is used to convert frequency tables into proportions. Multiply the table by 100 to get percentages.
+
+```{r freq_table_base}
+# Frequency table for a categorical variable
+table(airlinesat_small$gender)
+
+# Add proportions (shares)
+proportions(table(airlinesat_small$gender))
+
+# Add percentages
+100 * proportions(table(airlinesat_small$gender))
+```
+
+---
+
+## Crosstabs
+
+A crosstab is a frequency table for **two categorical variables**. Crosstabs are used frequently in marketing to compare segments (e.g., purchase by gender).
+
+### Base R
+
+Base R does not do a great job of easily creating crosstabs and testing for independence of the two variables. Instead, a multistep process is required:
+
+- Create the two-way frequency table using the `table(rowvar, colvar)` function and assign it to a separate object
+- Display the two-way freq table by just using the table name
+    ```{r crosstab_base_counts}
+    # Counts
+    ct <- table(airlinesat_small$flight_class, airlinesat_small$gender)
+    ct
+    ```
+
+- Use the function `proportions(tablename, margin)` on the newly created object to get column, row, or total percentages
+  - `proportions(tablename)` gives total percentages
+  - `proportions(tablename, 1)` gives row percentages
+  - `proportions(tablename, 2)` gives column percentages
+
+    ```{r crosstab_base_props}
+    proportions(ct)             # Total proportions: what pprportion of all respondents
+    proportions(ct, margin=1)   # Row proportions: how are genders distributed within a row
+    proportions(ct, margin=2)   # Column proportions: how is th outcome distributed within each gender
+    ```
+
+- Use the function `chisq.test(tablename)` on the newly created object to run the test of independence
+    ```{r crosstab_chisq}
+    chisq.test(ct)
+    ```
+
+### Using package *sjPlot*
+
+The **sjPlot** package can print crosstabs with nicer formatting. Use the function `tab_xtab(var.row=, var.col=, show.col.prc=TRUE)` to get a standard crosstab with column percentages and the chi-square test of independence. 
+
+```{r crosstab_sjplot}
+tab_xtab(airlinesat_small$flight_class,
+         airlinesat_small$gender,
+         show.col.prc = TRUE)
+```
+
+---
+
+## Measures of Central Tendency and Dispersion
+
+For **numeric** variables, the most common summaries are:
+
+- Central tendency: mean, median, mode
+- Dispersion: variance, standard deviation, IQR, range
+
+### Base R
+
+Any individual summary statistic can be easily calculated using Base R with functions such as:
+
+- `mean(var)` for mean
+- `sd(var)` for standard deviation
+- `quantile(var, .percentile)` for percentiles (e.g., ‘.50’ would be median)
+
+For summary statistics except for standard deviation, the `summary(object)` function can be used, where object can be a single variable or an entire data frame
+
+```{r numeric_summary_base}
+# Base R summary (min, quartiles, median, mean, max)
+summary(airlinesat_small$age)
+summary(airlinesat_small)
+
+# Mean and SD (remove missing values if present)
+mean(airlinesat_small$age, na.rm = TRUE)
+sd(airlinesat_small$age, na.rm = TRUE)
+```
+
+If you want a single, custom summary:
+
+```{r numeric_summary_custom}
+x <- airlinesat_small$age
+
+c(n = sum(!is.na(x)),
+  mean = mean(x, na.rm = TRUE),
+  sd = sd(x, na.rm = TRUE),
+  median = median(x, na.rm = TRUE),
+  iqr = IQR(x, na.rm = TRUE),
+  min = min(x, na.rm = TRUE),
+  max = max(x, na.rm = TRUE))
+```
+
+### Using package *dplyr*
+
+With **dplyr**, you can summarize many variables and/or do summaries by groups.
+
+Overall summaries:
+
+```{r dplyr_summarise_overall}
+airlinesat_small %>%
+  summarise(n = n(),
+            mean_age = mean(age, na.rm = TRUE),
+            sd_age = sd(age, na.rm = TRUE),
+            median_age = median(age, na.rm = TRUE),
+            iqr_age = IQR(age, na.rm = TRUE),
+            mean_nflights = mean(nflights, na.rm = TRUE),
+            sd_nflights = sd(nflights, na.rm = TRUE))
+```
+
+Group summaries (example: by `buy`):
+
+```{r dplyr_summarise_by_group}
+airlinesat_small %>%
+  group_by(status) %>%
+  summarise(n = n(),
+            mean_age = mean(age, na.rm = TRUE),
+            sd_age = sd(age, na.rm = TRUE),
+            mean_nflights = mean(nflights, na.rm = TRUE),
+            sd_nflights = sd(nflights, na.rm = TRUE))
+```
+
+### Using package *vtable*
+
+The **vtable** package can generate clean, compact descriptive tables with the `sumtable(data, vars=c(""))` function. For factor variables, it will provide the counts and percents of each level.
+
+```{r vtable_sumtable}
+sumtable(airlinesat_small, c("age", "nflights", "status"),
+         add.median=TRUE)   # 'add.median=TRUE' includes a 50th percentile column
+```
+
+The `sumtable()` function can also provide summary statistics by a grouping variable.
+
+```{r vtable_sumtable_grouping}
+sumtable(airlinesat_small, c("age", "nflights", "status"),
+         add.median=TRUE, 
+         group="gender")
+```
+
+---
+
+## Correlation
+
+Correlation measures the strength of a **linear relationship** between two numeric variables.
+The most common is Pearson correlation (the default).
+
+### Base R
+
+Base R can easily provide a correlation matrix of many variables, and it can provide a correlation test between two variables at a time, but it cannot produce a correlation matrix with p-values.
+
+To get a correlation matrix, use the `cor()` function with a dataframe of the variables desired or using indexing on variable names. By default, it uses all observations, which can create `NA` values if any missing values exists. Therefore, the preference is to add the option `use = "pairwise.complete.obs"` to only calculate the correlation on non-missing values for each pair of variables.
+
+```{r cor_base_r}
+mycorr_df <- airlinesat_small %>%
+  select(age, nflights, nps, overall_sat, reputation)
+cor(mycorr_df, use = "pairwise.complete.obs")
+
+cor(airlinesat_small[,c("age", "nflights", "nps", "overall_sat", "reputation")],
+    use = "pairwise.complete.obs")
+```
+
+To get the correlation test for any one pair of variables, use the `cor.test(var1, var2)` function. By default, it includes only observations that are non-missing in both variables.
+
+```{r cor_test_base_r}
+cor.test(airlinesat_small$age, airlinesat_small$nflights)
+```
+ 
+### Using package *Hmisc*
+
+The **Hmisc** package is useful for correlation matrices with p-values using the `rcorr()` function. This function expects a matrix (or data frame coerced to matrix). 
+
+```{r hmisc_rcorr}
+rcorr(as.matrix(mycorr_df))
+```
+
+### Using package *sjPlot*
+
+The **sjPlot** package can produce formatted correlation tables for reports using the `tab_corr()` function. By default, it uses listwise (or casewise) deletion, which removes an entire case (or row) if any value is `NA`, which may result in major data loss. Use the option `na.deletion = "pairwise")` to prevent this.
+
+```{r sjplot_corr_table}
+tab_corr(mycorr_df,
+         triangle = "lower",
+         show.p = TRUE,
+         na.deletion = "pairwise")
+```
+
+---
+
+## Why descriptive analysis matters
+
+Descriptive statistics help you to:
+
+- detect unusual values,
+- understand typical behavior,
+- compare groups,
+- and check whether results are plausible.
+
+They also guide decisions about which models or visualizations are appropriate.
+
+---
+
+## What’s next
+
+In the next chapter, we move from **numbers** to **visuals**. You will learn how to create effective data visualizations using a small amount of Base R, but primarily `ggplot2`. Visualizations allow you to see patterns, distributions, and relationships that are often difficult to detect from tables alone.
+
+Together, descriptive statistics and visualization form the foundation of **exploratory data analysis**, which prepares you for modeling and inference later in the course.

@@ -1,0 +1,15 @@
+h1:setup Setup
+h2:what-you-need What you need
+h2:r-and-rstudio-quick-overview R and RStudio (quick overview)
+h2:navigating-rstudio Navigating RStudio
+h2:installing-and-loading-packages Installing and loading packages
+h3:install-packages-one-time Install packages (one-time)
+h3:load-packages-each-session Load packages (each session)
+h2:installing-the-mkt4320bgsu-package Installing the MKT4320BGSU package
+h3:install-from-github Install from GitHub
+h3:load-the-package Load the package
+h3:verify-everything-works Verify everything works
+h2:getting-help-when-youre-stuck Getting help when you’re stuck
+h2:how-youll-use-this-book How you’ll use this book
+h2:whats-next What’s next
+

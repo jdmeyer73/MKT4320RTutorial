@@ -1,0 +1,6 @@
+book_filename: "MKT4320_ R_Tutorial"
+output_dir: "docs"  
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "

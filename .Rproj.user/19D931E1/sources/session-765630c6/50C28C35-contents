@@ -1,0 +1,252 @@
+
+# Alternative-Specific Multinomial Logit Models
+
+## Introduction: Why Alternative-Specific MNL?
+
+In the last chapter, we modeled brand choice using standard multinomial logit (MNL) models, where all predictors were **case-specific**. That is, they described the consumer or choice situation and took the same value for all brands in a given choice set.
+
+In many real marketing applications, however, the most important predictors vary **by brand**. Examples include:
+
+- Price of each brand
+- Package size
+- Sugar content or nutritional attributes
+- Promotional indicators
+- Brand-specific features
+
+Alternative-specific multinomial logit (AS-MNL) models allow us to include these variables directly, providing richer managerial insight into how brand attributes drive choice.
+
+In this chapter, you will learn how to:
+
+- Work with long-format choice data
+- Split alternative-specific data correctly into training and test samples
+- Estimate an alternative-specific MNL model
+- Evaluate model fit and classification performance
+- Interpret predicted probabilities and marginal effects in a marketing context
+
+Throughout the chapter, we will use the **yogurt** dataset.
+
+---
+
+## The Yogurt Choice Data
+
+The yogurt dataset records consumer brand choices in repeated choice situations. Each row represents **one alternative within one choice situation**, not a single consumer.
+
+Key implications:
+
+- Each choice situation appears multiple times (once per brand)
+- Exactly one alternative is chosen per choice set
+- Many predictors vary across brands within the same choice set
+
+This “long” structure is required for alternative-specific MNL models and differs from the wide-format data used earlier in the course.
+
+---
+
+## Preparing the Data for Modeling
+
+### Why Splitting Is Different for Choice Data
+
+With alternative-specific data, we **cannot** randomly split rows into training and test sets. Doing so would break apart choice sets and contaminate model evaluation.
+
+Instead, we must split at the **choice-set level**, ensuring that all rows belonging to the same choice situation stay together.
+
+### Creating Training and Test Samples
+
+We still use the `splitsample()` function from the `MKT4320BGSU` package, which supports group-level splitting. Whereas before we didn't use several parameters, will will use them for alternative specific MNL.
+
+Usage: 
+
+- `splitsample(data, outcome = NULL, group = NULL, choice = NULL, alt = NULL,`    
+`p = 0.75, seed = 4320)`
+- where:
+  - `data` is the data frame to split, in long-format.
+  - `outcome` is NOT (USUALLY) USED FOR ALTERNATIVE SPECIFIC MNL
+  - `group` is the grouping variable (e.g., choice situation id or respondent id). If provided, splitting is done at the group level. Required for alternative specific MNL.
+  - `choice` is the 0/1 (or TRUE/FALSE) indicator for the chosen alternative. Used only when `group` is provided. Required for alternative specific MNL.
+  - `alt` is the optional alternative label/ID. Used with `choice` to stratify at the group level. Required for alternative specific MNL.
+  - `p` is the proportion of observations to place in the training set. Must be strictly between 0 and 1. Default is 0.75.
+  - `seed` is the random seed for reproducibility. Default is 4320.
+  
+Before, we were interested in the `$train` and `$test` data frames.  Now, we are interested in the `train.mdata` and `test.mdata` objects that are saved. They are in the format needed for the using `mlogit` (see below). However, to avoid a console error, you'll access the a slightly different way.
+
+```{r split-sample-asmnl}
+sp <- splitsample(data = yogurt, group = "id", choice = "choice", alt = "brand")
+
+train <- sp[["train.mdata"]]
+test  <- sp[["test.mdata"]]
+```
+
+At this point:
+
+- `train` contains complete choice sets for model estimation
+- `test` contains unseen choice sets for out-of-sample evaluation
+
+---
+
+## Specifying an Alternative-Specific MNL Model
+
+In an alternative-specific MNL model:
+
+- Case-specific variables enter once
+- Alternative-specific variables enter as brand-varying predictors
+
+We use the `mlogit` function from the `mlogit` package to estimate the model. We separate the alternative specific from the case specific variables with a `|`. Alternative specific come first, then the case specific. We can use the base R `summary()` function to get the raw log-odds estimates.
+
+```{r fit-as-mnl, message=FALSE, warning=FALSE}
+library(mlogit)
+as_mnl_fit <- mlogit(choice ~ price + feat | income, data = train)
+summary(as_mnl_fit)
+```
+
+Interpretation notes:
+
+- Coefficients reflect changes in **relative utility**
+- Signs and magnitudes should be interpreted in marketing terms
+- Alternative-specific variables capture within-choice substitution effects
+
+---
+
+## Evaluating Model Performance
+
+### Model Fit and Coefficients
+
+We use the `eval_as_mnl()` function from the `MKT4320BGSU` package to obtain fit statistics, coefficients (both log-odds and odds ratio), and classification diagnostics.
+
+Usage:
+
+- `eval_as_mnl(model, digits = 4, ft = FALSE, newdata = NULL,`  
+`label_model = "Model data", label_newdata = "New data", class_digits = 3)`
+- where:
+  - `model` is a fitted mlogit model.
+  - `digits` is an integer; decimals to round coefficient and fit results (default 4).
+  - `ft` is logical; if TRUE, return coefficient and classification tables as flextable objects (default FALSE).
+  - `newdata` is an optional `dfidx` object (e.g., `test.mdata`) for an additional classification matrix. If NULL, only the training-data matrix is produced.
+  - `label_model` is a character string label for the training-data classification matrix (default "Model data").
+  - `label_newdata` is a character string label for the newdata classification matrix (default "New data").
+  - `class_digits` is an integer; decimals to round classification results (default 3).
+  
+Key outputs include:
+
+- Log-likelihood $\chi^2$ test
+- McFadden’s pseudo $R^2$
+- Odds ratios for interpretation
+- Classification accuracy and diagnostics
+
+```{r eval-model-asmnl}
+as_eval <- eval_as_mnl(as_mnl_fit, ft = TRUE, newdata = test)
+as_eval$coef_table
+as_eval$classify_model
+as_eval$classify_newdata
+```
+
+### Classification Performance
+
+Classification is evaluated at the **choice-set level**:
+
+- The predicted brand is the one with the highest predicted probability
+- Accuracy reflects correct brand predictions
+- PCC provides a baseline comparison
+
+This approach mirrors how managers think about predicting actual consumer choices.
+
+---
+
+## Predicted Probabilities and Marginal Effects
+
+### Why Predicted Probabilities Matter
+
+Coefficients are not always intuitive. Predicted probabilities translate the model into outcomes managers care about:
+
+- Market shares
+- Brand switching
+- Competitive responses
+
+### Why Marginal Effects Are Useful
+
+Marginal effects quantify how much choice probabilities change in response to a small change in an attribute, holding everything else constant. Marginal effects can be computed in two common ways:
+
+- **At observed values (Average Marginal Effects, AME)**  
+Marginal effects are calculated for each observation using its actual attribute values and then averaged.
+- **At means (Marginal Effects at the Mean, MEM)**  
+Marginal effects are calculated at a single “average” profile, where each attribute is set to its sample mean.
+
+Both approaches summarize how sensitive choice probabilities are to changes in attributes, but they differ in interpretation.
+
+Marginal effects **at observed values**:
+
+- Reflect the full distribution of the data
+- Avoid relying on a potentially unrealistic “average consumer”
+- Are often preferred for descriptive and policy interpretation
+
+Marginal effects **at means**:
+
+- Are easier to reproduce by hand or with software defaults
+- Provide a clear, single reference point
+- Can be useful for illustrating model mechanics and comparing effects across variables
+
+The marginal effects tables can therefore answer questions such as:
+
+- “On average, how does a $1 increase in price affect brand choice?”
+- “How would choice probabilities change for a typical consumer if an attribute increased slightly?”
+- “Which brands are most sensitive to changes in a specific attribute?”
+
+In practice, the choice between observed values and means depends on the goal of the analysis. For interpretation and real-world impact, average marginal effects at observed values are often preferred. For teaching, demonstration, or simplified comparisons, marginal effects at means can be equally informative.
+
+### The `pp_as_mnl()` Function
+
+For both case-specific and alternative-specific predictors, we use the `pp_as_mnl()` function from the `MKT4320BGSU` package to get both predicted probabilities and marginal effects.
+
+Usage:
+
+- `pp_as_mnl(model,focal_var, focal_type = c("auto", "alt", "case"),`  
+`grid_n = 25, digits = 4, ft = FALSE, marginal = TRUE,`  
+`me_method = c("observed", "means"), me_step = 1)`
+- where:
+  - `model` is a  fitted mlogit model.
+  - `focal_var` is a character string name of the focal variable.
+  - `focal_type` is a character string; one of "case", "alt", or "auto" (default = "auto").
+  - `grid_n` is an integer; number of points used to construct the grid of focal values for predicted probability plots when the focal variable is continuous (default = 25).
+  - `digits` is an integer; rounding for numeric output (default = 4).
+  - `ft` is logical; if TRUE, return tables as flextable objects (default = FALSE).
+  - `marginal` is logical; if TRUE, compute marginal effects (default = TRUE).
+  - `me_method` is a character string; one of "observed" AME or "means" (default = "observed").
+  - `me_step` is numeric; finite-difference step size for AME (default = 1).
+
+### Case-Specific Predictors
+
+We first examine how a consumer-level variable affects brand choice probabilities.
+
+```{r pp-case}
+pp_income <- pp_as_mnl(as_mnl_fit, focal_var = "income", ft = TRUE, me_method="means")
+pp_income$me_table
+pp_income$pp_table
+pp_income$pp_plot
+```
+
+### Alternative-Specific Predictors
+
+Now we examine a brand-specific variable such as price (a continuous variable) and feature (a categorical variable).
+
+```{r pp-alt}
+pp_price <- pp_as_mnl(as_mnl_fit, focal_var = "price", ft=TRUE, me_method="means")
+pp_price$me_table
+pp_price$pp_table
+pp_price$pp_plot
+
+pp_feat <- pp_as_mnl(as_mnl_fit, focal_var = "feat", ft=TRUE, me_method="means")
+pp_feat$me_table
+pp_feat$pp_table
+pp_feat$pp_plot
+
+```
+
+---
+
+## Managerial Insights
+
+Alternative-specific MNL models allow managers to:
+
+- Evaluate pricing and promotion strategies
+- Understand competitive substitution patterns
+- Predict market share changes under different scenarios
+
+Compared to standard MNL models, AS-MNL models provide more realistic insights when brand attributes vary within choice sets.

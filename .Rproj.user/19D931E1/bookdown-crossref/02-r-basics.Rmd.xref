@@ -1,0 +1,17 @@
+h1:r-basics R Basics
+h2:basics-of-r-commands Basics of R Commands
+h2:operators Operators
+h2:objects-and-assignment Objects and assignment
+h2:vectors Vectors
+h3:creating-vectors Creating vectors
+h3:vectorized-operations Vectorized operations
+h3:vector-length Vector Length
+h2:data-frames Data frames
+h2:indexing-and-sequencing Indexing and sequencing
+h3:indexing-vectors Indexing vectors
+h3:sequencing Sequencing
+h2:common-functions Common functions
+h2:missing-and-other-interesting-values Missing (and Other Interesting) Values
+h2:factors Factors
+h2:whats-next What’s next
+

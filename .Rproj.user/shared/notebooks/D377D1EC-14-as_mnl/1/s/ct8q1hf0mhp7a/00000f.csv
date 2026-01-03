@@ -1,0 +1,4 @@
+"0","sp <- splitsample(data = yogurt, group = ""id"", choice = ""choice"", alt = ""brand"")"
+"0",""
+"0","train <- sp[[""train.mdata""]]"
+"0","test  <- sp[[""test.mdata""]]"

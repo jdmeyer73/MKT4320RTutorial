@@ -1,0 +1,26 @@
+h1:data-visualization Data Visualization
+h2:base-r-visualizations Base R Visualizations
+h3:histogram-base-r Histogram (Base R)
+h3:box-and-whisker-plot-base-r Box-and-Whisker Plot (Base R)
+h3:scatterplot-base-r Scatterplot (Base R)
+h3:line-chart-base-r Line Chart (Base R)
+h3:bar-chart-base-r Bar Chart (Base R)
+h2:moving-beyond-base-r Moving Beyond Base R
+h2:introduction-to-ggplot2 Introduction to 
+h3:histogram Histogram
+h3:box-and-whiskers-plot Box-and-Whiskers Plot
+h4:side-by-side-boxplot Side-by-Side Boxplot
+h3:scatterplot Scatterplot
+h4:scatterplot-with-a-categorical-variable Scatterplot with a Categorical Variable
+h4:scatterplot-with-a-trendline Scatterplot with a Trendline
+h3:line-chart Line Chart
+h3:bar-chart Bar Chart
+h4:bar-charts-for-continuous-variables Bar Charts for Continuous Variables
+h3:grouped-bar-chart Grouped Bar Chart
+h4:stacked-bar-chart-with-counts Stacked Bar Chart with Counts
+h4:stacked-bar-chart-with-percentages Stacked Bar Chart with Percentages
+h4:side-by-side-bar-chart-with-countspercentages Side-by-Side Bar Chart with Counts/Percentages
+h4:side-by-side-bar-chart-with-continuous-variable Side-by-Side Bar Chart with Continuous Variable
+h2:summary Summary
+h2:whats-next What’s Next
+

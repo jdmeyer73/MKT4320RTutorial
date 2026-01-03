@@ -1,0 +1,18 @@
+h1:cluster-analysis Cluster Analysis
+h2:why-cluster-analysis-matters-in-marketing Why Cluster Analysis Matters in Marketing
+h2:the-ffseg-dataset The  Dataset
+h2:hierarchical-agglomerative-clustering Hierarchical Agglomerative Clustering
+h3:conceptual-overview Conceptual Overview
+h3:initial-hierarchical-clustering-fit Initial Hierarchical Clustering Fit
+h3:selecting-the-number-of-clusters Selecting the Number of Clusters
+h3:final-hierarchical-clustering-solution Final Hierarchical Clustering Solution
+h2:sec-describe-clusters Describing and Labeling Hierarchical Clusters
+h2:k-means-clustering K-Means Clustering
+h3:conceptual-overview-1 Conceptual Overview
+h3:initial-k-means-clustering-fit Initial K-Means Clustering Fit
+h3:final-k-means-clustering-solution Final K-Means Clustering Solution
+h2:describing-and-labeling-k-means-clusters Describing and Labeling -Means Clusters
+h2:comparing-clustering-approaches Comparing Clustering Approaches
+h2:chapter-summary Chapter Summary
+h2:whats-next What’s Next
+

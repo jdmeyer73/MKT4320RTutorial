@@ -1,0 +1,4 @@
+"0","email_visit <- glm(visit ~ promotion + recency + history + zip + womens,"
+"0","                   data=email.camp.w, family=""binomial"")"
+"0","email_spend <- lm(spend ~ promotion + recency + history + zip + womens,"
+"0","                  data=email.camp.w)"

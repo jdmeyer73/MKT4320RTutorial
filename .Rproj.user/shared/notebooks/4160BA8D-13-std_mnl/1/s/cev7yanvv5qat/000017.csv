@@ -1,0 +1,4 @@
+"0",""
+"0","pp_lifestyle <- pp_std_mnl(model = mnl_fit, focal= ""lifestyle"", "
+"0","                           xlab = ""Lifestyle"")"
+"0","pp_lifestyle$table"

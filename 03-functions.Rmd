@@ -1,0 +1,178 @@
+# Functions in R
+
+Most of what you do in R involves **using functions**. A function takes inputs (called **arguments**), performs an operation, and returns an output.
+
+You have already used several functions, such as `mean()`, `summary()`, and `seq()`.
+
+```{r example_functions}
+mean(ages)
+summary(ages)
+```
+
+## Function arguments
+
+Functions often require one or more arguments. For example:
+
+```{r mean_function}
+mean(ages)
+```
+
+Here, `ages` is passed to the function `mean()` as its first argument.
+
+Some functions require multiple arguments:
+
+```{r sequencing_function}
+seq(from = 0, to = 1, by = 0.2)
+```
+
+---
+
+## Positional vs named arguments
+
+Arguments can be passed to a function in **two ways**.
+
+### Positional arguments
+
+If arguments are supplied **in the correct order**, you do not need to name them.
+
+```{r sequencing_function_positional}
+seq(0, 1, 0.2)
+```
+
+This works because R knows the expected order of arguments for `seq()`:
+
+1. `from`
+2. `to`
+3. `by`
+
+Positional arguments are concise, but they can make code harder to read and easier to misuse.
+
+---
+
+### Named arguments (recommended)
+
+You can explicitly name arguments using `argument = value`.
+
+```{r sequencing_named}
+seq(from = 0, to = 1, by = 0.2)
+```
+
+Advantages of named arguments:
+
+- Code is easier to read
+- Order does not matter
+- Fewer mistakes when functions have many arguments
+
+For example, this works even though the order is different:
+
+```{r sequencing_named_outoforder}
+seq(by = 0.2, to = 1, from = 0)
+```
+
+In this course, **naming arguments is recommended**, especially for complex functions.
+
+---
+
+## Default argument values
+
+Many function arguments have **default values**. If you do not specify them, R uses the default.
+
+Example:
+
+```{r mean_default}
+mean(ages)
+```
+
+The function `mean()` has optional arguments such as `na.rm`, which defaults to `FALSE`.
+
+```{r mean_override default}
+mean(ages, na.rm = TRUE)
+```
+
+You only need to specify arguments when:
+
+- You want a non-default behavior
+- The function requires the argument
+
+---
+
+## Mixing positional and named arguments
+
+You can mix positional and named arguments, but **positional arguments must come first**.
+
+This is valid
+```{r mean_validmix}
+mean(ages, na.rm = TRUE)
+```
+
+This will result in an error.
+```{r mean_invalidmix}
+mean(na.rm = TRUE, ages)
+```
+
+A good rule of thumb:
+
+- Use positional arguments for the **main input**
+- Use named arguments for **options and settings**
+
+---
+
+## Viewing function documentation
+
+To understand how a function works and what arguments it accepts, use the help system.
+
+```{r help_mean, eval=FALSE}
+?mean
+```
+
+The help page shows:
+
+- What the function does
+- Required and optional arguments
+- Default values
+- Examples
+
+When in doubt, **read the argument list first**.
+
+---
+
+## Common mistakes to avoid
+
+- Forgetting parentheses. This refers to the function itself, not the result.:  
+```{r noparentheses}
+mean
+```
+  
+- Misspelling argument names:
+```{r misspelling}
+mean(ages, na_remove = TRUE)
+```
+
+- Assuming argument order without checking documentation
+
+---
+
+## Key takeaway
+
+You do **not** need to memorize every function or argument. Instead, focus on:
+
+- Understanding what a function expects as input
+- Knowing when to use named arguments
+- Reading help files when unsure
+
+These habits will make your R code more readable, more reliable, and easier to debug.
+
+---
+
+## What’s next
+
+In the next chapter, we turn to **working with course data**.
+
+You will learn how to:
+
+- inspect and understand real datasets used in the course,
+- distinguish between numeric and factor variables,
+- identify missing or problematic values, and
+- perform basic data manipulation using the `dplyr` package.
+
+These skills will allow you to move from isolated examples to analyzing complete datasets and will serve as the foundation for descriptive analysis, visualization, and modeling later in the semester.

@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 12 A/B Testing and Uplift Modeling | R Tutorial for MKT 4320</title>
+  <meta name="description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 12 A/B Testing and Uplift Modeling | R Tutorial for MKT 4320" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 12 A/B Testing and Uplift Modeling | R Tutorial for MKT 4320" />
+  
+  <meta name="twitter:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+<meta name="author" content="Jeffrey Meyer, Ph.D., Bowling Green State University" />
+
+
+<meta name="date" content="2025-01-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="pca-and-perceptual-maps.html"/>
+<link rel="next" href="standard-multinomial-logit-models.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/tabwid-1.1.3/tabwid.css" rel="stylesheet" />
+<script src="libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i><b>1</b> Setup</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="setup.html"><a href="setup.html#what-you-need"><i class="fa fa-check"></i><b>1.1</b> What you need</a></li>
+<li class="chapter" data-level="1.2" data-path="setup.html"><a href="setup.html#r-and-rstudio-quick-overview"><i class="fa fa-check"></i><b>1.2</b> R and RStudio (quick overview)</a></li>
+<li class="chapter" data-level="1.3" data-path="setup.html"><a href="setup.html#navigating-rstudio"><i class="fa fa-check"></i><b>1.3</b> Navigating RStudio</a></li>
+<li class="chapter" data-level="1.4" data-path="setup.html"><a href="setup.html#installing-and-loading-packages"><i class="fa fa-check"></i><b>1.4</b> Installing and loading packages</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="setup.html"><a href="setup.html#install-packages-one-time"><i class="fa fa-check"></i><b>1.4.1</b> Install packages (one-time)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="setup.html"><a href="setup.html#load-packages-each-session"><i class="fa fa-check"></i><b>1.4.2</b> Load packages (each session)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="setup.html"><a href="setup.html#installing-the-mkt4320bgsu-package"><i class="fa fa-check"></i><b>1.5</b> Installing the MKT4320BGSU package</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="setup.html"><a href="setup.html#install-from-github"><i class="fa fa-check"></i><b>1.5.1</b> Install from GitHub</a></li>
+<li class="chapter" data-level="1.5.2" data-path="setup.html"><a href="setup.html#load-the-package"><i class="fa fa-check"></i><b>1.5.2</b> Load the package</a></li>
+<li class="chapter" data-level="1.5.3" data-path="setup.html"><a href="setup.html#verify-everything-works"><i class="fa fa-check"></i><b>1.5.3</b> Verify everything works</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="setup.html"><a href="setup.html#getting-help-when-youre-stuck"><i class="fa fa-check"></i><b>1.6</b> Getting help when you’re stuck</a></li>
+<li class="chapter" data-level="1.7" data-path="setup.html"><a href="setup.html#how-youll-use-this-book"><i class="fa fa-check"></i><b>1.7</b> How you’ll use this book</a></li>
+<li class="chapter" data-level="1.8" data-path="setup.html"><a href="setup.html#whats-next-1"><i class="fa fa-check"></i><b>1.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="r-basics.html"><a href="r-basics.html"><i class="fa fa-check"></i><b>2</b> R Basics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="r-basics.html"><a href="r-basics.html#basics-of-r-commands"><i class="fa fa-check"></i><b>2.1</b> Basics of R Commands</a></li>
+<li class="chapter" data-level="2.2" data-path="r-basics.html"><a href="r-basics.html#operators"><i class="fa fa-check"></i><b>2.2</b> Operators</a></li>
+<li class="chapter" data-level="2.3" data-path="r-basics.html"><a href="r-basics.html#objects-and-assignment"><i class="fa fa-check"></i><b>2.3</b> Objects and assignment</a></li>
+<li class="chapter" data-level="2.4" data-path="r-basics.html"><a href="r-basics.html#vectors"><i class="fa fa-check"></i><b>2.4</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="r-basics.html"><a href="r-basics.html#creating-vectors"><i class="fa fa-check"></i><b>2.4.1</b> Creating vectors</a></li>
+<li class="chapter" data-level="2.4.2" data-path="r-basics.html"><a href="r-basics.html#vectorized-operations"><i class="fa fa-check"></i><b>2.4.2</b> Vectorized operations</a></li>
+<li class="chapter" data-level="2.4.3" data-path="r-basics.html"><a href="r-basics.html#vector-length"><i class="fa fa-check"></i><b>2.4.3</b> Vector Length</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="r-basics.html"><a href="r-basics.html#data-frames"><i class="fa fa-check"></i><b>2.5</b> Data frames</a></li>
+<li class="chapter" data-level="2.6" data-path="r-basics.html"><a href="r-basics.html#indexing-and-sequencing"><i class="fa fa-check"></i><b>2.6</b> Indexing and sequencing</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="r-basics.html"><a href="r-basics.html#indexing-vectors"><i class="fa fa-check"></i><b>2.6.1</b> Indexing vectors</a></li>
+<li class="chapter" data-level="2.6.2" data-path="r-basics.html"><a href="r-basics.html#sequencing"><i class="fa fa-check"></i><b>2.6.2</b> Sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="r-basics.html"><a href="r-basics.html#common-functions"><i class="fa fa-check"></i><b>2.7</b> Common functions</a></li>
+<li class="chapter" data-level="2.8" data-path="r-basics.html"><a href="r-basics.html#missing-and-other-interesting-values"><i class="fa fa-check"></i><b>2.8</b> Missing (and Other Interesting) Values</a></li>
+<li class="chapter" data-level="2.9" data-path="r-basics.html"><a href="r-basics.html#factors"><i class="fa fa-check"></i><b>2.9</b> Factors</a></li>
+<li class="chapter" data-level="2.10" data-path="r-basics.html"><a href="r-basics.html#whats-next-2"><i class="fa fa-check"></i><b>2.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="functions-in-r.html"><a href="functions-in-r.html"><i class="fa fa-check"></i><b>3</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="functions-in-r.html"><a href="functions-in-r.html#function-arguments"><i class="fa fa-check"></i><b>3.1</b> Function arguments</a></li>
+<li class="chapter" data-level="3.2" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-vs-named-arguments"><i class="fa fa-check"></i><b>3.2</b> Positional vs named arguments</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-arguments"><i class="fa fa-check"></i><b>3.2.1</b> Positional arguments</a></li>
+<li class="chapter" data-level="3.2.2" data-path="functions-in-r.html"><a href="functions-in-r.html#named-arguments-recommended"><i class="fa fa-check"></i><b>3.2.2</b> Named arguments (recommended)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="functions-in-r.html"><a href="functions-in-r.html#default-argument-values"><i class="fa fa-check"></i><b>3.3</b> Default argument values</a></li>
+<li class="chapter" data-level="3.4" data-path="functions-in-r.html"><a href="functions-in-r.html#mixing-positional-and-named-arguments"><i class="fa fa-check"></i><b>3.4</b> Mixing positional and named arguments</a></li>
+<li class="chapter" data-level="3.5" data-path="functions-in-r.html"><a href="functions-in-r.html#viewing-function-documentation"><i class="fa fa-check"></i><b>3.5</b> Viewing function documentation</a></li>
+<li class="chapter" data-level="3.6" data-path="functions-in-r.html"><a href="functions-in-r.html#common-mistakes-to-avoid"><i class="fa fa-check"></i><b>3.6</b> Common mistakes to avoid</a></li>
+<li class="chapter" data-level="3.7" data-path="functions-in-r.html"><a href="functions-in-r.html#key-takeaway"><i class="fa fa-check"></i><b>3.7</b> Key takeaway</a></li>
+<li class="chapter" data-level="3.8" data-path="functions-in-r.html"><a href="functions-in-r.html#whats-next-3"><i class="fa fa-check"></i><b>3.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="working-with-data.html"><a href="working-with-data.html"><i class="fa fa-check"></i><b>4</b> Working with Data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="working-with-data.html"><a href="working-with-data.html#course-data-vs-importing-data"><i class="fa fa-check"></i><b>4.1</b> Course data vs importing data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="working-with-data.html"><a href="working-with-data.html#importing-external-data"><i class="fa fa-check"></i><b>4.1.1</b> Importing external data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="working-with-data.html"><a href="working-with-data.html#inspecting-datasets-and-variables"><i class="fa fa-check"></i><b>4.2</b> Inspecting datasets and variables</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="working-with-data.html"><a href="working-with-data.html#viewing-the-data"><i class="fa fa-check"></i><b>4.2.1</b> Viewing the data</a></li>
+<li class="chapter" data-level="4.2.2" data-path="working-with-data.html"><a href="working-with-data.html#dataset-structure"><i class="fa fa-check"></i><b>4.2.2</b> Dataset structure</a></li>
+<li class="chapter" data-level="4.2.3" data-path="working-with-data.html"><a href="working-with-data.html#variable-summaries"><i class="fa fa-check"></i><b>4.2.3</b> Variable summaries</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="working-with-data.html"><a href="working-with-data.html#data-frames-variables-and-indexing"><i class="fa fa-check"></i><b>4.3</b> Data frames, variables, and indexing</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="working-with-data.html"><a href="working-with-data.html#accessing-a-variable-a-column"><i class="fa fa-check"></i><b>4.3.1</b> Accessing a variable (a column)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="working-with-data.html"><a href="working-with-data.html#indexing-a-data-frame"><i class="fa fa-check"></i><b>4.3.2</b> Indexing a data frame</a></li>
+<li class="chapter" data-level="4.3.3" data-path="working-with-data.html"><a href="working-with-data.html#filtering-rows-using-a-condition-base-r"><i class="fa fa-check"></i><b>4.3.3</b> Filtering rows using a condition (base R)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="working-with-data.html"><a href="working-with-data.html#specific-variable-summaries-base-r"><i class="fa fa-check"></i><b>4.3.4</b> Specific variable summaries (base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="working-with-data.html"><a href="working-with-data.html#data-transformations-base-r"><i class="fa fa-check"></i><b>4.4</b> Data transformations (base R)</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="working-with-data.html"><a href="working-with-data.html#creating-a-new-variable"><i class="fa fa-check"></i><b>4.4.1</b> Creating a new variable</a></li>
+<li class="chapter" data-level="4.4.2" data-path="working-with-data.html"><a href="working-with-data.html#recoding-with-ifelse"><i class="fa fa-check"></i><b>4.4.2</b> Recoding with <code>ifelse()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="working-with-data.html"><a href="working-with-data.html#whats-next-4"><i class="fa fa-check"></i><b>4.5</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dplyr-package.html"><a href="dplyr-package.html"><i class="fa fa-check"></i><b>5</b> <em>dplyr</em> Package</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dplyr-package.html"><a href="dplyr-package.html#the-dplyr-workflow"><i class="fa fa-check"></i><b>5.1</b> The <em>dplyr</em> workflow</a></li>
+<li class="chapter" data-level="5.2" data-path="dplyr-package.html"><a href="dplyr-package.html#selecting-variables"><i class="fa fa-check"></i><b>5.2</b> Selecting variables</a></li>
+<li class="chapter" data-level="5.3" data-path="dplyr-package.html"><a href="dplyr-package.html#filtering-observations"><i class="fa fa-check"></i><b>5.3</b> Filtering observations</a></li>
+<li class="chapter" data-level="5.4" data-path="dplyr-package.html"><a href="dplyr-package.html#creating-new-variables"><i class="fa fa-check"></i><b>5.4</b> Creating new variables</a></li>
+<li class="chapter" data-level="5.5" data-path="dplyr-package.html"><a href="dplyr-package.html#summaries-with-summarise"><i class="fa fa-check"></i><b>5.5</b> Summaries with <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.6" data-path="dplyr-package.html"><a href="dplyr-package.html#grouped-summaries-with-group_by-and-summarise"><i class="fa fa-check"></i><b>5.6</b> Grouped summaries with <code>group_by()</code> and <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.7" data-path="dplyr-package.html"><a href="dplyr-package.html#connecting-summarize-to-base-r"><i class="fa fa-check"></i><b>5.7</b> Connecting <code>summarize()</code> to base R</a></li>
+<li class="chapter" data-level="5.8" data-path="dplyr-package.html"><a href="dplyr-package.html#combining-transformations"><i class="fa fa-check"></i><b>5.8</b> Combining transformations</a></li>
+<li class="chapter" data-level="5.9" data-path="dplyr-package.html"><a href="dplyr-package.html#key-takeaway-1"><i class="fa fa-check"></i><b>5.9</b> Key takeaway</a></li>
+<li class="chapter" data-level="5.10" data-path="dplyr-package.html"><a href="dplyr-package.html#whats-next-5"><i class="fa fa-check"></i><b>5.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html"><i class="fa fa-check"></i><b>6</b> Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#descriptive-analysis-1"><i class="fa fa-check"></i><b>6.1</b> Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#inspecting-the-dataset"><i class="fa fa-check"></i><b>6.1.1</b> Inspecting the dataset</a></li>
+<li class="chapter" data-level="6.1.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#missing-values-quick-checks"><i class="fa fa-check"></i><b>6.1.2</b> Missing values (quick checks)</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#frequency-tables"><i class="fa fa-check"></i><b>6.2</b> Frequency Tables</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#one-way-frequency-table"><i class="fa fa-check"></i><b>6.2.1</b> One-way frequency table</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#crosstabs"><i class="fa fa-check"></i><b>6.3</b> Crosstabs</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r"><i class="fa fa-check"></i><b>6.3.1</b> Base R</a></li>
+<li class="chapter" data-level="6.3.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-sjplot"><i class="fa fa-check"></i><b>6.3.2</b> Using package <em>sjPlot</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#measures-of-central-tendency-and-dispersion"><i class="fa fa-check"></i><b>6.4</b> Measures of Central Tendency and Dispersion</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r-1"><i class="fa fa-check"></i><b>6.4.1</b> Base R</a></li>
+<li class="chapter" data-level="6.4.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-dplyr"><i class="fa fa-check"></i><b>6.4.2</b> Using package <em>dplyr</em></a></li>
+<li class="chapter" data-level="6.4.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-vtable"><i class="fa fa-check"></i><b>6.4.3</b> Using package <em>vtable</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#correlation"><i class="fa fa-check"></i><b>6.5</b> Correlation</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r-2"><i class="fa fa-check"></i><b>6.5.1</b> Base R</a></li>
+<li class="chapter" data-level="6.5.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-hmisc"><i class="fa fa-check"></i><b>6.5.2</b> Using package <em>Hmisc</em></a></li>
+<li class="chapter" data-level="6.5.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-sjplot-1"><i class="fa fa-check"></i><b>6.5.3</b> Using package <em>sjPlot</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#why-descriptive-analysis-matters"><i class="fa fa-check"></i><b>6.6</b> Why descriptive analysis matters</a></li>
+<li class="chapter" data-level="6.7" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#whats-next-6"><i class="fa fa-check"></i><b>6.7</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>7</b> Data Visualization</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-visualization.html"><a href="data-visualization.html#base-r-visualizations"><i class="fa fa-check"></i><b>7.1</b> Base R Visualizations</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="data-visualization.html"><a href="data-visualization.html#histogram-base-r"><i class="fa fa-check"></i><b>7.1.1</b> Histogram (Base R)</a></li>
+<li class="chapter" data-level="7.1.2" data-path="data-visualization.html"><a href="data-visualization.html#box-and-whisker-plot-base-r"><i class="fa fa-check"></i><b>7.1.2</b> Box-and-Whisker Plot (Base R)</a></li>
+<li class="chapter" data-level="7.1.3" data-path="data-visualization.html"><a href="data-visualization.html#scatterplot-base-r"><i class="fa fa-check"></i><b>7.1.3</b> Scatterplot (Base R)</a></li>
+<li class="chapter" data-level="7.1.4" data-path="data-visualization.html"><a href="data-visualization.html#line-chart-base-r"><i class="fa fa-check"></i><b>7.1.4</b> Line Chart (Base R)</a></li>
+<li class="chapter" data-level="7.1.5" data-path="data-visualization.html"><a href="data-visualization.html#bar-chart-base-r"><i class="fa fa-check"></i><b>7.1.5</b> Bar Chart (Base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="data-visualization.html"><a href="data-visualization.html#moving-beyond-base-r"><i class="fa fa-check"></i><b>7.2</b> Moving Beyond Base R</a></li>
+<li class="chapter" data-level="7.3" data-path="data-visualization.html"><a href="data-visualization.html#introduction-to-ggplot2"><i class="fa fa-check"></i><b>7.3</b> Introduction to <em>ggplot2</em></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="data-visualization.html"><a href="data-visualization.html#histogram"><i class="fa fa-check"></i><b>7.3.1</b> Histogram</a></li>
+<li class="chapter" data-level="7.3.2" data-path="data-visualization.html"><a href="data-visualization.html#box-and-whiskers-plot"><i class="fa fa-check"></i><b>7.3.2</b> Box-and-Whiskers Plot</a></li>
+<li class="chapter" data-level="7.3.3" data-path="data-visualization.html"><a href="data-visualization.html#scatterplot"><i class="fa fa-check"></i><b>7.3.3</b> Scatterplot</a></li>
+<li class="chapter" data-level="7.3.4" data-path="data-visualization.html"><a href="data-visualization.html#line-chart"><i class="fa fa-check"></i><b>7.3.4</b> Line Chart</a></li>
+<li class="chapter" data-level="7.3.5" data-path="data-visualization.html"><a href="data-visualization.html#bar-chart"><i class="fa fa-check"></i><b>7.3.5</b> Bar Chart</a></li>
+<li class="chapter" data-level="7.3.6" data-path="data-visualization.html"><a href="data-visualization.html#grouped-bar-chart"><i class="fa fa-check"></i><b>7.3.6</b> Grouped Bar Chart</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="data-visualization.html"><a href="data-visualization.html#summary"><i class="fa fa-check"></i><b>7.4</b> Summary</a></li>
+<li class="chapter" data-level="7.5" data-path="data-visualization.html"><a href="data-visualization.html#whats-next-7"><i class="fa fa-check"></i><b>7.5</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>8</b> Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="linear-regression.html"><a href="linear-regression.html#the-linear-regression-model"><i class="fa fa-check"></i><b>8.1</b> The Linear Regression Model</a></li>
+<li class="chapter" data-level="8.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>8.2</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="linear-regression.html"><a href="linear-regression.html#nice-output"><i class="fa fa-check"></i><b>8.2.1</b> “Nice” Output</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>8.3</b> Multiple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="linear-regression.html"><a href="linear-regression.html#adding-additional-variables"><i class="fa fa-check"></i><b>8.3.1</b> Adding Additional Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors-and-reference-groups"><i class="fa fa-check"></i><b>8.4</b> Categorical Predictors and Reference Groups</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="linear-regression.html"><a href="linear-regression.html#example-flight-class"><i class="fa fa-check"></i><b>8.4.1</b> Example: Flight Class</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="linear-regression.html"><a href="linear-regression.html#interaction-effects"><i class="fa fa-check"></i><b>8.5</b> Interaction Effects</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="linear-regression.html"><a href="linear-regression.html#example-flights-and-frequent-flier-status"><i class="fa fa-check"></i><b>8.5.1</b> Example: Flights and Frequent Flier Status</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="linear-regression.html"><a href="linear-regression.html#sec-margin-plots"><i class="fa fa-check"></i><b>8.6</b> Margin Plots with <code>easy_mp</code></a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="linear-regression.html"><a href="linear-regression.html#the-easy_mp-function"><i class="fa fa-check"></i><b>8.6.1</b> The <code>easy_mp()</code> Function</a></li>
+<li class="chapter" data-level="8.6.2" data-path="linear-regression.html"><a href="linear-regression.html#without-interactions"><i class="fa fa-check"></i><b>8.6.2</b> WITHOUT Interactions</a></li>
+<li class="chapter" data-level="8.6.3" data-path="linear-regression.html"><a href="linear-regression.html#with-interactions"><i class="fa fa-check"></i><b>8.6.3</b> WITH Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="linear-regression.html"><a href="linear-regression.html#prediction"><i class="fa fa-check"></i><b>8.7</b> Prediction</a></li>
+<li class="chapter" data-level="8.8" data-path="linear-regression.html"><a href="linear-regression.html#whats-next-8"><i class="fa fa-check"></i><b>8.8</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html"><i class="fa fa-check"></i><b>9</b> Binary Logistic Regression</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#why-logistic-regression-in-marketing-analytics"><i class="fa fa-check"></i><b>9.1</b> Why Logistic Regression in Marketing Analytics</a></li>
+<li class="chapter" data-level="9.2" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#the-direct-marketing-data"><i class="fa fa-check"></i><b>9.2</b> The Direct Marketing Data</a></li>
+<li class="chapter" data-level="9.3" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#splitting-data-into-training-and-test-samples"><i class="fa fa-check"></i><b>9.3</b> Splitting Data into Training and Test Samples</a></li>
+<li class="chapter" data-level="9.4" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#estimating-a-binary-logistic-regression-model"><i class="fa fa-check"></i><b>9.4</b> Estimating a Binary Logistic Regression Model</a></li>
+<li class="chapter" data-level="9.5" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#interpreting-odds-ratios"><i class="fa fa-check"></i><b>9.5</b> Interpreting Odds Ratios</a></li>
+<li class="chapter" data-level="9.6" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#predicted-probabilities"><i class="fa fa-check"></i><b>9.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="9.7" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#classification-and-cutoff-values"><i class="fa fa-check"></i><b>9.7</b> Classification and Cutoff Values</a></li>
+<li class="chapter" data-level="9.8" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#choosing-a-cutoff"><i class="fa fa-check"></i><b>9.8</b> Choosing a Cutoff</a></li>
+<li class="chapter" data-level="9.9" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#roc-curve-and-auc"><i class="fa fa-check"></i><b>9.9</b> ROC Curve and AUC</a></li>
+<li class="chapter" data-level="9.10" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#gain-and-lift-charts"><i class="fa fa-check"></i><b>9.10</b> Gain and Lift Charts</a></li>
+<li class="chapter" data-level="9.11" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#margin-plots-with-easy_mp"><i class="fa fa-check"></i><b>9.11</b> Margin Plots with <code>easy_mp()</code></a></li>
+<li class="chapter" data-level="9.12" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#putting-it-all-together"><i class="fa fa-check"></i><b>9.12</b> Putting It All Together</a></li>
+<li class="chapter" data-level="9.13" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#whats-next-9"><i class="fa fa-check"></i><b>9.13</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="cluster-analysis.html"><a href="cluster-analysis.html"><i class="fa fa-check"></i><b>10</b> Cluster Analysis</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#why-cluster-analysis-matters-in-marketing"><i class="fa fa-check"></i><b>10.1</b> Why Cluster Analysis Matters in Marketing</a></li>
+<li class="chapter" data-level="10.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#the-ffseg-dataset"><i class="fa fa-check"></i><b>10.2</b> The <code>ffseg</code> Dataset</a></li>
+<li class="chapter" data-level="10.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#hierarchical-agglomerative-clustering"><i class="fa fa-check"></i><b>10.3</b> Hierarchical Agglomerative Clustering</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#conceptual-overview"><i class="fa fa-check"></i><b>10.3.1</b> Conceptual Overview</a></li>
+<li class="chapter" data-level="10.3.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#initial-hierarchical-clustering-fit"><i class="fa fa-check"></i><b>10.3.2</b> Initial Hierarchical Clustering Fit</a></li>
+<li class="chapter" data-level="10.3.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#selecting-the-number-of-clusters"><i class="fa fa-check"></i><b>10.3.3</b> Selecting the Number of Clusters</a></li>
+<li class="chapter" data-level="10.3.4" data-path="cluster-analysis.html"><a href="cluster-analysis.html#final-hierarchical-clustering-solution"><i class="fa fa-check"></i><b>10.3.4</b> Final Hierarchical Clustering Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="cluster-analysis.html"><a href="cluster-analysis.html#sec-describe-clusters"><i class="fa fa-check"></i><b>10.4</b> Describing and Labeling Hierarchical Clusters</a></li>
+<li class="chapter" data-level="10.5" data-path="cluster-analysis.html"><a href="cluster-analysis.html#k-means-clustering"><i class="fa fa-check"></i><b>10.5</b> K-Means Clustering</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#conceptual-overview-1"><i class="fa fa-check"></i><b>10.5.1</b> Conceptual Overview</a></li>
+<li class="chapter" data-level="10.5.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#initial-k-means-clustering-fit"><i class="fa fa-check"></i><b>10.5.2</b> Initial K-Means Clustering Fit</a></li>
+<li class="chapter" data-level="10.5.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#final-k-means-clustering-solution"><i class="fa fa-check"></i><b>10.5.3</b> Final K-Means Clustering Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="cluster-analysis.html"><a href="cluster-analysis.html#describing-and-labeling-k-means-clusters"><i class="fa fa-check"></i><b>10.6</b> Describing and Labeling <em>k</em>-Means Clusters</a></li>
+<li class="chapter" data-level="10.7" data-path="cluster-analysis.html"><a href="cluster-analysis.html#comparing-clustering-approaches"><i class="fa fa-check"></i><b>10.7</b> Comparing Clustering Approaches</a></li>
+<li class="chapter" data-level="10.8" data-path="cluster-analysis.html"><a href="cluster-analysis.html#chapter-summary"><i class="fa fa-check"></i><b>10.8</b> Chapter Summary</a></li>
+<li class="chapter" data-level="10.9" data-path="cluster-analysis.html"><a href="cluster-analysis.html#whats-next-10"><i class="fa fa-check"></i><b>10.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html"><i class="fa fa-check"></i><b>11</b> PCA and Perceptual Maps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#introduction-why-pca-matters-in-marketing-analytics"><i class="fa fa-check"></i><b>11.1</b> Introduction: Why PCA Matters in Marketing Analytics</a></li>
+<li class="chapter" data-level="11.2" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#the-greekbrands-dataset"><i class="fa fa-check"></i><b>11.2</b> The <code>greekbrands</code> Dataset</a></li>
+<li class="chapter" data-level="11.3" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#preparing-for-pca-in-a-marketing-context"><i class="fa fa-check"></i><b>11.3</b> Preparing for PCA in a Marketing Context</a></li>
+<li class="chapter" data-level="11.4" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#pca-modeling"><i class="fa fa-check"></i><b>11.4</b> PCA Modeling</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#fitting-an-initial-pca-model"><i class="fa fa-check"></i><b>11.4.1</b> Fitting an Initial PCA Model</a></li>
+<li class="chapter" data-level="11.4.2" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#final-pca-solution"><i class="fa fa-check"></i><b>11.4.2</b> Final PCA Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#from-pca-to-perceptual-maps"><i class="fa fa-check"></i><b>11.5</b> From PCA to Perceptual Maps</a></li>
+<li class="chapter" data-level="11.6" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#attribute-based-perceptual-maps-using-pca"><i class="fa fa-check"></i><b>11.6</b> Attribute-Based Perceptual Maps Using PCA</a>
+<ul>
+<li class="chapter" data-level="11.6.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#creating-pca-based-maps"><i class="fa fa-check"></i><b>11.6.1</b> Creating PCA-Based Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="11.7" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#managerial-interpretation-and-strategic-insights"><i class="fa fa-check"></i><b>11.7</b> Managerial Interpretation and Strategic Insights</a></li>
+<li class="chapter" data-level="11.8" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#chapter-summary-1"><i class="fa fa-check"></i><b>11.8</b> Chapter Summary</a></li>
+<li class="chapter" data-level="11.9" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#whats-next-11"><i class="fa fa-check"></i><b>11.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html"><i class="fa fa-check"></i><b>12</b> A/B Testing and Uplift Modeling</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#introduction-from-average-effects-to-targeted-marketing"><i class="fa fa-check"></i><b>12.1</b> Introduction: From Average Effects to Targeted Marketing</a></li>
+<li class="chapter" data-level="12.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#the-email-campaign-experiment"><i class="fa fa-check"></i><b>12.2</b> The Email Campaign Experiment</a></li>
+<li class="chapter" data-level="12.3" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#checking-the-randomization-assumption"><i class="fa fa-check"></i><b>12.3</b> Checking the Randomization Assumption</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-balance-checks-matter"><i class="fa fa-check"></i><b>12.3.1</b> Why Balance Checks Matter</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#randomization-check-using-rand_check"><i class="fa fa-check"></i><b>12.3.2</b> Randomization Check Using <code>rand_check()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#estimating-the-average-treatment-effect-ate"><i class="fa fa-check"></i><b>12.4</b> Estimating the Average Treatment Effect (ATE)</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#what-is-the-ate"><i class="fa fa-check"></i><b>12.4.1</b> What Is the ATE?</a></li>
+<li class="chapter" data-level="12.4.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#ate-via-regression"><i class="fa fa-check"></i><b>12.4.2</b> ATE via Regression</a></li>
+<li class="chapter" data-level="12.4.3" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#using-easy_ab_ate"><i class="fa fa-check"></i><b>12.4.3</b> Using <code>easy_ab_ate()</code></a></li>
+<li class="chapter" data-level="12.4.4" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-average-effects-are-not-enough"><i class="fa fa-check"></i><b>12.4.4</b> Why Average Effects Are Not Enough</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#introduction-to-uplift-modeling"><i class="fa fa-check"></i><b>12.5</b> Introduction to Uplift Modeling</a>
+<ul>
+<li class="chapter" data-level="12.5.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#what-is-uplift"><i class="fa fa-check"></i><b>12.5.1</b> What Is Uplift?</a></li>
+<li class="chapter" data-level="12.5.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#two-model-indirect-approach"><i class="fa fa-check"></i><b>12.5.2</b> Two-Model (Indirect) Approach</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#estimating-uplift-with-easy_uplift"><i class="fa fa-check"></i><b>12.6</b> Estimating Uplift with <code>easy_uplift()</code></a>
+<ul>
+<li class="chapter" data-level="12.6.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#model-specification"><i class="fa fa-check"></i><b>12.6.1</b> Model Specification</a></li>
+<li class="chapter" data-level="12.6.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#interpreting-core-outputs"><i class="fa fa-check"></i><b>12.6.2</b> Interpreting Core Outputs</a></li>
+</ul></li>
+<li class="chapter" data-level="12.7" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#diagnosing-uplift-with-lift-plots"><i class="fa fa-check"></i><b>12.7</b> Diagnosing Uplift with Lift Plots</a>
+<ul>
+<li class="chapter" data-level="12.7.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-lift-diagnostics-matter"><i class="fa fa-check"></i><b>12.7.1</b> Why Lift Diagnostics Matter</a></li>
+<li class="chapter" data-level="12.7.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#using-easy_liftplots"><i class="fa fa-check"></i><b>12.7.2</b> Using <code>easy_liftplots()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#from-analysis-to-action"><i class="fa fa-check"></i><b>12.8</b> From Analysis to Action</a></li>
+<li class="chapter" data-level="12.9" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#summary-1"><i class="fa fa-check"></i><b>12.9</b> Summary</a></li>
+<li class="chapter" data-level="12.10" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#whats-next-12"><i class="fa fa-check"></i><b>12.10</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html"><i class="fa fa-check"></i><b>13</b> Standard Multinomial Logit Models</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#introduction-to-multinomial-choice-in-marketing"><i class="fa fa-check"></i><b>13.1</b> Introduction to Multinomial Choice in Marketing</a></li>
+<li class="chapter" data-level="13.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#the-bfast-dataset"><i class="fa fa-check"></i><b>13.2</b> The <code>bfast</code> Dataset</a></li>
+<li class="chapter" data-level="13.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#training-and-test-samples"><i class="fa fa-check"></i><b>13.3</b> Training and Test Samples</a></li>
+<li class="chapter" data-level="13.4" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#estimating-a-standard-multinomial-logit-model"><i class="fa fa-check"></i><b>13.4</b> Estimating a Standard Multinomial Logit Model</a></li>
+<li class="chapter" data-level="13.5" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#evaluating-model-fit"><i class="fa fa-check"></i><b>13.5</b> Evaluating Model Fit</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#interpreting-coefficients"><i class="fa fa-check"></i><b>13.5.1</b> Interpreting Coefficients</a></li>
+<li class="chapter" data-level="13.5.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#classification-performance"><i class="fa fa-check"></i><b>13.5.2</b> Classification Performance</a></li>
+<li class="chapter" data-level="13.5.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#holdout-sample-evaluation"><i class="fa fa-check"></i><b>13.5.3</b> Holdout Sample Evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#predicted-probabilities-1"><i class="fa fa-check"></i><b>13.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="13.7" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#marketing-interpretation"><i class="fa fa-check"></i><b>13.7</b> Marketing Interpretation</a></li>
+<li class="chapter" data-level="13.8" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#summary-2"><i class="fa fa-check"></i><b>13.8</b> Summary</a></li>
+<li class="chapter" data-level="13.9" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#whats-next-13"><i class="fa fa-check"></i><b>13.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html"><i class="fa fa-check"></i><b>14</b> Alternative-Specific Multinomial Logit Models</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#introduction-why-alternative-specific-mnl"><i class="fa fa-check"></i><b>14.1</b> Introduction: Why Alternative-Specific MNL?</a></li>
+<li class="chapter" data-level="14.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#the-yogurt-choice-data"><i class="fa fa-check"></i><b>14.2</b> The Yogurt Choice Data</a></li>
+<li class="chapter" data-level="14.3" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#preparing-the-data-for-modeling"><i class="fa fa-check"></i><b>14.3</b> Preparing the Data for Modeling</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-splitting-is-different-for-choice-data"><i class="fa fa-check"></i><b>14.3.1</b> Why Splitting Is Different for Choice Data</a></li>
+<li class="chapter" data-level="14.3.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#creating-training-and-test-samples"><i class="fa fa-check"></i><b>14.3.2</b> Creating Training and Test Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#specifying-an-alternative-specific-mnl-model"><i class="fa fa-check"></i><b>14.4</b> Specifying an Alternative-Specific MNL Model</a></li>
+<li class="chapter" data-level="14.5" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#evaluating-model-performance"><i class="fa fa-check"></i><b>14.5</b> Evaluating Model Performance</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#model-fit-and-coefficients"><i class="fa fa-check"></i><b>14.5.1</b> Model Fit and Coefficients</a></li>
+<li class="chapter" data-level="14.5.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#classification-performance-1"><i class="fa fa-check"></i><b>14.5.2</b> Classification Performance</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#predicted-probabilities-and-marginal-effects"><i class="fa fa-check"></i><b>14.6</b> Predicted Probabilities and Marginal Effects</a>
+<ul>
+<li class="chapter" data-level="14.6.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-predicted-probabilities-matter"><i class="fa fa-check"></i><b>14.6.1</b> Why Predicted Probabilities Matter</a></li>
+<li class="chapter" data-level="14.6.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-marginal-effects-are-useful"><i class="fa fa-check"></i><b>14.6.2</b> Why Marginal Effects Are Useful</a></li>
+<li class="chapter" data-level="14.6.3" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#the-pp_as_mnl-function"><i class="fa fa-check"></i><b>14.6.3</b> The <code>pp_as_mnl()</code> Function</a></li>
+<li class="chapter" data-level="14.6.4" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#case-specific-predictors"><i class="fa fa-check"></i><b>14.6.4</b> Case-Specific Predictors</a></li>
+<li class="chapter" data-level="14.6.5" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#alternative-specific-predictors"><i class="fa fa-check"></i><b>14.6.5</b> Alternative-Specific Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#managerial-insights"><i class="fa fa-check"></i><b>14.7</b> Managerial Insights</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Tutorial for MKT 4320</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ab-testing-and-uplift-modeling" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">Chapter 12</span> A/B Testing and Uplift Modeling<a href="ab-testing-and-uplift-modeling.html#ab-testing-and-uplift-modeling" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="introduction-from-average-effects-to-targeted-marketing" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> Introduction: From Average Effects to Targeted Marketing<a href="ab-testing-and-uplift-modeling.html#introduction-from-average-effects-to-targeted-marketing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A/B testing is one of the most widely used tools in marketing analytics. Whether testing
+email subject lines, promotional offers, website layouts, or pricing messages, marketers
+frequently rely on randomized experiments to measure causal effects.</p>
+<p>In this chapter, we begin with <strong>average treatment effects (ATEs)</strong>, which is the traditional goal
+of A/B testing,and then move beyond averages to <strong>uplift modeling</strong>, which focuses on
+identifying <em>who</em> is most likely to be influenced by a marketing intervention.</p>
+<p>Throughout the chapter, we use data from an email marketing experiment contained in the
+<code>email.camp.w</code> dataset.</p>
+<hr />
+</div>
+<div id="the-email-campaign-experiment" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> The Email Campaign Experiment<a href="ab-testing-and-uplift-modeling.html#the-email-campaign-experiment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The dataset <code>email.camp.w</code> comes from a randomized email campaign experiment. Customers
+were randomly assigned to receive either:</p>
+<ul>
+<li>a <strong>promotional email</strong> (treatment group), or</li>
+<li><strong>no promotional email</strong> (control group).</li>
+</ul>
+<p>The primary outcome of interest is whether the customer responded (e.g., clicked or
+converted). In addition, the dataset contains several customer characteristics
+(covariates) such as demographics and prior behavior.</p>
+<p>Because treatment assignment was randomized, differences in outcomes between the two
+groups can be interpreted causally.</p>
+<hr />
+</div>
+<div id="checking-the-randomization-assumption" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Checking the Randomization Assumption<a href="ab-testing-and-uplift-modeling.html#checking-the-randomization-assumption" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="why-balance-checks-matter" class="section level3 hasAnchor" number="12.3.1">
+<h3><span class="header-section-number">12.3.1</span> Why Balance Checks Matter<a href="ab-testing-and-uplift-modeling.html#why-balance-checks-matter" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Randomization ensures that treatment and control groups are similar <em>on average</em>.
+However, especially in applied settings, it is good practice to verify that observable
+covariates are balanced across groups.</p>
+<p>Large imbalances may signal problems such as implementation errors or data issues.</p>
+</div>
+<div id="randomization-check-using-rand_check" class="section level3 hasAnchor" number="12.3.2">
+<h3><span class="header-section-number">12.3.2</span> Randomization Check Using <code>rand_check()</code><a href="ab-testing-and-uplift-modeling.html#randomization-check-using-rand_check" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <code>rand_check()</code> function from the <code>MKT4320BGSU</code> package compares the distribution of selected covariates across
+treatment groups and automatically applies appropriate statistical tests.</p>
+<p>Usage:</p>
+<ul>
+<li><code>rand_check(data, treatment, covariates, ft = TRUE, digits = 3)</code></li>
+<li>where:
+<ul>
+<li><code>data</code> is a data frame containing the treatment indicator and covariates.</li>
+<li><code>treatment</code> is a character string giving the name of the treatment variable. Must identify two or more groups.</li>
+<li><code>covariates</code> is a character vector of covariate names to include in the randomization check.</li>
+<li><code>ft</code> is logical; if TRUE (default), return results as a flextable. If FALSE, return a data frame.</li>
+<li><code>digits</code> is an integer; number of decimal places to display in the output (default = 3).</li>
+</ul></li>
+</ul>
+<p>An example is provided below. When reviewing the output, focus on:</p>
+<ul>
+<li><strong>Scaled mean differences</strong>: values close to zero indicate good balance.</li>
+<li><strong>p-values</strong>: large p-values suggest no systematic differences.</li>
+</ul>
+<p>Well-balanced covariates support the validity of the experiment.</p>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="ab-testing-and-uplift-modeling.html#cb331-1" tabindex="-1"></a><span class="fu">rand_check</span>(<span class="at">data =</span> email.camp.w, <span class="at">treatment =</span> <span class="st">&quot;promotion&quot;</span>,</span>
+<span id="cb331-2"><a href="ab-testing-and-uplift-modeling.html#cb331-2" tabindex="-1"></a>  <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">&quot;recency&quot;</span>, <span class="st">&quot;history&quot;</span>, <span class="st">&quot;womens&quot;</span>, <span class="st">&quot;zip&quot;</span>),</span>
+<span id="cb331-3"><a href="ab-testing-and-uplift-modeling.html#cb331-3" tabindex="-1"></a>  <span class="at">ft =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="tabwid"><style>.cl-9f0f3000{}.cl-9f089e16{font-family:'Arial';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-9f089e20{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-9f0b60b0{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-9f0b60ba{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:1pt;padding-top:1pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-9f0b60c4{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:1pt;padding-top:1pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-9f0b7b4a{width:0.75in;background-color:transparent;vertical-align: bottom;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f0b7b54{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f0b7b55{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f0b7b68{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f0b7b69{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing='true' class='cl-9f0f3000'><thead><tr style="overflow-wrap:break-word;"><th  rowspan="2"class="cl-9f0b7b4a"><p class="cl-9f0b60b0"><span class="cl-9f089e16">Variable</span></p></th><th  colspan="2"class="cl-9f0b7b4a"><p class="cl-9f0b60b0"><span class="cl-9f089e16">Mean</span></p></th><th  rowspan="2"class="cl-9f0b7b4a"><p class="cl-9f0b60b0"><span class="cl-9f089e16">SD</span></p></th><th  rowspan="2"class="cl-9f0b7b4a"><p class="cl-9f0b60b0"><span class="cl-9f089e16">Scaled Mean Difference</span></p></th><th  rowspan="2"class="cl-9f0b7b4a"><p class="cl-9f0b60b0"><span class="cl-9f089e16">p-value</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-9f0b7b4a"><p class="cl-9f0b60b0"><span class="cl-9f089e16">Treatment</span></p></th><th class="cl-9f0b7b4a"><p class="cl-9f0b60b0"><span class="cl-9f089e16">Control</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-9f0b7b54"><p class="cl-9f0b60ba"><span class="cl-9f089e20">recency</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">5.810</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">5.725</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">3.504</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.024</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.227</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9f0b7b54"><p class="cl-9f0b60ba"><span class="cl-9f089e20">history</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">245.995</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">242.539</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">253.384</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.014</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.495</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9f0b7b54"><p class="cl-9f0b60ba"><span class="cl-9f089e20">womens</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.545</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.539</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.498</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.011</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.574</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9f0b7b54"><p class="cl-9f0b60ba"><span class="cl-9f089e20">zip:Rural</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.143</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.148</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.353</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">-0.014</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.395</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9f0b7b54"><p class="cl-9f0b60ba"><span class="cl-9f089e20">zip:Surburban</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.459</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.445</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.498</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.027</span></p></td><td class="cl-9f0b7b55"><p class="cl-9f0b60c4"><span class="cl-9f089e20"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9f0b7b68"><p class="cl-9f0b60ba"><span class="cl-9f089e20">zip:Urban</span></p></td><td class="cl-9f0b7b69"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.398</span></p></td><td class="cl-9f0b7b69"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.406</span></p></td><td class="cl-9f0b7b69"><p class="cl-9f0b60c4"><span class="cl-9f089e20">0.490</span></p></td><td class="cl-9f0b7b69"><p class="cl-9f0b60c4"><span class="cl-9f089e20">-0.017</span></p></td><td class="cl-9f0b7b69"><p class="cl-9f0b60c4"><span class="cl-9f089e20"></span></p></td></tr></tbody></table></div>
+<hr />
+</div>
+</div>
+<div id="estimating-the-average-treatment-effect-ate" class="section level2 hasAnchor" number="12.4">
+<h2><span class="header-section-number">12.4</span> Estimating the Average Treatment Effect (ATE)<a href="ab-testing-and-uplift-modeling.html#estimating-the-average-treatment-effect-ate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="what-is-the-ate" class="section level3 hasAnchor" number="12.4.1">
+<h3><span class="header-section-number">12.4.1</span> What Is the ATE?<a href="ab-testing-and-uplift-modeling.html#what-is-the-ate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <strong>average treatment effect</strong> measures the average impact of the promotion across all
+customers. In an email campaign, this answers the question:
+Did sending the promotion increase response rates overall?</p>
+</div>
+<div id="ate-via-regression" class="section level3 hasAnchor" number="12.4.2">
+<h3><span class="header-section-number">12.4.2</span> ATE via Regression<a href="ab-testing-and-uplift-modeling.html#ate-via-regression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For binary outcomes, a linear regression with a treatment indicator is equivalent to a
+difference-in-means estimator. When the outcome is binary, this is known as a <strong>linear
+probability model (LPM)</strong>.</p>
+</div>
+<div id="using-easy_ab_ate" class="section level3 hasAnchor" number="12.4.3">
+<h3><span class="header-section-number">12.4.3</span> Using <code>easy_ab_ate()</code><a href="ab-testing-and-uplift-modeling.html#using-easy_ab_ate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We estimate the ATE using a regression model that includes the treatment indicator and
+optionally adjusts for covariates by using the <code>easy_ab_ate()</code> function from the <code>MKT4320BGSU</code> package.</p>
+<p>Usage:</p>
+<ul>
+<li><code>easy_ab_ate(model, treatment, ft = TRUE)</code></li>
+<li>where:
+<ul>
+<li><code>model</code> is a fitted linear regression model of class lm. This model should include the treatment variable and (optionally) covariates.</li>
+<li><code>treatment</code> is a character string with the name of the treatment variable (in quotes).</li>
+<li><code>ft</code> is logical; if TRUE (default) return a flextable. If FALSE, print full regression results to the console.</li>
+</ul></li>
+</ul>
+<p>Note that to use this function, you must first create a linear regression model using the <code>lm()</code> function. The model should have a response variable as the dependent variable, the treatment variable as an independent variable, and any additional covariates as additional independent variables. The results should be saved to an object. For example:</p>
+<ul>
+<li><code>object &lt;- lm(response ~ treatment + cov_1 + cov_2 + ... + cov_k, data = data)</code></li>
+</ul>
+<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="ab-testing-and-uplift-modeling.html#cb332-1" tabindex="-1"></a>m_ab_visit <span class="ot">&lt;-</span> <span class="fu">lm</span>(visit <span class="sc">~</span> promotion <span class="sc">+</span> recency <span class="sc">+</span> history <span class="sc">+</span> womens <span class="sc">+</span> zip, </span>
+<span id="cb332-2"><a href="ab-testing-and-uplift-modeling.html#cb332-2" tabindex="-1"></a>                 <span class="at">data =</span> email.camp.w)</span>
+<span id="cb332-3"><a href="ab-testing-and-uplift-modeling.html#cb332-3" tabindex="-1"></a><span class="fu">easy_ab_ate</span>(<span class="at">model =</span> m_ab_visit, <span class="at">treatment =</span> <span class="st">&quot;promotion&quot;</span>, <span class="at">ft =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="tabwid"><style>.cl-a01b8c96{}.cl-a0136278{font-family:'Arial';font-size:14pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a0136282{font-family:'Arial';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a013628c{font-family:'Arial';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a0167ce2{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a0167cf6{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a0167d00{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:1pt;padding-top:1pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a0167d0a{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:1pt;padding-top:1pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a0167d14{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:1pt;padding-top:1pt;padding-left:15pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a016c896{width:1.304in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8a0{width:0.757in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8aa{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8b4{width:1.304in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8be{width:0.757in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8c8{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8c9{width:1.304in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8d2{width:0.757in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8dc{width:0.82in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8dd{width:1.304in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8e6{width:0.757in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8e7{width:0.82in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8f0{width:1.304in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c8fa{width:0.757in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a016c904{width:0.82in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing='true' class='cl-a01b8c96'><thead><tr style="overflow-wrap:break-word;"><th class="cl-a016c896"><p class="cl-a0167ce2"><span class="cl-a0136278"> </span></p></th><th  colspan="2"class="cl-a016c8a0"><p class="cl-a0167cf6"><span class="cl-a0136278">Without</span><br><span class="cl-a0136278">Covariates</span></p></th><th  colspan="2"class="cl-a016c8a0"><p class="cl-a0167cf6"><span class="cl-a0136278">With</span><br><span class="cl-a0136278">Covariates</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-a016c8b4"><p class="cl-a0167ce2"><span class="cl-a0136282">Characteristic</span></p></th><th class="cl-a016c8be"><p class="cl-a0167cf6"><span class="cl-a0136282">Beta</span></p></th><th class="cl-a016c8c8"><p class="cl-a0167cf6"><span class="cl-a0136282">p-value</span></p></th><th class="cl-a016c8be"><p class="cl-a0167cf6"><span class="cl-a0136282">Beta</span></p></th><th class="cl-a016c8c8"><p class="cl-a0167cf6"><span class="cl-a0136282">p-value</span></p></th></tr></thead><tbody><tr><td class="cl-a016c8c9"><p class="cl-a0167d00"><span class="cl-a013628c">(Intercept)</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">0.106</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">0.151</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td></tr><tr><td class="cl-a016c8c9"><p class="cl-a0167d00"><span class="cl-a013628c">promotion</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">0.049</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">0.050</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td></tr><tr><td class="cl-a016c8c9"><p class="cl-a0167d00"><span class="cl-a013628c">recency</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">-0.006</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td></tr><tr><td class="cl-a016c8c9"><p class="cl-a0167d00"><span class="cl-a013628c">history</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">0.000</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td></tr><tr><td class="cl-a016c8c9"><p class="cl-a0167d00"><span class="cl-a013628c">womens</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">0.046</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td></tr><tr><td class="cl-a016c8c9"><p class="cl-a0167d00"><span class="cl-a013628c">zip</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td></tr><tr><td class="cl-a016c8c9"><p class="cl-a0167d14"><span class="cl-a013628c">Rural</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">—</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td></tr><tr><td class="cl-a016c8c9"><p class="cl-a0167d14"><span class="cl-a013628c">Surburban</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">-0.053</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td></tr><tr><td class="cl-a016c8c9"><p class="cl-a0167d14"><span class="cl-a013628c">Urban</span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8d2"><p class="cl-a0167d0a"><span class="cl-a013628c">-0.065</span></p></td><td class="cl-a016c8dc"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td></tr><tr><td class="cl-a016c8dd"><p class="cl-a0167d00"><span class="cl-a013628c">p-value</span></p></td><td class="cl-a016c8e6"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td><td class="cl-a016c8e7"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8e6"><p class="cl-a0167d0a"><span class="cl-a013628c">&lt;0.001</span></p></td><td class="cl-a016c8e7"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td></tr><tr><td class="cl-a016c8f0"><p class="cl-a0167d00"><span class="cl-a013628c">R²</span></p></td><td class="cl-a016c8fa"><p class="cl-a0167d0a"><span class="cl-a013628c">0.005</span></p></td><td class="cl-a016c904"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td><td class="cl-a016c8fa"><p class="cl-a0167d0a"><span class="cl-a013628c">0.024</span></p></td><td class="cl-a016c904"><p class="cl-a0167d0a"><span class="cl-a013628c"></span></p></td></tr></tbody></table></div>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="ab-testing-and-uplift-modeling.html#cb333-1" tabindex="-1"></a>m_ab_spend <span class="ot">&lt;-</span> <span class="fu">lm</span>(spend <span class="sc">~</span> promotion <span class="sc">+</span> recency <span class="sc">+</span> history <span class="sc">+</span> womens <span class="sc">+</span> zip,</span>
+<span id="cb333-2"><a href="ab-testing-and-uplift-modeling.html#cb333-2" tabindex="-1"></a>                 <span class="at">data =</span> email.camp.w)</span>
+<span id="cb333-3"><a href="ab-testing-and-uplift-modeling.html#cb333-3" tabindex="-1"></a><span class="fu">easy_ab_ate</span>(<span class="at">model =</span> m_ab_spend, <span class="at">treatment =</span> <span class="st">&quot;promotion&quot;</span>, <span class="at">ft =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="tabwid"><style>.cl-a1180aa2{}.cl-a11040ec{font-family:'Arial';font-size:14pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a1104100{font-family:'Arial';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a1104101{font-family:'Arial';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a11345a8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a11345bc{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a11345c6{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:1pt;padding-top:1pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a11345c7{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:1pt;padding-top:1pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a11345d0{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:1pt;padding-top:1pt;padding-left:15pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a1137c30{width:1.304in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c3a{width:0.668in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c3b{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c44{width:0.718in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c4e{width:1.304in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c4f{width:0.668in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c50{width:0.82in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c58{width:0.718in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c59{width:1.304in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c5a{width:0.668in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c62{width:0.82in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c63{width:0.718in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c6c{width:1.304in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c76{width:0.668in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c77{width:0.82in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c78{width:0.718in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c80{width:1.304in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c81{width:0.668in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c8a{width:0.82in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a1137c8b{width:0.718in;height:0.157in;background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing='true' class='cl-a1180aa2'><thead><tr style="overflow-wrap:break-word;"><th class="cl-a1137c30"><p class="cl-a11345a8"><span class="cl-a11040ec"> </span></p></th><th  colspan="2"class="cl-a1137c3a"><p class="cl-a11345bc"><span class="cl-a11040ec">Without</span><br><span class="cl-a11040ec">Covariates</span></p></th><th  colspan="2"class="cl-a1137c44"><p class="cl-a11345bc"><span class="cl-a11040ec">With</span><br><span class="cl-a11040ec">Covariates</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-a1137c4e"><p class="cl-a11345a8"><span class="cl-a1104100">Characteristic</span></p></th><th class="cl-a1137c4f"><p class="cl-a11345bc"><span class="cl-a1104100">Beta</span></p></th><th class="cl-a1137c50"><p class="cl-a11345bc"><span class="cl-a1104100">p-value</span></p></th><th class="cl-a1137c58"><p class="cl-a11345bc"><span class="cl-a1104100">Beta</span></p></th><th class="cl-a1137c50"><p class="cl-a11345bc"><span class="cl-a1104100">p-value</span></p></th></tr></thead><tbody><tr><td class="cl-a1137c59"><p class="cl-a11345c6"><span class="cl-a1104101">(Intercept)</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101">0.651</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">&lt;0.001</span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101">1.265</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">0.011</span></p></td></tr><tr><td class="cl-a1137c59"><p class="cl-a11345c6"><span class="cl-a1104101">promotion</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101">0.436</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">0.108</span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101">0.450</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">0.097</span></p></td></tr><tr><td class="cl-a1137c59"><p class="cl-a11345c6"><span class="cl-a1104101">recency</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101">-0.081</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">0.042</span></p></td></tr><tr><td class="cl-a1137c59"><p class="cl-a11345c6"><span class="cl-a1104101">history</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101">0.000</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">0.703</span></p></td></tr><tr><td class="cl-a1137c59"><p class="cl-a11345c6"><span class="cl-a1104101">womens</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101">0.049</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">0.858</span></p></td></tr><tr><td class="cl-a1137c59"><p class="cl-a11345c6"><span class="cl-a1104101">zip</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td></tr><tr><td class="cl-a1137c59"><p class="cl-a11345d0"><span class="cl-a1104101">Rural</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101">—</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td></tr><tr><td class="cl-a1137c59"><p class="cl-a11345d0"><span class="cl-a1104101">Surburban</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101">-0.596</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">0.144</span></p></td></tr><tr><td class="cl-a1137c59"><p class="cl-a11345d0"><span class="cl-a1104101">Urban</span></p></td><td class="cl-a1137c5a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c63"><p class="cl-a11345c7"><span class="cl-a1104101">0.098</span></p></td><td class="cl-a1137c62"><p class="cl-a11345c7"><span class="cl-a1104101">0.814</span></p></td></tr><tr><td class="cl-a1137c6c"><p class="cl-a11345c6"><span class="cl-a1104101">p-value</span></p></td><td class="cl-a1137c76"><p class="cl-a11345c7"><span class="cl-a1104101">0.11</span></p></td><td class="cl-a1137c77"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c78"><p class="cl-a11345c7"><span class="cl-a1104101">0.032</span></p></td><td class="cl-a1137c77"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td></tr><tr><td class="cl-a1137c80"><p class="cl-a11345c6"><span class="cl-a1104101">R²</span></p></td><td class="cl-a1137c81"><p class="cl-a11345c7"><span class="cl-a1104101">0.000</span></p></td><td class="cl-a1137c8a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td><td class="cl-a1137c8b"><p class="cl-a11345c7"><span class="cl-a1104101">0.001</span></p></td><td class="cl-a1137c8a"><p class="cl-a11345c7"><span class="cl-a1104101"></span></p></td></tr></tbody></table></div>
+<p>The table compares two models:</p>
+<ul>
+<li><strong>Without covariates</strong>: a pure A/B comparison.</li>
+<li><strong>With covariates</strong>: a regression-adjusted estimate.</li>
+</ul>
+<p>The treatment coefficient represents the average change in response probability caused
+by the promotion in isolation (in the without covariates column) or when controlling for other variables (in the with covariates column).</p>
+</div>
+<div id="why-average-effects-are-not-enough" class="section level3 hasAnchor" number="12.4.4">
+<h3><span class="header-section-number">12.4.4</span> Why Average Effects Are Not Enough<a href="ab-testing-and-uplift-modeling.html#why-average-effects-are-not-enough" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>While the ATE is useful, it hides important heterogeneity:</p>
+<ul>
+<li>Some customers may respond very positively.</li>
+<li>Others may be unaffected or even respond negatively.</li>
+</ul>
+<p>From a managerial perspective, sending promotions to everyone may be inefficient or
+costly. This motivates <strong>uplift modeling</strong>, which focuses on targeting customers who are
+most likely to be influenced.</p>
+<hr />
+</div>
+</div>
+<div id="introduction-to-uplift-modeling" class="section level2 hasAnchor" number="12.5">
+<h2><span class="header-section-number">12.5</span> Introduction to Uplift Modeling<a href="ab-testing-and-uplift-modeling.html#introduction-to-uplift-modeling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="what-is-uplift" class="section level3 hasAnchor" number="12.5.1">
+<h3><span class="header-section-number">12.5.1</span> What Is Uplift?<a href="ab-testing-and-uplift-modeling.html#what-is-uplift" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Uplift</strong> measures the <em>incremental</em> effect of treatment on an individual. That is, how much more likely is this customer to respond <em>because</em> they received the promotion?</p>
+<p>This differs from standard prediction, which focuses on response likelihood regardless
+of treatment.</p>
+</div>
+<div id="two-model-indirect-approach" class="section level3 hasAnchor" number="12.5.2">
+<h3><span class="header-section-number">12.5.2</span> Two-Model (Indirect) Approach<a href="ab-testing-and-uplift-modeling.html#two-model-indirect-approach" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The two-model approach estimates:</p>
+<ul>
+<li>one model estimated on treated customers, and</li>
+<li>one model estimated on control customers.</li>
+</ul>
+<p>The difference between their predicted outcomes for a given customer is the estimated uplift.</p>
+<hr />
+</div>
+</div>
+<div id="estimating-uplift-with-easy_uplift" class="section level2 hasAnchor" number="12.6">
+<h2><span class="header-section-number">12.6</span> Estimating Uplift with <code>easy_uplift()</code><a href="ab-testing-and-uplift-modeling.html#estimating-uplift-with-easy_uplift" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="model-specification" class="section level3 hasAnchor" number="12.6.1">
+<h3><span class="header-section-number">12.6.1</span> Model Specification<a href="ab-testing-and-uplift-modeling.html#model-specification" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The outcome variable can be either continuous, like amount spent (outcome) after a promotion (treatment), or it can be binary, like if they visited or not (outcome) after a promotion (treatment). To perform a uplift modeling using regression, we will use the <code>easy_uplift()</code> function from the <code>MKT4320BGSU</code> package. This function performs uplift modeling based on either logistic regression (for binary outcomes) or linear regression (for continuous outcomes). The function uses the two-model, indirect modeling approach.</p>
+<p>Usage:</p>
+<ul>
+<li><code>easy_uplift(model, treatment, newdata = NULL, bins = 10, aspect_ratio = NULL)</code></li>
+<li>where:
+<ul>
+<li><code>model</code> is a fitted regression model of class glm (binary logit) or lm.</li>
+<li><code>treatment</code> is a character string giving the name of the treatment variable. The variable must have exactly two levels and be coded as (0/1), logical, or (“Yes”, “No”).</li>
+<li><code>newdata</code> is an optional data frame on which to compute uplift (e.g., holdout or test data). If NULL, uplift is computed on the model data.</li>
+<li><code>bins</code> is an integer; number of groups used for the uplift tables and plots. Must be between 5 and 20. Default is 10.</li>
+<li><code>aspect_ratio</code> is an optional numeric aspect ratio applied to all plots. Default is NULL.</li>
+</ul></li>
+</ul>
+<p>In order to use the function, we must first create our base model:</p>
+<ul>
+<li>The base model is usually a model with no interactions included, along with the treatment variable. But if known interactions are to be used, the base model can include the interactions also.</li>
+<li>The base model must contain the treatment variable.</li>
+</ul>
+<p>Base model examples:</p>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="ab-testing-and-uplift-modeling.html#cb334-1" tabindex="-1"></a>email_visit <span class="ot">&lt;-</span> <span class="fu">glm</span>(visit <span class="sc">~</span> promotion <span class="sc">+</span> recency <span class="sc">+</span> history <span class="sc">+</span> zip <span class="sc">+</span> womens,</span>
+<span id="cb334-2"><a href="ab-testing-and-uplift-modeling.html#cb334-2" tabindex="-1"></a>                   <span class="at">data=</span>email.camp.w, <span class="at">family=</span><span class="st">&quot;binomial&quot;</span>)</span>
+<span id="cb334-3"><a href="ab-testing-and-uplift-modeling.html#cb334-3" tabindex="-1"></a>email_spend <span class="ot">&lt;-</span> <span class="fu">lm</span>(spend <span class="sc">~</span> promotion <span class="sc">+</span> recency <span class="sc">+</span> history <span class="sc">+</span> zip <span class="sc">+</span> womens,</span>
+<span id="cb334-4"><a href="ab-testing-and-uplift-modeling.html#cb334-4" tabindex="-1"></a>                  <span class="at">data=</span>email.camp.w)</span></code></pre></div>
+<p>Once the base model is created, we are aready to use the <code>easy_uplift()</code> function:</p>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="ab-testing-and-uplift-modeling.html#cb335-1" tabindex="-1"></a>visit_uplift <span class="ot">&lt;-</span> <span class="fu">easy_uplift</span>(<span class="at">model =</span> email_visit, <span class="at">treatment =</span> <span class="st">&quot;promotion&quot;</span>)</span>
+<span id="cb335-2"><a href="ab-testing-and-uplift-modeling.html#cb335-2" tabindex="-1"></a>visit_uplift<span class="sc">$</span>plots</span></code></pre></div>
+<pre><code>$qini</code></pre>
+<p><img src="mybook_files/figure-html/uplift-model-1.png" alt="" width="672" /></p>
+<pre><code>
+$uplift</code></pre>
+<p><img src="mybook_files/figure-html/uplift-model-2.png" alt="" width="672" /></p>
+<pre><code>
+$c.gain</code></pre>
+<p><img src="mybook_files/figure-html/uplift-model-3.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="ab-testing-and-uplift-modeling.html#cb339-1" tabindex="-1"></a>spend_uplift <span class="ot">&lt;-</span> <span class="fu">easy_uplift</span>(<span class="at">model =</span> email_spend, <span class="at">treatment =</span> <span class="st">&quot;promotion&quot;</span>)</span>
+<span id="cb339-2"><a href="ab-testing-and-uplift-modeling.html#cb339-2" tabindex="-1"></a>spend_uplift<span class="sc">$</span>plots</span></code></pre></div>
+<pre><code>$qini</code></pre>
+<p><img src="mybook_files/figure-html/uplift-model-4.png" alt="" width="672" /></p>
+<pre><code>
+$uplift</code></pre>
+<p><img src="mybook_files/figure-html/uplift-model-5.png" alt="" width="672" /></p>
+<pre><code>
+$c.gain</code></pre>
+<p><img src="mybook_files/figure-html/uplift-model-6.png" alt="" width="672" /></p>
+</div>
+<div id="interpreting-core-outputs" class="section level3 hasAnchor" number="12.6.2">
+<h3><span class="header-section-number">12.6.2</span> Interpreting Core Outputs<a href="ab-testing-and-uplift-modeling.html#interpreting-core-outputs" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The uplift object includes:</p>
+<ul>
+<li>predicted individual-level lift appended to original data (<code>$all</code>),</li>
+<li>uplift table by percentile group (<code>$group</code>),</li>
+<li>diagnostic plots, including:
+<ul>
+<li>uplift by group (<code>$plots$uplift</code>),</li>
+<li>cumulative gain (<code>$plots$c.gain</code>),</li>
+<li>Qini curve (<code>$plots$qini</code>).</li>
+</ul></li>
+</ul>
+<p>Customers in the top-ranked groups should exhibit the largest incremental gains from treatment.</p>
+<hr />
+</div>
+</div>
+<div id="diagnosing-uplift-with-lift-plots" class="section level2 hasAnchor" number="12.7">
+<h2><span class="header-section-number">12.7</span> Diagnosing Uplift with Lift Plots<a href="ab-testing-and-uplift-modeling.html#diagnosing-uplift-with-lift-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="why-lift-diagnostics-matter" class="section level3 hasAnchor" number="12.7.1">
+<h3><span class="header-section-number">12.7.1</span> Why Lift Diagnostics Matter<a href="ab-testing-and-uplift-modeling.html#why-lift-diagnostics-matter" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Lift diagnostics help explain <em>why</em> uplift varies across customers and which covariates
+drive heterogeneity.</p>
+</div>
+<div id="using-easy_liftplots" class="section level3 hasAnchor" number="12.7.2">
+<h3><span class="header-section-number">12.7.2</span> Using <code>easy_liftplots()</code><a href="ab-testing-and-uplift-modeling.html#using-easy_liftplots" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We use the <code>easy_liftplots()</code> function from the <code>MKT4320BGSU</code> package to easily create lift plots.</p>
+<p>Usage:</p>
+<ul>
+<li><code>easy_liftplots(x, vars = "all", pairs = NULL, ar = NULL, ci = 0.95,</code><br />
+<code>bins = 30, numeric_bins = 5, by_numeric_bins = 3, grid = TRUE,</code><br />
+<code>top = NULL, ft = TRUE)</code></li>
+<li>where:
+<ul>
+<li><code>x</code> is an object returned by <code>easy_uplift()</code> (must include x<span class="math inline">\(all and x\)</span>covariates or x<span class="math inline">\(spec\)</span>covariates).</li>
+<li><code>vars</code> is a character vector of covariate names to plot. Default is “all” (uses x<span class="math inline">\(covariates / x\)</span>spec$covariates).</li>
+<li><code>pairs</code> is an optional list of length-2 character vectors specifying interaction-style plots to create, e.g., list(c(“recency”,“zip”), c(“gender”,“income”)).</li>
+<li><code>ar</code> is an optional aspect ratio passed to theme(aspect.ratio = ar). Default is NULL.</li>
+<li><code>ci</code> affects the error-bar style. Use 0 for <span class="math inline">\(\pm 1\)</span> SD error bars, or one of c(0.90, 0.95, 0.975, 0.99) for normal-approximation confidence intervals. Default is 0.95.</li>
+<li><code>bins</code> is an integer; number of bins for the histogram. Default is 30.</li>
+<li><code>numeric_bins</code> is an integer; number of quantile bins for numeric covariates. Default is 5.</li>
+<li><code>by_numeric_bins</code> is an integer; number of quantile bins to use for the second variable in a pair when it is numeric. Default is 3.</li>
+<li><code>grid</code> is logical; if TRUE, also return paginated cowplot grids of plots. Default is TRUE.</li>
+<li><code>top</code> is an optional integer. If provided, only the top <code>top</code> covariates (by score_wmae) are included in plots_main/pages_main. Rankings are still computed for all covariates.</li>
+<li><code>ft</code> is logical; if TRUE (default), return ranking tables as flextable objects.</li>
+</ul></li>
+</ul>
+<p>A histogram is always produced, which shows the distribution of predicted uplift across customers. It is saved as <code>$hist</code>.</p>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="ab-testing-and-uplift-modeling.html#cb343-1" tabindex="-1"></a>lift_out <span class="ot">&lt;-</span> <span class="fu">easy_liftplots</span>(visit_uplift, <span class="at">vars =</span> <span class="st">&quot;all&quot;</span>, <span class="at">ci =</span> <span class="fl">0.99</span>)</span>
+<span id="cb343-2"><a href="ab-testing-and-uplift-modeling.html#cb343-2" tabindex="-1"></a>lift_out<span class="sc">$</span>hist</span></code></pre></div>
+<p><img src="mybook_files/figure-html/liftplots-1.png" alt="" width="672" /></p>
+<p>The main lift plots are saved in <code>$plots_main</code>. Lift-by-covariate plots display how average uplift varies across customer segments.</p>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="ab-testing-and-uplift-modeling.html#cb344-1" tabindex="-1"></a>lift_out<span class="sc">$</span>plots_main</span></code></pre></div>
+<pre><code>$recency</code></pre>
+<p><img src="mybook_files/figure-html/lift-by-covariate-1.png" alt="" width="672" /></p>
+<pre><code>
+$history</code></pre>
+<p><img src="mybook_files/figure-html/lift-by-covariate-2.png" alt="" width="672" /></p>
+<pre><code>
+$zip</code></pre>
+<p><img src="mybook_files/figure-html/lift-by-covariate-3.png" alt="" width="672" /></p>
+<pre><code>
+$womens</code></pre>
+<p><img src="mybook_files/figure-html/lift-by-covariate-4.png" alt="" width="672" /></p>
+<p>The <code>pairs</code> option is exteremely valuable when known interactions are includedin the model. The option can also be useful to help identify if an interaction may be warranted. If <code>pairs</code> is provided, the plots are saved in <code>plots_pairs</code>.</p>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="ab-testing-and-uplift-modeling.html#cb349-1" tabindex="-1"></a>lift_out_pairs <span class="ot">&lt;-</span> <span class="fu">easy_liftplots</span>(visit_uplift, <span class="at">vars =</span> <span class="st">&quot;all&quot;</span>, </span>
+<span id="cb349-2"><a href="ab-testing-and-uplift-modeling.html#cb349-2" tabindex="-1"></a>                                 <span class="at">pairs =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;recency&quot;</span>,<span class="st">&quot;zip&quot;</span>), </span>
+<span id="cb349-3"><a href="ab-testing-and-uplift-modeling.html#cb349-3" tabindex="-1"></a>                                              <span class="fu">c</span>(<span class="st">&quot;history&quot;</span>,<span class="st">&quot;womens&quot;</span>)), </span>
+<span id="cb349-4"><a href="ab-testing-and-uplift-modeling.html#cb349-4" tabindex="-1"></a>                                 <span class="at">ci =</span> <span class="fl">0.99</span>)</span>
+<span id="cb349-5"><a href="ab-testing-and-uplift-modeling.html#cb349-5" tabindex="-1"></a>lift_out_pairs<span class="sc">$</span>plots_pairs</span></code></pre></div>
+<pre><code>$`recency × zip`</code></pre>
+<p><img src="mybook_files/figure-html/lift-pairs-1.png" alt="" width="672" /></p>
+<pre><code>
+$`history × womens`</code></pre>
+<p><img src="mybook_files/figure-html/lift-pairs-2.png" alt="" width="672" /></p>
+<hr />
+</div>
+</div>
+<div id="from-analysis-to-action" class="section level2 hasAnchor" number="12.8">
+<h2><span class="header-section-number">12.8</span> From Analysis to Action<a href="ab-testing-and-uplift-modeling.html#from-analysis-to-action" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Uplift modeling enables smarter targeting strategies:</p>
+<ul>
+<li>Send promotions only to customers with positive uplift.</li>
+<li>Prioritize customers in the highest uplift deciles.</li>
+<li>Avoid over-targeting customers unlikely to respond.</li>
+</ul>
+<p>These strategies can improve campaign profitability and customer experience.</p>
+<hr />
+</div>
+<div id="summary-1" class="section level2 hasAnchor" number="12.9">
+<h2><span class="header-section-number">12.9</span> Summary<a href="ab-testing-and-uplift-modeling.html#summary-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this chapter, you learned how to:</p>
+<ul>
+<li>validate randomization in A/B tests,</li>
+<li>estimate average treatment effects,</li>
+<li>move beyond averages using uplift modeling,</li>
+<li>interpret uplift diagnostics for targeting decisions.</li>
+</ul>
+<p>A/B testing answers <em>whether</em> a campaign works. Uplift modeling answers <em>for whom</em> it works.</p>
+<hr />
+</div>
+<div id="whats-next-12" class="section level2 hasAnchor" number="12.10">
+<h2><span class="header-section-number">12.10</span> What’s Next<a href="ab-testing-and-uplift-modeling.html#whats-next-12" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In many real-world marketing problems, managers face a different challenge: customers are not choosing between respond and not respond, but among multiple competing alternatives. Examples include:</p>
+<ul>
+<li>Which brand a customer purchases</li>
+<li>Which product variant is selected</li>
+<li>Which service tier is chosen</li>
+</ul>
+<p>In the next chapter, we introduce standard multinomial logistic regression, a workhorse model for analyzing and predicting choice among more than two options. You will learn how to:</p>
+<ul>
+<li>Model customer choice across multiple alternatives</li>
+<li>Interpret coefficients and predicted choice probabilities</li>
+<li>Evaluate model fit and classification performance</li>
+<li>Use multinomial logit models for applied marketing decisions</li>
+</ul>
+<p>This next step shifts our focus from experimental treatment effects to choice modeling, setting the foundation for more advanced models of consumer decision-making used throughout marketing analytics and research.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="pca-and-perceptual-maps.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="standard-multinomial-logit-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/USERNAME/REPO/edit/BRANCH/12-abtesting_uplift.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["mybook.pdf", "mybook.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

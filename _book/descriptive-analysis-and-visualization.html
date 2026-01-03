@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Descriptive Analysis and Visualization | R Tutorial for MKT 4320</title>
+  <meta name="description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Descriptive Analysis and Visualization | R Tutorial for MKT 4320" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Descriptive Analysis and Visualization | R Tutorial for MKT 4320" />
+  
+  <meta name="twitter:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+<meta name="author" content="Jeffrey Meyer, Ph.D., Bowling Green State University" />
+
+
+<meta name="date" content="2025-01-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="dplyr-package.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i><b>1</b> Setup</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="setup.html"><a href="setup.html#what-you-need"><i class="fa fa-check"></i><b>1.1</b> What you need</a></li>
+<li class="chapter" data-level="1.2" data-path="setup.html"><a href="setup.html#r-and-rstudio-quick-overview"><i class="fa fa-check"></i><b>1.2</b> R and RStudio (quick overview)</a></li>
+<li class="chapter" data-level="1.3" data-path="setup.html"><a href="setup.html#navigating-rstudio"><i class="fa fa-check"></i><b>1.3</b> Navigating RStudio</a></li>
+<li class="chapter" data-level="1.4" data-path="setup.html"><a href="setup.html#installing-and-loading-packages"><i class="fa fa-check"></i><b>1.4</b> Installing and loading packages</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="setup.html"><a href="setup.html#install-packages-one-time"><i class="fa fa-check"></i><b>1.4.1</b> Install packages (one-time)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="setup.html"><a href="setup.html#load-packages-each-session"><i class="fa fa-check"></i><b>1.4.2</b> Load packages (each session)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="setup.html"><a href="setup.html#installing-the-mkt4320bgsu-package"><i class="fa fa-check"></i><b>1.5</b> Installing the MKT4320BGSU package</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="setup.html"><a href="setup.html#install-from-github"><i class="fa fa-check"></i><b>1.5.1</b> Install from GitHub</a></li>
+<li class="chapter" data-level="1.5.2" data-path="setup.html"><a href="setup.html#load-the-package"><i class="fa fa-check"></i><b>1.5.2</b> Load the package</a></li>
+<li class="chapter" data-level="1.5.3" data-path="setup.html"><a href="setup.html#verify-everything-works"><i class="fa fa-check"></i><b>1.5.3</b> Verify everything works</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="setup.html"><a href="setup.html#getting-help-when-youre-stuck"><i class="fa fa-check"></i><b>1.6</b> Getting help when you’re stuck</a></li>
+<li class="chapter" data-level="1.7" data-path="setup.html"><a href="setup.html#how-youll-use-this-book"><i class="fa fa-check"></i><b>1.7</b> How you’ll use this book</a></li>
+<li class="chapter" data-level="1.8" data-path="setup.html"><a href="setup.html#whats-next-1"><i class="fa fa-check"></i><b>1.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="r-basics.html"><a href="r-basics.html"><i class="fa fa-check"></i><b>2</b> R Basics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="r-basics.html"><a href="r-basics.html#basics-of-r-commands"><i class="fa fa-check"></i><b>2.1</b> Basics of R Commands</a></li>
+<li class="chapter" data-level="2.2" data-path="r-basics.html"><a href="r-basics.html#operators"><i class="fa fa-check"></i><b>2.2</b> Operators</a></li>
+<li class="chapter" data-level="2.3" data-path="r-basics.html"><a href="r-basics.html#objects-and-assignment"><i class="fa fa-check"></i><b>2.3</b> Objects and assignment</a></li>
+<li class="chapter" data-level="2.4" data-path="r-basics.html"><a href="r-basics.html#vectors"><i class="fa fa-check"></i><b>2.4</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="r-basics.html"><a href="r-basics.html#creating-vectors"><i class="fa fa-check"></i><b>2.4.1</b> Creating vectors</a></li>
+<li class="chapter" data-level="2.4.2" data-path="r-basics.html"><a href="r-basics.html#vectorized-operations"><i class="fa fa-check"></i><b>2.4.2</b> Vectorized operations</a></li>
+<li class="chapter" data-level="2.4.3" data-path="r-basics.html"><a href="r-basics.html#vector-length"><i class="fa fa-check"></i><b>2.4.3</b> Vector Length</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="r-basics.html"><a href="r-basics.html#data-frames"><i class="fa fa-check"></i><b>2.5</b> Data frames</a></li>
+<li class="chapter" data-level="2.6" data-path="r-basics.html"><a href="r-basics.html#indexing-and-sequencing"><i class="fa fa-check"></i><b>2.6</b> Indexing and sequencing</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="r-basics.html"><a href="r-basics.html#indexing-vectors"><i class="fa fa-check"></i><b>2.6.1</b> Indexing vectors</a></li>
+<li class="chapter" data-level="2.6.2" data-path="r-basics.html"><a href="r-basics.html#sequencing"><i class="fa fa-check"></i><b>2.6.2</b> Sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="r-basics.html"><a href="r-basics.html#common-functions"><i class="fa fa-check"></i><b>2.7</b> Common functions</a></li>
+<li class="chapter" data-level="2.8" data-path="r-basics.html"><a href="r-basics.html#missing-and-other-interesting-values"><i class="fa fa-check"></i><b>2.8</b> Missing (and Other Interesting) Values</a></li>
+<li class="chapter" data-level="2.9" data-path="r-basics.html"><a href="r-basics.html#factors"><i class="fa fa-check"></i><b>2.9</b> Factors</a></li>
+<li class="chapter" data-level="2.10" data-path="r-basics.html"><a href="r-basics.html#whats-next-2"><i class="fa fa-check"></i><b>2.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="functions-in-r.html"><a href="functions-in-r.html"><i class="fa fa-check"></i><b>3</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="functions-in-r.html"><a href="functions-in-r.html#function-arguments"><i class="fa fa-check"></i><b>3.1</b> Function arguments</a></li>
+<li class="chapter" data-level="3.2" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-vs-named-arguments"><i class="fa fa-check"></i><b>3.2</b> Positional vs named arguments</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-arguments"><i class="fa fa-check"></i><b>3.2.1</b> Positional arguments</a></li>
+<li class="chapter" data-level="3.2.2" data-path="functions-in-r.html"><a href="functions-in-r.html#named-arguments-recommended"><i class="fa fa-check"></i><b>3.2.2</b> Named arguments (recommended)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="functions-in-r.html"><a href="functions-in-r.html#default-argument-values"><i class="fa fa-check"></i><b>3.3</b> Default argument values</a></li>
+<li class="chapter" data-level="3.4" data-path="functions-in-r.html"><a href="functions-in-r.html#mixing-positional-and-named-arguments"><i class="fa fa-check"></i><b>3.4</b> Mixing positional and named arguments</a></li>
+<li class="chapter" data-level="3.5" data-path="functions-in-r.html"><a href="functions-in-r.html#viewing-function-documentation"><i class="fa fa-check"></i><b>3.5</b> Viewing function documentation</a></li>
+<li class="chapter" data-level="3.6" data-path="functions-in-r.html"><a href="functions-in-r.html#common-mistakes-to-avoid"><i class="fa fa-check"></i><b>3.6</b> Common mistakes to avoid</a></li>
+<li class="chapter" data-level="3.7" data-path="functions-in-r.html"><a href="functions-in-r.html#key-takeaway"><i class="fa fa-check"></i><b>3.7</b> Key takeaway</a></li>
+<li class="chapter" data-level="3.8" data-path="functions-in-r.html"><a href="functions-in-r.html#whats-next-3"><i class="fa fa-check"></i><b>3.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="working-with-data.html"><a href="working-with-data.html"><i class="fa fa-check"></i><b>4</b> Working with Data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="working-with-data.html"><a href="working-with-data.html#course-data-vs-importing-data"><i class="fa fa-check"></i><b>4.1</b> Course data vs importing data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="working-with-data.html"><a href="working-with-data.html#importing-external-data"><i class="fa fa-check"></i><b>4.1.1</b> Importing external data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="working-with-data.html"><a href="working-with-data.html#inspecting-datasets-and-variables"><i class="fa fa-check"></i><b>4.2</b> Inspecting datasets and variables</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="working-with-data.html"><a href="working-with-data.html#viewing-the-data"><i class="fa fa-check"></i><b>4.2.1</b> Viewing the data</a></li>
+<li class="chapter" data-level="4.2.2" data-path="working-with-data.html"><a href="working-with-data.html#dataset-structure"><i class="fa fa-check"></i><b>4.2.2</b> Dataset structure</a></li>
+<li class="chapter" data-level="4.2.3" data-path="working-with-data.html"><a href="working-with-data.html#variable-summaries"><i class="fa fa-check"></i><b>4.2.3</b> Variable summaries</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="working-with-data.html"><a href="working-with-data.html#data-frames-variables-and-indexing"><i class="fa fa-check"></i><b>4.3</b> Data frames, variables, and indexing</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="working-with-data.html"><a href="working-with-data.html#accessing-a-variable-a-column"><i class="fa fa-check"></i><b>4.3.1</b> Accessing a variable (a column)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="working-with-data.html"><a href="working-with-data.html#indexing-a-data-frame"><i class="fa fa-check"></i><b>4.3.2</b> Indexing a data frame</a></li>
+<li class="chapter" data-level="4.3.3" data-path="working-with-data.html"><a href="working-with-data.html#filtering-rows-using-a-condition-base-r"><i class="fa fa-check"></i><b>4.3.3</b> Filtering rows using a condition (base R)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="working-with-data.html"><a href="working-with-data.html#specific-variable-summaries-base-r"><i class="fa fa-check"></i><b>4.3.4</b> Specific variable summaries (base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="working-with-data.html"><a href="working-with-data.html#data-transformations-base-r"><i class="fa fa-check"></i><b>4.4</b> Data transformations (base R)</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="working-with-data.html"><a href="working-with-data.html#creating-a-new-variable"><i class="fa fa-check"></i><b>4.4.1</b> Creating a new variable</a></li>
+<li class="chapter" data-level="4.4.2" data-path="working-with-data.html"><a href="working-with-data.html#recoding-with-ifelse"><i class="fa fa-check"></i><b>4.4.2</b> Recoding with <code>ifelse()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="working-with-data.html"><a href="working-with-data.html#whats-next-4"><i class="fa fa-check"></i><b>4.5</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dplyr-package.html"><a href="dplyr-package.html"><i class="fa fa-check"></i><b>5</b> <em>dplyr</em> Package</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dplyr-package.html"><a href="dplyr-package.html#the-dplyr-workflow"><i class="fa fa-check"></i><b>5.1</b> The <em>dplyr</em> workflow</a></li>
+<li class="chapter" data-level="5.2" data-path="dplyr-package.html"><a href="dplyr-package.html#selecting-variables"><i class="fa fa-check"></i><b>5.2</b> Selecting variables</a></li>
+<li class="chapter" data-level="5.3" data-path="dplyr-package.html"><a href="dplyr-package.html#filtering-observations"><i class="fa fa-check"></i><b>5.3</b> Filtering observations</a></li>
+<li class="chapter" data-level="5.4" data-path="dplyr-package.html"><a href="dplyr-package.html#creating-new-variables"><i class="fa fa-check"></i><b>5.4</b> Creating new variables</a></li>
+<li class="chapter" data-level="5.5" data-path="dplyr-package.html"><a href="dplyr-package.html#summaries-with-summarise"><i class="fa fa-check"></i><b>5.5</b> Summaries with <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.6" data-path="dplyr-package.html"><a href="dplyr-package.html#grouped-summaries-with-group_by-and-summarise"><i class="fa fa-check"></i><b>5.6</b> Grouped summaries with <code>group_by()</code> and <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.7" data-path="dplyr-package.html"><a href="dplyr-package.html#connecting-summarize-to-base-r"><i class="fa fa-check"></i><b>5.7</b> Connecting <code>summarize()</code> to base R</a></li>
+<li class="chapter" data-level="5.8" data-path="dplyr-package.html"><a href="dplyr-package.html#combining-transformations"><i class="fa fa-check"></i><b>5.8</b> Combining transformations</a></li>
+<li class="chapter" data-level="5.9" data-path="dplyr-package.html"><a href="dplyr-package.html#key-takeaway-1"><i class="fa fa-check"></i><b>5.9</b> Key takeaway</a></li>
+<li class="chapter" data-level="5.10" data-path="dplyr-package.html"><a href="dplyr-package.html#whats-next-5"><i class="fa fa-check"></i><b>5.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html"><i class="fa fa-check"></i><b>6</b> Descriptive Analysis and Visualization</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#descriptive-analysis"><i class="fa fa-check"></i><b>6.1</b> Descriptive analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#overall-summaries"><i class="fa fa-check"></i><b>6.2</b> Overall summaries</a></li>
+<li class="chapter" data-level="6.3" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#summaries-by-group"><i class="fa fa-check"></i><b>6.3</b> Summaries by group</a></li>
+<li class="chapter" data-level="6.4" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#frequency-tables"><i class="fa fa-check"></i><b>6.4</b> Frequency tables</a></li>
+<li class="chapter" data-level="6.5" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#proportions-and-rates"><i class="fa fa-check"></i><b>6.5</b> Proportions and rates</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#overall-proportions"><i class="fa fa-check"></i><b>6.5.1</b> Overall proportions</a></li>
+<li class="chapter" data-level="6.5.2" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#proportions-from-a-cross-tab"><i class="fa fa-check"></i><b>6.5.2</b> Proportions from a cross-tab</a></li>
+<li class="chapter" data-level="6.5.3" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#row-proportions"><i class="fa fa-check"></i><b>6.5.3</b> Row proportions</a></li>
+<li class="chapter" data-level="6.5.4" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#column-proportions"><i class="fa fa-check"></i><b>6.5.4</b> Column proportions</a></li>
+<li class="chapter" data-level="6.5.5" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#proportions-vs.-rates"><i class="fa fa-check"></i><b>6.5.5</b> Proportions vs. rates</a></li>
+<li class="chapter" data-level="6.5.6" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#key-takeaway-2"><i class="fa fa-check"></i><b>6.5.6</b> Key takeaway</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#why-descriptive-analysis-matters"><i class="fa fa-check"></i><b>6.6</b> Why descriptive analysis matters</a></li>
+<li class="chapter" data-level="6.7" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#visualization"><i class="fa fa-check"></i><b>6.7</b> Visualization</a></li>
+<li class="chapter" data-level="6.8" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#histograms"><i class="fa fa-check"></i><b>6.8</b> Histograms</a></li>
+<li class="chapter" data-level="6.9" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#bar-charts"><i class="fa fa-check"></i><b>6.9</b> Bar charts</a></li>
+<li class="chapter" data-level="6.10" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#grouped-bar-charts"><i class="fa fa-check"></i><b>6.10</b> Grouped bar charts</a></li>
+<li class="chapter" data-level="6.11" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#boxplots"><i class="fa fa-check"></i><b>6.11</b> Boxplots</a></li>
+<li class="chapter" data-level="6.12" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#connecting-tables-and-plots"><i class="fa fa-check"></i><b>6.12</b> Connecting tables and plots</a></li>
+<li class="chapter" data-level="6.13" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#key-takeaway-3"><i class="fa fa-check"></i><b>6.13</b> Key takeaway</a></li>
+<li class="chapter" data-level="6.14" data-path="descriptive-analysis-and-visualization.html"><a href="descriptive-analysis-and-visualization.html#whats-next-6"><i class="fa fa-check"></i><b>6.14</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Tutorial for MKT 4320</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="descriptive-analysis-and-visualization" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Descriptive Analysis and Visualization<a href="descriptive-analysis-and-visualization.html#descriptive-analysis-and-visualization" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This chapter introduces two closely related tasks that are central to marketing analytics:
+<strong>descriptive analysis</strong> and <strong>visualization</strong>.</p>
+<p>Descriptive analysis focuses on summarizing and understanding data numerically.
+Visualization focuses on exploring and communicating patterns graphically.</p>
+<p>In this chapter, we begin with descriptive statistics and then move to visualization.
+Both rely on clean, well-understood data, as developed in earlier chapters.</p>
+<hr />
+<div id="descriptive-analysis" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Descriptive analysis<a href="descriptive-analysis-and-visualization.html#descriptive-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Descriptive analysis involves computing numerical summaries that describe the
+distribution and key characteristics of variables.</p>
+<p>These summaries are often the <strong>first step</strong> in any marketing analysis and help
+you understand the data before modeling.</p>
+<hr />
+</div>
+<div id="overall-summaries" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Overall summaries<a href="descriptive-analysis-and-visualization.html#overall-summaries" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A simple starting point is to compute summaries for the entire dataset, using either <code>summary()</code> from base R or using the <code>dplyr</code> package.</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="descriptive-analysis-and-visualization.html#cb172-1" tabindex="-1"></a><span class="fu">summary</span>(directmktg)</span></code></pre></div>
+<pre><code>     userid              age         buy         gender        salary      
+ Min.   :15566689   Min.   :18.00   No :257   Male  :196   Min.   : 15.00  
+ 1st Qu.:15626764   1st Qu.:29.75   Yes:143   Female:204   1st Qu.: 43.00  
+ Median :15694342   Median :37.00                          Median : 70.00  
+ Mean   :15691540   Mean   :37.66                          Mean   : 69.74  
+ 3rd Qu.:15750363   3rd Qu.:46.00                          3rd Qu.: 88.00  
+ Max.   :15815236   Max.   :60.00                          Max.   :150.00  </code></pre>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="descriptive-analysis-and-visualization.html#cb174-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb174-2"><a href="descriptive-analysis-and-visualization.html#cb174-2" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb174-3"><a href="descriptive-analysis-and-visualization.html#cb174-3" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb174-4"><a href="descriptive-analysis-and-visualization.html#cb174-4" tabindex="-1"></a>    <span class="at">mean_age =</span> <span class="fu">mean</span>(age),</span>
+<span id="cb174-5"><a href="descriptive-analysis-and-visualization.html#cb174-5" tabindex="-1"></a>    <span class="at">sd_age =</span> <span class="fu">sd</span>(age),</span>
+<span id="cb174-6"><a href="descriptive-analysis-and-visualization.html#cb174-6" tabindex="-1"></a>    <span class="at">min_age =</span> <span class="fu">min</span>(age),</span>
+<span id="cb174-7"><a href="descriptive-analysis-and-visualization.html#cb174-7" tabindex="-1"></a>    <span class="at">max_age =</span> <span class="fu">max</span>(age)</span>
+<span id="cb174-8"><a href="descriptive-analysis-and-visualization.html#cb174-8" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code># A tibble: 1 × 5
+      n mean_age sd_age min_age max_age
+  &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1   400     37.7   10.5      18      60</code></pre>
+<hr />
+</div>
+<div id="summaries-by-group" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Summaries by group<a href="descriptive-analysis-and-visualization.html#summaries-by-group" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In marketing analytics, we often want to compare summaries across groups, such as
+demographic segments or customer types.</p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="descriptive-analysis-and-visualization.html#cb176-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb176-2"><a href="descriptive-analysis-and-visualization.html#cb176-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span></span>
+<span id="cb176-3"><a href="descriptive-analysis-and-visualization.html#cb176-3" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb176-4"><a href="descriptive-analysis-and-visualization.html#cb176-4" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb176-5"><a href="descriptive-analysis-and-visualization.html#cb176-5" tabindex="-1"></a>    <span class="at">mean_age =</span> <span class="fu">mean</span>(age),</span>
+<span id="cb176-6"><a href="descriptive-analysis-and-visualization.html#cb176-6" tabindex="-1"></a>    <span class="at">sd_age =</span> <span class="fu">sd</span>(age),</span>
+<span id="cb176-7"><a href="descriptive-analysis-and-visualization.html#cb176-7" tabindex="-1"></a>    <span class="at">buy_rate =</span> <span class="fu">mean</span>(buy <span class="sc">==</span> <span class="st">&quot;Yes&quot;</span>)</span>
+<span id="cb176-8"><a href="descriptive-analysis-and-visualization.html#cb176-8" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code># A tibble: 2 × 5
+  gender     n mean_age sd_age buy_rate
+  &lt;fct&gt;  &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+1 Male     196     36.9   10.0    0.337
+2 Female   204     38.4   10.9    0.377</code></pre>
+<p>Each row in the output represents a group, and each column represents a summary
+statistic computed within that group.</p>
+<p>Grouped summaries are especially useful for identifying differences across
+segments.</p>
+<hr />
+</div>
+<div id="frequency-tables" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Frequency tables<a href="descriptive-analysis-and-visualization.html#frequency-tables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For categorical variables, frequency tables are often more informative than
+numerical summaries.</p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="descriptive-analysis-and-visualization.html#cb178-1" tabindex="-1"></a><span class="fu">table</span>(directmktg<span class="sc">$</span>buy)</span></code></pre></div>
+<pre><code>
+ No Yes 
+257 143 </code></pre>
+<p>Two-way tables allow you to examine relationships between categorical variables.</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="descriptive-analysis-and-visualization.html#cb180-1" tabindex="-1"></a><span class="fu">table</span>(directmktg<span class="sc">$</span>gender, directmktg<span class="sc">$</span>buy)</span></code></pre></div>
+<pre><code>        
+          No Yes
+  Male   130  66
+  Female 127  77</code></pre>
+<p>These tables provide counts and are often used to compute proportions or rates.</p>
+<hr />
+</div>
+<div id="proportions-and-rates" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Proportions and rates<a href="descriptive-analysis-and-visualization.html#proportions-and-rates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Counts are often converted into <strong>proportions</strong> or <strong>rates</strong> to make results easier
+to interpret and compare.</p>
+<p>In R, the <code>proportions()</code> function is used to convert frequency tables into
+proportions.</p>
+<hr />
+<div id="overall-proportions" class="section level3 hasAnchor" number="6.5.1">
+<h3><span class="header-section-number">6.5.1</span> Overall proportions<a href="descriptive-analysis-and-visualization.html#overall-proportions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To compute proportions for a single categorical variable, first create a
+frequency table and then apply (or “wrap it with”) <code>proportions()</code>.</p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="descriptive-analysis-and-visualization.html#cb182-1" tabindex="-1"></a><span class="fu">proportions</span>(<span class="fu">table</span>(directmktg<span class="sc">$</span>buy))</span></code></pre></div>
+<pre><code>
+    No    Yes 
+0.6425 0.3575 </code></pre>
+<p>This returns the proportion of observations in each category, where the
+proportions sum to 1 across the entire table.</p>
+<hr />
+</div>
+<div id="proportions-from-a-cross-tab" class="section level3 hasAnchor" number="6.5.2">
+<h3><span class="header-section-number">6.5.2</span> Proportions from a cross-tab<a href="descriptive-analysis-and-visualization.html#proportions-from-a-cross-tab" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When working with two categorical variables, <code>table()</code> produces a cross-tab. By default, <code>proportions()</code> computes proportions relative to the <strong>entire table</strong>.</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="descriptive-analysis-and-visualization.html#cb184-1" tabindex="-1"></a><span class="fu">proportions</span>(<span class="fu">table</span>(directmktg<span class="sc">$</span>gender, directmktg<span class="sc">$</span>buy))</span></code></pre></div>
+<pre><code>        
+             No    Yes
+  Male   0.3250 0.1650
+  Female 0.3175 0.1925</code></pre>
+<p>These are called <strong>total proportions</strong>, because each cell is divided by the total
+number of observations.</p>
+<hr />
+</div>
+<div id="row-proportions" class="section level3 hasAnchor" number="6.5.3">
+<h3><span class="header-section-number">6.5.3</span> Row proportions<a href="descriptive-analysis-and-visualization.html#row-proportions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Row proportions show how outcomes are distributed <strong>within each row category</strong>.
+This is often useful when the rows represent groups or segments. We accomplish this by using the <code>margin = 1</code> argument in <code>proportions</code>.</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="descriptive-analysis-and-visualization.html#cb186-1" tabindex="-1"></a><span class="fu">proportions</span>(<span class="fu">table</span>(directmktg<span class="sc">$</span>gender, directmktg<span class="sc">$</span>buy), <span class="at">margin =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>        
+                No       Yes
+  Male   0.6632653 0.3367347
+  Female 0.6225490 0.3774510</code></pre>
+<p>Here, each row sums to 1. For example, you can interpret the values as purchase
+rates <strong>within gender</strong>.</p>
+<hr />
+</div>
+<div id="column-proportions" class="section level3 hasAnchor" number="6.5.4">
+<h3><span class="header-section-number">6.5.4</span> Column proportions<a href="descriptive-analysis-and-visualization.html#column-proportions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Column proportions show how groups are distributed <strong>within each column category</strong>. We accomplish this by using the <code>margin = 2</code> argument in <code>proportions</code>.</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="descriptive-analysis-and-visualization.html#cb188-1" tabindex="-1"></a><span class="fu">proportions</span>(<span class="fu">table</span>(directmktg<span class="sc">$</span>gender, directmktg<span class="sc">$</span>buy), <span class="at">margin =</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>        
+                No       Yes
+  Male   0.5058366 0.4615385
+  Female 0.4941634 0.5384615</code></pre>
+<p>In this case, each column sums to 1. These proportions are useful when you want
+to understand the composition of each outcome category.</p>
+<hr />
+</div>
+<div id="proportions-vs.-rates" class="section level3 hasAnchor" number="6.5.5">
+<h3><span class="header-section-number">6.5.5</span> Proportions vs. rates<a href="descriptive-analysis-and-visualization.html#proportions-vs.-rates" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In many marketing applications, proportions are interpreted as <strong>rates</strong>. For example, the proportion of observations where <code>buy == "Yes"</code> is the purchase rate.</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="descriptive-analysis-and-visualization.html#cb190-1" tabindex="-1"></a><span class="fu">mean</span>(directmktg<span class="sc">$</span>buy <span class="sc">==</span> <span class="st">&quot;Yes&quot;</span>)</span></code></pre></div>
+<pre><code>[1] 0.3575</code></pre>
+<p>This expression works because logical values (<code>TRUE</code> / <code>FALSE</code>) are treated as
+<code>1</code> and <code>0</code> when computing a mean.</p>
+<hr />
+</div>
+<div id="key-takeaway-2" class="section level3 hasAnchor" number="6.5.6">
+<h3><span class="header-section-number">6.5.6</span> Key takeaway<a href="descriptive-analysis-and-visualization.html#key-takeaway-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><code>proportions()</code> converts frequency tables into proportions</li>
+<li>The <code>margin</code> argument controls <strong>how proportions are computed</strong>:
+<ul>
+<li>no margin: total proportions</li>
+<li><code>margin = 1</code>: row proportions</li>
+<li><code>margin = 2</code>: column proportions</li>
+</ul></li>
+<li>Proportions are often interpreted as rates in marketing analytics</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="why-descriptive-analysis-matters" class="section level2 hasAnchor" number="6.6">
+<h2><span class="header-section-number">6.6</span> Why descriptive analysis matters<a href="descriptive-analysis-and-visualization.html#why-descriptive-analysis-matters" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Descriptive statistics help you to:
+- detect unusual values,
+- understand typical behavior,
+- compare groups,
+- and check whether results are plausible.</p>
+<p>They also guide decisions about which models or visualizations are appropriate.</p>
+<hr />
+</div>
+<div id="visualization" class="section level2 hasAnchor" number="6.7">
+<h2><span class="header-section-number">6.7</span> Visualization<a href="descriptive-analysis-and-visualization.html#visualization" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Visualization complements descriptive analysis by revealing patterns that are
+difficult to see in tables alone.</p>
+<p>In this course, visualization is primarily used for <strong>exploration</strong> and
+<strong>communication</strong>, not decoration.</p>
+<hr />
+</div>
+<div id="histograms" class="section level2 hasAnchor" number="6.8">
+<h2><span class="header-section-number">6.8</span> Histograms<a href="descriptive-analysis-and-visualization.html#histograms" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Histograms show the distribution of a numeric variable.</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="descriptive-analysis-and-visualization.html#cb192-1" tabindex="-1"></a><span class="fu">ggplot</span>(directmktg, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb192-2"><a href="descriptive-analysis-and-visualization.html#cb192-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb192-3"><a href="descriptive-analysis-and-visualization.html#cb192-3" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb192-4"><a href="descriptive-analysis-and-visualization.html#cb192-4" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb192-5"><a href="descriptive-analysis-and-visualization.html#cb192-5" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>,</span>
+<span id="cb192-6"><a href="descriptive-analysis-and-visualization.html#cb192-6" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Distribution of Age&quot;</span></span>
+<span id="cb192-7"><a href="descriptive-analysis-and-visualization.html#cb192-7" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="mybook_files/figure-html/hist-age-1.png" alt="" width="672" /></p>
+<p>Histograms help identify skewness, outliers, and general distribution shape.</p>
+<hr />
+</div>
+<div id="bar-charts" class="section level2 hasAnchor" number="6.9">
+<h2><span class="header-section-number">6.9</span> Bar charts<a href="descriptive-analysis-and-visualization.html#bar-charts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Bar charts are commonly used for categorical variables.</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="descriptive-analysis-and-visualization.html#cb193-1" tabindex="-1"></a><span class="fu">ggplot</span>(directmktg, <span class="fu">aes</span>(<span class="at">x =</span> buy)) <span class="sc">+</span></span>
+<span id="cb193-2"><a href="descriptive-analysis-and-visualization.html#cb193-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb193-3"><a href="descriptive-analysis-and-visualization.html#cb193-3" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb193-4"><a href="descriptive-analysis-and-visualization.html#cb193-4" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Purchase Decision&quot;</span>,</span>
+<span id="cb193-5"><a href="descriptive-analysis-and-visualization.html#cb193-5" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>,</span>
+<span id="cb193-6"><a href="descriptive-analysis-and-visualization.html#cb193-6" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Purchase Outcomes&quot;</span></span>
+<span id="cb193-7"><a href="descriptive-analysis-and-visualization.html#cb193-7" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="mybook_files/figure-html/bar-buy-1.png" alt="" width="672" /></p>
+<hr />
+</div>
+<div id="grouped-bar-charts" class="section level2 hasAnchor" number="6.10">
+<h2><span class="header-section-number">6.10</span> Grouped bar charts<a href="descriptive-analysis-and-visualization.html#grouped-bar-charts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Grouped bar charts allow comparisons across categories.</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="descriptive-analysis-and-visualization.html#cb194-1" tabindex="-1"></a><span class="fu">ggplot</span>(directmktg, <span class="fu">aes</span>(<span class="at">x =</span> buy, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb194-2"><a href="descriptive-analysis-and-visualization.html#cb194-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span></span>
+<span id="cb194-3"><a href="descriptive-analysis-and-visualization.html#cb194-3" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb194-4"><a href="descriptive-analysis-and-visualization.html#cb194-4" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Purchase Decision&quot;</span>,</span>
+<span id="cb194-5"><a href="descriptive-analysis-and-visualization.html#cb194-5" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>,</span>
+<span id="cb194-6"><a href="descriptive-analysis-and-visualization.html#cb194-6" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb194-7"><a href="descriptive-analysis-and-visualization.html#cb194-7" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Purchase Outcomes by Gender&quot;</span></span>
+<span id="cb194-8"><a href="descriptive-analysis-and-visualization.html#cb194-8" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="mybook_files/figure-html/bar-buy-gender-1.png" alt="" width="672" /></p>
+<hr />
+</div>
+<div id="boxplots" class="section level2 hasAnchor" number="6.11">
+<h2><span class="header-section-number">6.11</span> Boxplots<a href="descriptive-analysis-and-visualization.html#boxplots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Boxplots summarize distributions and are especially useful for comparing groups.</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="descriptive-analysis-and-visualization.html#cb195-1" tabindex="-1"></a><span class="fu">ggplot</span>(directmktg, <span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> age)) <span class="sc">+</span></span>
+<span id="cb195-2"><a href="descriptive-analysis-and-visualization.html#cb195-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb195-3"><a href="descriptive-analysis-and-visualization.html#cb195-3" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb195-4"><a href="descriptive-analysis-and-visualization.html#cb195-4" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Gender&quot;</span>,</span>
+<span id="cb195-5"><a href="descriptive-analysis-and-visualization.html#cb195-5" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb195-6"><a href="descriptive-analysis-and-visualization.html#cb195-6" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Age Distribution by Gender&quot;</span></span>
+<span id="cb195-7"><a href="descriptive-analysis-and-visualization.html#cb195-7" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="mybook_files/figure-html/box-age-gender-1.png" alt="" width="672" /></p>
+<hr />
+</div>
+<div id="connecting-tables-and-plots" class="section level2 hasAnchor" number="6.12">
+<h2><span class="header-section-number">6.12</span> Connecting tables and plots<a href="descriptive-analysis-and-visualization.html#connecting-tables-and-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Tables and plots serve complementary purposes:</p>
+<ul>
+<li>Tables provide precise numerical values</li>
+<li>Plots reveal patterns and differences quickly</li>
+</ul>
+<p>In practice, analysts often use <strong>both</strong>, starting with tables and then using
+plots to explore or communicate findings.</p>
+<hr />
+</div>
+<div id="key-takeaway-3" class="section level2 hasAnchor" number="6.13">
+<h2><span class="header-section-number">6.13</span> Key takeaway<a href="descriptive-analysis-and-visualization.html#key-takeaway-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Effective descriptive analysis combines:
+- numerical summaries,
+- frequency tables,
+- and visualizations.</p>
+<p>Together, these tools provide a clear picture of the data and prepare you for
+more advanced analyses later in the course.</p>
+<hr />
+</div>
+<div id="whats-next-6" class="section level2 hasAnchor" number="6.14">
+<h2><span class="header-section-number">6.14</span> What’s next<a href="descriptive-analysis-and-visualization.html#whats-next-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the next chapter, we will build on descriptive analysis and visualization to
+introduce <strong>modeling concepts</strong>, beginning with classification and prediction in
+a marketing context.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dplyr-package.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/USERNAME/REPO/edit/BRANCH/06-descriptives.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["mybook.pdf", "mybook.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

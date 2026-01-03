@@ -1,0 +1,8 @@
+"0","airlinesat_small %>%"
+"0","  summarise(n = n(),"
+"0","            mean_age = mean(age, na.rm = TRUE),"
+"0","            sd_age = sd(age, na.rm = TRUE),"
+"0","            median_age = median(age, na.rm = TRUE),"
+"0","            iqr_age = IQR(age, na.rm = TRUE),"
+"0","            mean_nflights = mean(nflights, na.rm = TRUE),"
+"0","            sd_nflights = sd(nflights, na.rm = TRUE))"

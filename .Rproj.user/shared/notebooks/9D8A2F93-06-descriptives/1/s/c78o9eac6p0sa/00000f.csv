@@ -1,0 +1,2 @@
+"0","sumtable(airlinesat_small, c(""age"", ""nflights"", ""status""),"
+"0","         add.median=TRUE)   # 'add.median=TRUE' includes a 50th percentile column"

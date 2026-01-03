@@ -1,0 +1,2 @@
+"0","gl <- gainlift_logistic(MOD = mod, TRAIN = train, TEST = test, POSITIVE = ""Yes"")"
+"0","gl$gainplot"

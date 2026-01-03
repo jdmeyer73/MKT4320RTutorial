@@ -1,0 +1,201 @@
+# R Basics
+
+This chapter introduces the core R concepts you will use throughout the course. The goal is not to be exhaustive, but to give you enough familiarity with R’s basic building blocks so that later analytical methods make sense.
+
+By the end of this chapter, you should be comfortable creating objects, working with vectors and data frames, indexing data, and performing simple data manipulation tasks.
+
+---
+
+## Objects and assignment
+
+In R, almost everything you work with is an **object**. Objects store values, data, or results from functions.
+
+You create objects using the assignment operator `<-`.
+
+```{r assignment}
+x <- 10
+x
+```
+
+You can overwrite objects by assigning a new value:
+
+```{r overwrite}
+x <- 25
+x
+```
+
+Object names should be:
+- Descriptive
+- Lowercase
+- Use underscores instead of spaces
+
+---
+
+## Vectors
+
+A **vector** is a collection of values of the same type.
+
+### Creating vectors
+
+```{r vectors}
+ages <- c(18, 21, 25, 30)
+ages
+```
+
+Common vector types include:
+- Numeric
+- Character
+- Logical
+
+```{r vector-types}
+names <- c("Alex", "Jamie", "Taylor")
+passed <- c(TRUE, FALSE, TRUE)
+```
+
+### Vectorized operations
+
+R is vectorized, meaning operations apply to all elements at once.
+
+```{r vectorized}
+ages + 1
+ages * 2
+```
+
+---
+
+## Data frames
+
+A **data frame** is a table where:
+- Each column is a variable
+- Each row is an observation
+
+```{r data-frame}
+students <- data.frame(
+  id = 1:4,
+  age = c(18, 21, 25, 30),
+  major = c("MKT", "FIN", "MKT", "MKT")
+)
+
+students
+```
+
+You will work with data frames constantly in this course.
+
+---
+
+## Indexing and sequencing
+
+### Indexing vectors
+
+Use square brackets `[]` to select elements.
+
+```{r vector-index}
+ages[1]
+ages[2:4]
+```
+
+Logical indexing is also common:
+
+```{r logical-index}
+ages[ages > 21]
+```
+
+### Sequencing
+
+Sequences are useful for indexing and loops.
+
+```{r sequences}
+1:10
+seq(from = 0, to = 1, by = 0.2)
+```
+
+---
+
+## Common functions
+
+Functions take inputs (arguments) and return outputs.
+
+Examples of commonly used functions:
+
+```{r common-functions}
+mean(ages)
+min(ages)
+max(ages)
+length(ages)
+summary(ages)
+```
+
+To learn about a function:
+
+```{r help-function, eval=FALSE}
+?mean
+```
+
+---
+
+## Importing data
+
+Most of your data will come from external files.
+
+### Working directory
+
+Your **working directory** is where R looks for files by default.
+
+```{r getwd}
+getwd()
+```
+
+You can set it manually, but in this course you should rely on **RStudio Projects** whenever possible.
+
+### Importing CSV files
+
+```{r import-csv, eval=FALSE}
+mydata <- read.csv("mydata.csv")
+```
+
+The data will be stored as a data frame.
+
+---
+
+## Basic data manipulation (dplyr)
+
+The `dplyr` package provides tools for working with data frames.
+
+```{r dplyr-load}
+library(dplyr)
+```
+
+### Selecting variables
+
+```{r select}
+students %>%
+  select(id, age)
+```
+
+### Filtering observations
+
+```{r filter}
+students %>%
+  filter(age >= 21)
+```
+
+### Creating new variables
+
+```{r mutate}
+students %>%
+  mutate(age_next_year = age + 1)
+```
+
+---
+
+## Putting it together
+
+These basic operations—creating objects, indexing data, and manipulating data frames—form the foundation for everything you will do later in the course.
+
+Do not worry about memorizing syntax. Focus on recognizing patterns and understanding what each line of code is doing.
+
+---
+
+## What’s next
+
+In the next chapter, we will build on these fundamentals and begin working with **course datasets** and **descriptive analysis**, setting the stage for modeling and visualization later in the semester.

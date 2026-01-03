@@ -1,0 +1,17 @@
+h1:linear-regression Linear Regression
+h2:the-linear-regression-model The Linear Regression Model
+h2:simple-linear-regression Simple Linear Regression
+h3:nice-output  Output
+h2:multiple-linear-regression Multiple Linear Regression
+h3:adding-additional-variables Adding Additional Variables
+h2:categorical-predictors-and-reference-groups Categorical Predictors and Reference Groups
+h3:example-flight-class Example: Flight Class
+h2:interaction-effects Interaction Effects
+h3:example-flights-and-frequent-flier-status Example: Flights and Frequent Flier Status
+h2:sec-margin-plots Margin Plots with 
+h3:the-easy_mp-function The  Function
+h3:without-interactions WITHOUT Interactions
+h3:with-interactions WITH Interactions
+h2:prediction Prediction
+h2:whats-next What’s Next
+

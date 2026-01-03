@@ -1,0 +1,6 @@
+book_filename: "mybook"
+output_dir: "_book"  # Ensure this line is present and not empty
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "

@@ -1,0 +1,265 @@
+# Binary Logistic Regression
+
+## Why Logistic Regression in Marketing Analytics
+
+Many important marketing decisions involve **binary outcomes**:
+
+- Did the customer buy or not?
+- Did the customer respond to a promotion?
+- Did the customer churn?
+
+In these cases, the dependent variable takes on only two possible values. A standard linear regression model is not appropriate because it can produce predicted values below 0 or above 1 and does not model probabilities correctly.
+
+**Binary logistic regression** is designed specifically for situations where the outcome is binary. Rather than predicting the outcome directly, logistic regression models the **probability** that the outcome occurs.
+
+From a marketing perspective, this is powerful: instead of simply predicting “buy” or “not buy,” we can estimate how *likely* a customer is to buy and then use those probabilities for targeting and decision-making.
+
+---
+
+## The Direct Marketing Data
+
+In this chapter, we use the `directmktg` dataset, which contains information on a direct marketing campaign.
+
+The dataset consists of **400 prospects** and the following variables:
+
+- `userid`: Unique identifier for each prospect  
+- `age`: Prospect age in years  
+- `gender`: Prospect gender (coded as provided)  
+- `salary`: Prospect salary in thousands of dollars  
+- `buy`: Purchase decision ("Yes" or "No")
+
+The marketing objective is:
+
+Predict whether a prospect will purchase and estimate the probability of purchase.
+
+```{r load-data}
+data(directmktg)
+```
+
+---
+
+## Splitting Data into Training and Test Samples
+
+To evaluate predictive performance, we split the data into training and test samples using `splitsample()` from the `MKT4320BGSU` package.
+
+Usage:
+
+- `splitsample(data, outcome = NULL, group = NULL, choice = NULL, alt = NULL,`    
+`p = 0.75, seed = 4320)`
+- where:
+  - `data` is the data frame to split.
+  - `outcome` is the outcome variable used for stratification. Required when group is `NULL`. Optional when group is provided. For binary logistic regression, it is required.
+  - `group` is NOT USED FOR BINARY LOGISTIC
+  - `choice` is NOT USED FOR BINARY LOGISTIC
+  - `alt` is NOT USED FOR BINARY LOGISTIC
+  - `p` is the proportion of observations to place in the training set. Must be strictly between 0 and 1. Default is 0.75.
+  - `seed` is the random seed for reproducibility. Default is 4320.
+
+```{r split-sample}
+sp <- splitsample(directmktg, outcome = "buy")
+train <- sp$train
+test  <- sp$test
+```
+
+The training data are used to estimate the model. The test data are reserved for out-of-sample evaluation.
+
+---
+
+## Estimating a Binary Logistic Regression Model
+
+We estimate a logistic regression model using `glm()` with `family = "binomial"`.  Remember, we want to estimate the model with the `train` data we just created.
+
+```{r fit-logistic}
+mod <- glm(buy ~ age + gender + salary, data = train, family = "binomial")
+summary(mod)
+```
+
+The coefficients indicate how each variable affects the **log-odds** of purchase. The sign of each coefficient tells us whether the variable increases or decreases the likelihood of purchase.
+
+For "nicer" looking results, the `summ()` function from the `jtools` package can be used.
+
+```{r fit-logitic-nice}
+library(jtools)
+summ(mod, digits = 4)
+```
+
+---
+
+## Interpreting Odds Ratios
+
+Because log-odds are difficult to interpret, we often convert coefficients to **odds ratios**. While we can do this by simply taking the natural exponents of the model coefficients (i.e., $e^{coeff}$), `exp(coef(mod))`, you can again use the `summ()` function from `jtools` and use the `exp = TRUE` option.
+
+```{r odds-ratios}
+summ(mod, exp = TRUE, digits = 4)
+```
+
+An odds ratio greater than 1 indicates higher odds of purchase as the predictor increases. An odds ratio less than 1 indicates lower odds.
+
+---
+
+## Predicted Probabilities
+
+Logistic regression naturally produces predicted probabilities.
+
+```{r predicted-probabilities}
+train$phat <- predict(mod, type = "response")
+head(train$phat)
+```
+
+These probabilities are often more useful than hard classifications because they allow ranking and targeting. However, these probabilities are also used in evaluating model fit through the classification matrix. NOTE: You do not have to create these probabilities manually like shown above.
+
+---
+
+## Classification and Cutoff Values
+
+To classify prospects, we choose a probability cutoff (commonly 0.50). That is, a prospect/row is predicted to be "positive" if their predicted probability of the positive outcome is equal to 0.50 or greater. We use the `logistic_classify()` function from the `MKT4320BGSU` package to create classification matrices.
+
+Usage: 
+
+- `classify_logistic(MOD, DATA, POSITIVE, CUTOFF = 0.5, DATA2 = NULL,`  
+`LABEL1 = "Sample 1", LABEL2 = "Sample 2", digits = 3, ft = FALSE)`
+- where:
+  - `MOD`	is a fitted binary logistic regression glm object (i.e., family = "binomial").
+  - `DATA` a data frame for which the classification matrix should be produced. Usually `train`.
+  - `POSITIVE` is the level in the outcome variable representing the positive outcome.
+  - `CUTOFF` is the pobability cutoff for classification (default = 0.5).
+  - `DATA2`	is an optional second data frame (e.g., test/holdout sample).
+  - `LABEL1` is the label for the first data set (default = "Sample 1")
+  - `LABEL2` is the label for the section data set, if provided (default = "Sample 2")
+  - `digits` is the number of decimal places (default = 3) to show.
+  - `ft` is a logical operator to return a nicer looking flextable (default = FALSE).
+
+```{r classify-training}
+classify_logistic(MOD = mod, DATA = train, POSITIVE = "Yes")
+```
+
+We can also evaluate classification performance on the test sample and get the output in a "nicer" table.
+
+```{r classify-test}
+classify_logistic(MOD = mod, DATA = train, DATA2 = test, POSITIVE = "Yes",
+                  LABEL1 = "Training", LABEL2 = "Test", ft=TRUE)
+```
+
+## Choosing a Cutoff
+
+The default cutoff of 0.50 may not be optimal. The `cutoff_logistic()` function helps visualize tradeoffs between sensitivity, specificity, and accuracy.
+
+Usage:
+
+- `cutoff_logistic(MOD, DATA, POSITIVE, LABEL1 = "Sample 1",`  
+`DATA2 = NULL, LABEL2 = "Sample 2")`
+- where:
+  - `MOD` is a fitted binary logistic regression model (glm with family = "binomial").
+  - `DATA` a data frame for which the classification matrix should be produced. Usually `train`.
+  - `POSITIVE` is the level in the outcome variable representing the positive outcome.
+  - `LABEL1` is the label for the first data set (default = "Sample 1").
+  - `DATA2`	is an optional second data frame (e.g., test/holdout sample).
+  - `LABEL2` is the label for the section data set, if provided (default = "Sample 2").
+
+```{r cutoff-diagnostics}
+cut <- cutoff_logistic(MOD = mod, DATA = train, DATA2 = test, POSITIVE = "Yes", 
+                LABEL1 = "Training", LABEL2 = "Test")
+```
+
+---
+
+## ROC Curve and AUC
+
+The ROC curve evaluates model discrimination across all possible cutoffs. The Area Under the Curve (AUC) summarizes overall classification performance. To get the ROC curve, use the `roc_logistic()` function from the `MKT4320BGSU` package.
+
+Usage: 
+
+- `roc_logistic(MOD, DATA, LABEL1 = "Sample 1",`  
+`DATA2 = NULL, LABEL2 = "Sample 2")`
+- where:
+  - `MOD` is a fitted binary logistic regression model (glm with family = "binomial").
+  - `DATA` a data frame for ROC computation. Usually `train`.
+  - `LABEL1` is the label for the first data set (default = "Sample 1").
+  - `DATA2`	is an optional second data frame (e.g., test/holdout sample) (default = NULL).
+  - `LABEL2` is the label for the section data set, if provided (default = "Sample 2").
+
+```{r roc-curve}
+roc_logistic(MOD = mod, DATA = train, DATA2 = test, 
+             LABEL1 = "Training",LABEL2 = "Test")
+```
+
+---
+
+## Gain and Lift Charts
+
+Gain and lift charts are especially useful for targeting decisions. These plots (and tables) show how much better the model performs relative to random targeting. To get the gain and lift charts, use the `gainlift_logistic()` function from the `MKT4320BGSU` package.
+
+Usage:
+
+- `gainlift_logistic(MOD, TRAIN, TEST, POSITIVE)`
+- where:
+  - `MOD` is a fitted binary logistic regression model (glm with family = "binomial").
+  - `TRAIN` a data frame with the training data (usually `train`).
+  - `TEST`	a data frame with the test/holdout data (usually `test`).
+  - `POSITIVE` is the level in the outcome variable representing the positive outcome.
+
+```{r gain-lift}
+gl <- gainlift_logistic(MOD = mod, TRAIN = train, TEST = test, POSITIVE = "Yes")
+gl$gainplot
+gl$gaintable
+gl$liftplot
+gl$lifttable
+```
+
+---
+
+## Margin Plots with `easy_mp()`
+
+Coefficients are difficult to interpret directly. Marginal effects plots help visualize how predictors influence purchase probability. As with linear regression (see Section \@ref(sec-margin-plots)), we use the `easy_mp()` function from the `MKT4320BGSU` package to help create the margin plots.
+
+```{r marginal-age}
+mp_age <- easy_mp(mod, focal = "age")
+mp_age$plot
+```
+
+We can also examine categorical predictors.
+
+```{r marginal-gender}
+mp_gender <- easy_mp(mod, focal = "gender")
+mp_gender$plot
+```
+
+We can also examine interactions.
+
+```{r marginal-interaction}
+mod_int <- glm(buy ~ age * salary + gender, data = train, family = "binomial")
+mp_gender <- easy_mp(mod_int, focal = "age", int="salary")
+mp_gender$plot
+```
+
+---
+
+## Putting It All Together
+
+Binary logistic regression provides a complete framework for:
+
+- Predicting purchase probabilities
+- Classifying prospects
+- Evaluating models using multiple metrics
+- Supporting targeting decisions
+
+No single metric tells the whole story. Marketing analysts must choose evaluation tools that align with business objectives.
+
+---
+
+## What’s Next
+
+In the next chapter, we shift from prediction to segmentation. We will use cluster analysis to:
+
+- Identify distinct customer segments based on observed attributes
+- Understand how customers naturally group together
+- Support positioning, targeting, and strategy development
+- Translate data-driven segments into actionable marketing insights
+
+Where logistic regression answers questions like “Who is likely to buy?”, cluster analysis addresses questions such as:
+
+- What types of customers do we have?
+- How are customers meaningfully different from one another?
+- How many segments make sense from a managerial perspective?
+
+The next chapter introduces several clustering approaches, discusses how to choose the number of clusters, and emphasizes interpretation and managerial usefulness over purely technical solutions.

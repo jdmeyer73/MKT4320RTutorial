@@ -1,0 +1,103 @@
+---
+title: "R Tutorial for MKT 4320"
+subtitle: "Marketing Analytics"
+author: "Jeffrey Meyer, Ph.D., Bowling Green State University"
+date: "2025"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+description: |
+  A practical, course-focused guide to using R for applied marketing analytics
+  in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+  analysis using the MKT4320BGSU R package.
+link-citations: yes
+---
+``` {r package_setup, include=FALSE}
+library(dplyr)
+library(kableExtra)
+library(ggplot2)
+library(sjPlot)
+library(jtools)
+library(vtable)
+library(Hmisc)
+load("Data/operators.rdata")
+knitr::opts_chunk$set(comment = "")
+```
+
+# Preface {-}
+
+## About this book {.unnumbered .unlisted}
+
+This book is a companion resource for **MKT 4320: Marketing Analytics** at Bowling Green State University.
+
+Its purpose is to help you **use R effectively for applied marketing analytics**, not to provide a comprehensive or theoretical treatment of the R language. The focus is on learning how to run analyses, interpret results, and apply methods to real marketing problems.
+
+This book is intentionally practical and course-driven. Chapters are designed to support lab assignments, projects, and examples used throughout the semester.
+
+---
+
+## What this book is (and is not) {.unnumbered .unlisted}
+
+This book **is**:
+
+- A guided introduction to R and RStudio for marketing analytics
+- A reference for the types of analyses used in MKT 4320
+- A practical companion to lab assignments and course projects
+
+This book **is not**:
+
+- A complete R programming textbook
+- A reference for every possible R function or package
+- A substitute for reading lab instructions carefully
+
+You are not expected to memorize R syntax. You *are* expected to run code, modify examples, interpret output, and explain results.
+
+---
+
+## The MKT4320BGSU package {.unnumbered .unlisted}
+
+Many examples in this book rely on the **MKT4320BGSU** R package.
+
+This package contains:
+
+- Custom functions used in the course
+- Datasets for labs and demonstrations
+- Tools designed specifically for teaching marketing analytics
+
+Because the package is actively maintained, this book may be updated over time to reflect changes in functions, workflows, or best practices.
+
+---
+
+## How to use this book {.unnumbered .unlisted}
+
+Most weeks, you will use this book alongside a lab assignment. A typical workflow looks like this:
+
+1. Read the relevant sections of the book
+2. Open the corresponding lab file
+3. Run the example code
+4. Modify the code to answer lab questions
+5. Interpret results and write conclusions
+
+Code examples are meant to be run. Errors are normal and are part of the learning process.
+
+---
+
+## A note on updates {.unnumbered .unlisted}
+
+This book is a **living document**. Content may be revised, expanded, or clarified as the course progresses or as the supporting R package evolves.
+
+When updates occur, they are intended to improve clarity, consistency, or alignment with course objectives.
+
+---
+
+## Acknowledgments {.unnumbered .unlisted}
+
+Portions of this material are adapted from a variety of sources, including R documentation, textbooks, online tutorials, and teaching materials developed over time. Where appropriate, sources are noted within individual chapters.
+
+---
+
+## What’s next {.unnumbered .unlisted}
+
+The first chapter covers **Setup**, including how to install and configure R, RStudio, and the required packages for the course.
+
+From there, the book moves into core R fundamentals and then into the specific analytical methods used in marketing analytics.

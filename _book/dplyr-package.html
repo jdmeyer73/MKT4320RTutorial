@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 dplyr Package | R Tutorial for MKT 4320</title>
+  <meta name="description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 dplyr Package | R Tutorial for MKT 4320" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 dplyr Package | R Tutorial for MKT 4320" />
+  
+  <meta name="twitter:description" content="<p>A practical, course-focused guide to using R for applied marketing analytics
+in MKT 4320 at Bowling Green State University. The book emphasizes hands-on
+analysis using the MKT4320BGSU R package.</p>" />
+  
+
+<meta name="author" content="Jeffrey Meyer, Ph.D., Bowling Green State University" />
+
+
+<meta name="date" content="2025-01-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="working-with-data.html"/>
+<link rel="next" href="descriptive-analysis.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/tabwid-1.1.3/tabwid.css" rel="stylesheet" />
+<script src="libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i><b>1</b> Setup</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="setup.html"><a href="setup.html#what-you-need"><i class="fa fa-check"></i><b>1.1</b> What you need</a></li>
+<li class="chapter" data-level="1.2" data-path="setup.html"><a href="setup.html#r-and-rstudio-quick-overview"><i class="fa fa-check"></i><b>1.2</b> R and RStudio (quick overview)</a></li>
+<li class="chapter" data-level="1.3" data-path="setup.html"><a href="setup.html#navigating-rstudio"><i class="fa fa-check"></i><b>1.3</b> Navigating RStudio</a></li>
+<li class="chapter" data-level="1.4" data-path="setup.html"><a href="setup.html#installing-and-loading-packages"><i class="fa fa-check"></i><b>1.4</b> Installing and loading packages</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="setup.html"><a href="setup.html#install-packages-one-time"><i class="fa fa-check"></i><b>1.4.1</b> Install packages (one-time)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="setup.html"><a href="setup.html#load-packages-each-session"><i class="fa fa-check"></i><b>1.4.2</b> Load packages (each session)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="setup.html"><a href="setup.html#installing-the-mkt4320bgsu-package"><i class="fa fa-check"></i><b>1.5</b> Installing the MKT4320BGSU package</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="setup.html"><a href="setup.html#install-from-github"><i class="fa fa-check"></i><b>1.5.1</b> Install from GitHub</a></li>
+<li class="chapter" data-level="1.5.2" data-path="setup.html"><a href="setup.html#load-the-package"><i class="fa fa-check"></i><b>1.5.2</b> Load the package</a></li>
+<li class="chapter" data-level="1.5.3" data-path="setup.html"><a href="setup.html#verify-everything-works"><i class="fa fa-check"></i><b>1.5.3</b> Verify everything works</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="setup.html"><a href="setup.html#getting-help-when-youre-stuck"><i class="fa fa-check"></i><b>1.6</b> Getting help when you’re stuck</a></li>
+<li class="chapter" data-level="1.7" data-path="setup.html"><a href="setup.html#how-youll-use-this-book"><i class="fa fa-check"></i><b>1.7</b> How you’ll use this book</a></li>
+<li class="chapter" data-level="1.8" data-path="setup.html"><a href="setup.html#whats-next-1"><i class="fa fa-check"></i><b>1.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="r-basics.html"><a href="r-basics.html"><i class="fa fa-check"></i><b>2</b> R Basics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="r-basics.html"><a href="r-basics.html#basics-of-r-commands"><i class="fa fa-check"></i><b>2.1</b> Basics of R Commands</a></li>
+<li class="chapter" data-level="2.2" data-path="r-basics.html"><a href="r-basics.html#operators"><i class="fa fa-check"></i><b>2.2</b> Operators</a></li>
+<li class="chapter" data-level="2.3" data-path="r-basics.html"><a href="r-basics.html#objects-and-assignment"><i class="fa fa-check"></i><b>2.3</b> Objects and assignment</a></li>
+<li class="chapter" data-level="2.4" data-path="r-basics.html"><a href="r-basics.html#vectors"><i class="fa fa-check"></i><b>2.4</b> Vectors</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="r-basics.html"><a href="r-basics.html#creating-vectors"><i class="fa fa-check"></i><b>2.4.1</b> Creating vectors</a></li>
+<li class="chapter" data-level="2.4.2" data-path="r-basics.html"><a href="r-basics.html#vectorized-operations"><i class="fa fa-check"></i><b>2.4.2</b> Vectorized operations</a></li>
+<li class="chapter" data-level="2.4.3" data-path="r-basics.html"><a href="r-basics.html#vector-length"><i class="fa fa-check"></i><b>2.4.3</b> Vector Length</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="r-basics.html"><a href="r-basics.html#data-frames"><i class="fa fa-check"></i><b>2.5</b> Data frames</a></li>
+<li class="chapter" data-level="2.6" data-path="r-basics.html"><a href="r-basics.html#indexing-and-sequencing"><i class="fa fa-check"></i><b>2.6</b> Indexing and sequencing</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="r-basics.html"><a href="r-basics.html#indexing-vectors"><i class="fa fa-check"></i><b>2.6.1</b> Indexing vectors</a></li>
+<li class="chapter" data-level="2.6.2" data-path="r-basics.html"><a href="r-basics.html#sequencing"><i class="fa fa-check"></i><b>2.6.2</b> Sequencing</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="r-basics.html"><a href="r-basics.html#common-functions"><i class="fa fa-check"></i><b>2.7</b> Common functions</a></li>
+<li class="chapter" data-level="2.8" data-path="r-basics.html"><a href="r-basics.html#missing-and-other-interesting-values"><i class="fa fa-check"></i><b>2.8</b> Missing (and Other Interesting) Values</a></li>
+<li class="chapter" data-level="2.9" data-path="r-basics.html"><a href="r-basics.html#factors"><i class="fa fa-check"></i><b>2.9</b> Factors</a></li>
+<li class="chapter" data-level="2.10" data-path="r-basics.html"><a href="r-basics.html#whats-next-2"><i class="fa fa-check"></i><b>2.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="functions-in-r.html"><a href="functions-in-r.html"><i class="fa fa-check"></i><b>3</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="functions-in-r.html"><a href="functions-in-r.html#function-arguments"><i class="fa fa-check"></i><b>3.1</b> Function arguments</a></li>
+<li class="chapter" data-level="3.2" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-vs-named-arguments"><i class="fa fa-check"></i><b>3.2</b> Positional vs named arguments</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="functions-in-r.html"><a href="functions-in-r.html#positional-arguments"><i class="fa fa-check"></i><b>3.2.1</b> Positional arguments</a></li>
+<li class="chapter" data-level="3.2.2" data-path="functions-in-r.html"><a href="functions-in-r.html#named-arguments-recommended"><i class="fa fa-check"></i><b>3.2.2</b> Named arguments (recommended)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="functions-in-r.html"><a href="functions-in-r.html#default-argument-values"><i class="fa fa-check"></i><b>3.3</b> Default argument values</a></li>
+<li class="chapter" data-level="3.4" data-path="functions-in-r.html"><a href="functions-in-r.html#mixing-positional-and-named-arguments"><i class="fa fa-check"></i><b>3.4</b> Mixing positional and named arguments</a></li>
+<li class="chapter" data-level="3.5" data-path="functions-in-r.html"><a href="functions-in-r.html#viewing-function-documentation"><i class="fa fa-check"></i><b>3.5</b> Viewing function documentation</a></li>
+<li class="chapter" data-level="3.6" data-path="functions-in-r.html"><a href="functions-in-r.html#common-mistakes-to-avoid"><i class="fa fa-check"></i><b>3.6</b> Common mistakes to avoid</a></li>
+<li class="chapter" data-level="3.7" data-path="functions-in-r.html"><a href="functions-in-r.html#key-takeaway"><i class="fa fa-check"></i><b>3.7</b> Key takeaway</a></li>
+<li class="chapter" data-level="3.8" data-path="functions-in-r.html"><a href="functions-in-r.html#whats-next-3"><i class="fa fa-check"></i><b>3.8</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="working-with-data.html"><a href="working-with-data.html"><i class="fa fa-check"></i><b>4</b> Working with Data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="working-with-data.html"><a href="working-with-data.html#course-data-vs-importing-data"><i class="fa fa-check"></i><b>4.1</b> Course data vs importing data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="working-with-data.html"><a href="working-with-data.html#importing-external-data"><i class="fa fa-check"></i><b>4.1.1</b> Importing external data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="working-with-data.html"><a href="working-with-data.html#inspecting-datasets-and-variables"><i class="fa fa-check"></i><b>4.2</b> Inspecting datasets and variables</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="working-with-data.html"><a href="working-with-data.html#viewing-the-data"><i class="fa fa-check"></i><b>4.2.1</b> Viewing the data</a></li>
+<li class="chapter" data-level="4.2.2" data-path="working-with-data.html"><a href="working-with-data.html#dataset-structure"><i class="fa fa-check"></i><b>4.2.2</b> Dataset structure</a></li>
+<li class="chapter" data-level="4.2.3" data-path="working-with-data.html"><a href="working-with-data.html#variable-summaries"><i class="fa fa-check"></i><b>4.2.3</b> Variable summaries</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="working-with-data.html"><a href="working-with-data.html#data-frames-variables-and-indexing"><i class="fa fa-check"></i><b>4.3</b> Data frames, variables, and indexing</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="working-with-data.html"><a href="working-with-data.html#accessing-a-variable-a-column"><i class="fa fa-check"></i><b>4.3.1</b> Accessing a variable (a column)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="working-with-data.html"><a href="working-with-data.html#indexing-a-data-frame"><i class="fa fa-check"></i><b>4.3.2</b> Indexing a data frame</a></li>
+<li class="chapter" data-level="4.3.3" data-path="working-with-data.html"><a href="working-with-data.html#filtering-rows-using-a-condition-base-r"><i class="fa fa-check"></i><b>4.3.3</b> Filtering rows using a condition (base R)</a></li>
+<li class="chapter" data-level="4.3.4" data-path="working-with-data.html"><a href="working-with-data.html#specific-variable-summaries-base-r"><i class="fa fa-check"></i><b>4.3.4</b> Specific variable summaries (base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="working-with-data.html"><a href="working-with-data.html#data-transformations-base-r"><i class="fa fa-check"></i><b>4.4</b> Data transformations (base R)</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="working-with-data.html"><a href="working-with-data.html#creating-a-new-variable"><i class="fa fa-check"></i><b>4.4.1</b> Creating a new variable</a></li>
+<li class="chapter" data-level="4.4.2" data-path="working-with-data.html"><a href="working-with-data.html#recoding-with-ifelse"><i class="fa fa-check"></i><b>4.4.2</b> Recoding with <code>ifelse()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="working-with-data.html"><a href="working-with-data.html#whats-next-4"><i class="fa fa-check"></i><b>4.5</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="dplyr-package.html"><a href="dplyr-package.html"><i class="fa fa-check"></i><b>5</b> <em>dplyr</em> Package</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dplyr-package.html"><a href="dplyr-package.html#the-dplyr-workflow"><i class="fa fa-check"></i><b>5.1</b> The <em>dplyr</em> workflow</a></li>
+<li class="chapter" data-level="5.2" data-path="dplyr-package.html"><a href="dplyr-package.html#selecting-variables"><i class="fa fa-check"></i><b>5.2</b> Selecting variables</a></li>
+<li class="chapter" data-level="5.3" data-path="dplyr-package.html"><a href="dplyr-package.html#filtering-observations"><i class="fa fa-check"></i><b>5.3</b> Filtering observations</a></li>
+<li class="chapter" data-level="5.4" data-path="dplyr-package.html"><a href="dplyr-package.html#creating-new-variables"><i class="fa fa-check"></i><b>5.4</b> Creating new variables</a></li>
+<li class="chapter" data-level="5.5" data-path="dplyr-package.html"><a href="dplyr-package.html#summaries-with-summarise"><i class="fa fa-check"></i><b>5.5</b> Summaries with <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.6" data-path="dplyr-package.html"><a href="dplyr-package.html#grouped-summaries-with-group_by-and-summarise"><i class="fa fa-check"></i><b>5.6</b> Grouped summaries with <code>group_by()</code> and <code>summarise()</code></a></li>
+<li class="chapter" data-level="5.7" data-path="dplyr-package.html"><a href="dplyr-package.html#connecting-summarize-to-base-r"><i class="fa fa-check"></i><b>5.7</b> Connecting <code>summarize()</code> to base R</a></li>
+<li class="chapter" data-level="5.8" data-path="dplyr-package.html"><a href="dplyr-package.html#combining-transformations"><i class="fa fa-check"></i><b>5.8</b> Combining transformations</a></li>
+<li class="chapter" data-level="5.9" data-path="dplyr-package.html"><a href="dplyr-package.html#key-takeaway-1"><i class="fa fa-check"></i><b>5.9</b> Key takeaway</a></li>
+<li class="chapter" data-level="5.10" data-path="dplyr-package.html"><a href="dplyr-package.html#whats-next-5"><i class="fa fa-check"></i><b>5.10</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html"><i class="fa fa-check"></i><b>6</b> Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#descriptive-analysis-1"><i class="fa fa-check"></i><b>6.1</b> Descriptive Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#inspecting-the-dataset"><i class="fa fa-check"></i><b>6.1.1</b> Inspecting the dataset</a></li>
+<li class="chapter" data-level="6.1.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#missing-values-quick-checks"><i class="fa fa-check"></i><b>6.1.2</b> Missing values (quick checks)</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#frequency-tables"><i class="fa fa-check"></i><b>6.2</b> Frequency Tables</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#one-way-frequency-table"><i class="fa fa-check"></i><b>6.2.1</b> One-way frequency table</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#crosstabs"><i class="fa fa-check"></i><b>6.3</b> Crosstabs</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r"><i class="fa fa-check"></i><b>6.3.1</b> Base R</a></li>
+<li class="chapter" data-level="6.3.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-sjplot"><i class="fa fa-check"></i><b>6.3.2</b> Using package <em>sjPlot</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#measures-of-central-tendency-and-dispersion"><i class="fa fa-check"></i><b>6.4</b> Measures of Central Tendency and Dispersion</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r-1"><i class="fa fa-check"></i><b>6.4.1</b> Base R</a></li>
+<li class="chapter" data-level="6.4.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-dplyr"><i class="fa fa-check"></i><b>6.4.2</b> Using package <em>dplyr</em></a></li>
+<li class="chapter" data-level="6.4.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-vtable"><i class="fa fa-check"></i><b>6.4.3</b> Using package <em>vtable</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#correlation"><i class="fa fa-check"></i><b>6.5</b> Correlation</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#base-r-2"><i class="fa fa-check"></i><b>6.5.1</b> Base R</a></li>
+<li class="chapter" data-level="6.5.2" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-hmisc"><i class="fa fa-check"></i><b>6.5.2</b> Using package <em>Hmisc</em></a></li>
+<li class="chapter" data-level="6.5.3" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#using-package-sjplot-1"><i class="fa fa-check"></i><b>6.5.3</b> Using package <em>sjPlot</em></a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#why-descriptive-analysis-matters"><i class="fa fa-check"></i><b>6.6</b> Why descriptive analysis matters</a></li>
+<li class="chapter" data-level="6.7" data-path="descriptive-analysis.html"><a href="descriptive-analysis.html#whats-next-6"><i class="fa fa-check"></i><b>6.7</b> What’s next</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>7</b> Data Visualization</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-visualization.html"><a href="data-visualization.html#base-r-visualizations"><i class="fa fa-check"></i><b>7.1</b> Base R Visualizations</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="data-visualization.html"><a href="data-visualization.html#histogram-base-r"><i class="fa fa-check"></i><b>7.1.1</b> Histogram (Base R)</a></li>
+<li class="chapter" data-level="7.1.2" data-path="data-visualization.html"><a href="data-visualization.html#box-and-whisker-plot-base-r"><i class="fa fa-check"></i><b>7.1.2</b> Box-and-Whisker Plot (Base R)</a></li>
+<li class="chapter" data-level="7.1.3" data-path="data-visualization.html"><a href="data-visualization.html#scatterplot-base-r"><i class="fa fa-check"></i><b>7.1.3</b> Scatterplot (Base R)</a></li>
+<li class="chapter" data-level="7.1.4" data-path="data-visualization.html"><a href="data-visualization.html#line-chart-base-r"><i class="fa fa-check"></i><b>7.1.4</b> Line Chart (Base R)</a></li>
+<li class="chapter" data-level="7.1.5" data-path="data-visualization.html"><a href="data-visualization.html#bar-chart-base-r"><i class="fa fa-check"></i><b>7.1.5</b> Bar Chart (Base R)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="data-visualization.html"><a href="data-visualization.html#moving-beyond-base-r"><i class="fa fa-check"></i><b>7.2</b> Moving Beyond Base R</a></li>
+<li class="chapter" data-level="7.3" data-path="data-visualization.html"><a href="data-visualization.html#introduction-to-ggplot2"><i class="fa fa-check"></i><b>7.3</b> Introduction to <em>ggplot2</em></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="data-visualization.html"><a href="data-visualization.html#histogram"><i class="fa fa-check"></i><b>7.3.1</b> Histogram</a></li>
+<li class="chapter" data-level="7.3.2" data-path="data-visualization.html"><a href="data-visualization.html#box-and-whiskers-plot"><i class="fa fa-check"></i><b>7.3.2</b> Box-and-Whiskers Plot</a></li>
+<li class="chapter" data-level="7.3.3" data-path="data-visualization.html"><a href="data-visualization.html#scatterplot"><i class="fa fa-check"></i><b>7.3.3</b> Scatterplot</a></li>
+<li class="chapter" data-level="7.3.4" data-path="data-visualization.html"><a href="data-visualization.html#line-chart"><i class="fa fa-check"></i><b>7.3.4</b> Line Chart</a></li>
+<li class="chapter" data-level="7.3.5" data-path="data-visualization.html"><a href="data-visualization.html#bar-chart"><i class="fa fa-check"></i><b>7.3.5</b> Bar Chart</a></li>
+<li class="chapter" data-level="7.3.6" data-path="data-visualization.html"><a href="data-visualization.html#grouped-bar-chart"><i class="fa fa-check"></i><b>7.3.6</b> Grouped Bar Chart</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="data-visualization.html"><a href="data-visualization.html#summary"><i class="fa fa-check"></i><b>7.4</b> Summary</a></li>
+<li class="chapter" data-level="7.5" data-path="data-visualization.html"><a href="data-visualization.html#whats-next-7"><i class="fa fa-check"></i><b>7.5</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>8</b> Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="linear-regression.html"><a href="linear-regression.html#the-linear-regression-model"><i class="fa fa-check"></i><b>8.1</b> The Linear Regression Model</a></li>
+<li class="chapter" data-level="8.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>8.2</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="linear-regression.html"><a href="linear-regression.html#nice-output"><i class="fa fa-check"></i><b>8.2.1</b> “Nice” Output</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>8.3</b> Multiple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="linear-regression.html"><a href="linear-regression.html#adding-additional-variables"><i class="fa fa-check"></i><b>8.3.1</b> Adding Additional Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors-and-reference-groups"><i class="fa fa-check"></i><b>8.4</b> Categorical Predictors and Reference Groups</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="linear-regression.html"><a href="linear-regression.html#example-flight-class"><i class="fa fa-check"></i><b>8.4.1</b> Example: Flight Class</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="linear-regression.html"><a href="linear-regression.html#interaction-effects"><i class="fa fa-check"></i><b>8.5</b> Interaction Effects</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="linear-regression.html"><a href="linear-regression.html#example-flights-and-frequent-flier-status"><i class="fa fa-check"></i><b>8.5.1</b> Example: Flights and Frequent Flier Status</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="linear-regression.html"><a href="linear-regression.html#sec-margin-plots"><i class="fa fa-check"></i><b>8.6</b> Margin Plots with <code>easy_mp</code></a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="linear-regression.html"><a href="linear-regression.html#the-easy_mp-function"><i class="fa fa-check"></i><b>8.6.1</b> The <code>easy_mp()</code> Function</a></li>
+<li class="chapter" data-level="8.6.2" data-path="linear-regression.html"><a href="linear-regression.html#without-interactions"><i class="fa fa-check"></i><b>8.6.2</b> WITHOUT Interactions</a></li>
+<li class="chapter" data-level="8.6.3" data-path="linear-regression.html"><a href="linear-regression.html#with-interactions"><i class="fa fa-check"></i><b>8.6.3</b> WITH Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="linear-regression.html"><a href="linear-regression.html#prediction"><i class="fa fa-check"></i><b>8.7</b> Prediction</a></li>
+<li class="chapter" data-level="8.8" data-path="linear-regression.html"><a href="linear-regression.html#whats-next-8"><i class="fa fa-check"></i><b>8.8</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html"><i class="fa fa-check"></i><b>9</b> Binary Logistic Regression</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#why-logistic-regression-in-marketing-analytics"><i class="fa fa-check"></i><b>9.1</b> Why Logistic Regression in Marketing Analytics</a></li>
+<li class="chapter" data-level="9.2" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#the-direct-marketing-data"><i class="fa fa-check"></i><b>9.2</b> The Direct Marketing Data</a></li>
+<li class="chapter" data-level="9.3" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#splitting-data-into-training-and-test-samples"><i class="fa fa-check"></i><b>9.3</b> Splitting Data into Training and Test Samples</a></li>
+<li class="chapter" data-level="9.4" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#estimating-a-binary-logistic-regression-model"><i class="fa fa-check"></i><b>9.4</b> Estimating a Binary Logistic Regression Model</a></li>
+<li class="chapter" data-level="9.5" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#interpreting-odds-ratios"><i class="fa fa-check"></i><b>9.5</b> Interpreting Odds Ratios</a></li>
+<li class="chapter" data-level="9.6" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#predicted-probabilities"><i class="fa fa-check"></i><b>9.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="9.7" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#classification-and-cutoff-values"><i class="fa fa-check"></i><b>9.7</b> Classification and Cutoff Values</a></li>
+<li class="chapter" data-level="9.8" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#choosing-a-cutoff"><i class="fa fa-check"></i><b>9.8</b> Choosing a Cutoff</a></li>
+<li class="chapter" data-level="9.9" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#roc-curve-and-auc"><i class="fa fa-check"></i><b>9.9</b> ROC Curve and AUC</a></li>
+<li class="chapter" data-level="9.10" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#gain-and-lift-charts"><i class="fa fa-check"></i><b>9.10</b> Gain and Lift Charts</a></li>
+<li class="chapter" data-level="9.11" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#margin-plots-with-easy_mp"><i class="fa fa-check"></i><b>9.11</b> Margin Plots with <code>easy_mp()</code></a></li>
+<li class="chapter" data-level="9.12" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#putting-it-all-together"><i class="fa fa-check"></i><b>9.12</b> Putting It All Together</a></li>
+<li class="chapter" data-level="9.13" data-path="binary-logistic-regression.html"><a href="binary-logistic-regression.html#whats-next-9"><i class="fa fa-check"></i><b>9.13</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="cluster-analysis.html"><a href="cluster-analysis.html"><i class="fa fa-check"></i><b>10</b> Cluster Analysis</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#why-cluster-analysis-matters-in-marketing"><i class="fa fa-check"></i><b>10.1</b> Why Cluster Analysis Matters in Marketing</a></li>
+<li class="chapter" data-level="10.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#the-ffseg-dataset"><i class="fa fa-check"></i><b>10.2</b> The <code>ffseg</code> Dataset</a></li>
+<li class="chapter" data-level="10.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#hierarchical-agglomerative-clustering"><i class="fa fa-check"></i><b>10.3</b> Hierarchical Agglomerative Clustering</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#conceptual-overview"><i class="fa fa-check"></i><b>10.3.1</b> Conceptual Overview</a></li>
+<li class="chapter" data-level="10.3.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#initial-hierarchical-clustering-fit"><i class="fa fa-check"></i><b>10.3.2</b> Initial Hierarchical Clustering Fit</a></li>
+<li class="chapter" data-level="10.3.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#selecting-the-number-of-clusters"><i class="fa fa-check"></i><b>10.3.3</b> Selecting the Number of Clusters</a></li>
+<li class="chapter" data-level="10.3.4" data-path="cluster-analysis.html"><a href="cluster-analysis.html#final-hierarchical-clustering-solution"><i class="fa fa-check"></i><b>10.3.4</b> Final Hierarchical Clustering Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="cluster-analysis.html"><a href="cluster-analysis.html#sec-describe-clusters"><i class="fa fa-check"></i><b>10.4</b> Describing and Labeling Hierarchical Clusters</a></li>
+<li class="chapter" data-level="10.5" data-path="cluster-analysis.html"><a href="cluster-analysis.html#k-means-clustering"><i class="fa fa-check"></i><b>10.5</b> K-Means Clustering</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="cluster-analysis.html"><a href="cluster-analysis.html#conceptual-overview-1"><i class="fa fa-check"></i><b>10.5.1</b> Conceptual Overview</a></li>
+<li class="chapter" data-level="10.5.2" data-path="cluster-analysis.html"><a href="cluster-analysis.html#initial-k-means-clustering-fit"><i class="fa fa-check"></i><b>10.5.2</b> Initial K-Means Clustering Fit</a></li>
+<li class="chapter" data-level="10.5.3" data-path="cluster-analysis.html"><a href="cluster-analysis.html#final-k-means-clustering-solution"><i class="fa fa-check"></i><b>10.5.3</b> Final K-Means Clustering Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="cluster-analysis.html"><a href="cluster-analysis.html#describing-and-labeling-k-means-clusters"><i class="fa fa-check"></i><b>10.6</b> Describing and Labeling <em>k</em>-Means Clusters</a></li>
+<li class="chapter" data-level="10.7" data-path="cluster-analysis.html"><a href="cluster-analysis.html#comparing-clustering-approaches"><i class="fa fa-check"></i><b>10.7</b> Comparing Clustering Approaches</a></li>
+<li class="chapter" data-level="10.8" data-path="cluster-analysis.html"><a href="cluster-analysis.html#chapter-summary"><i class="fa fa-check"></i><b>10.8</b> Chapter Summary</a></li>
+<li class="chapter" data-level="10.9" data-path="cluster-analysis.html"><a href="cluster-analysis.html#whats-next-10"><i class="fa fa-check"></i><b>10.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html"><i class="fa fa-check"></i><b>11</b> PCA and Perceptual Maps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#introduction-why-pca-matters-in-marketing-analytics"><i class="fa fa-check"></i><b>11.1</b> Introduction: Why PCA Matters in Marketing Analytics</a></li>
+<li class="chapter" data-level="11.2" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#the-greekbrands-dataset"><i class="fa fa-check"></i><b>11.2</b> The <code>greekbrands</code> Dataset</a></li>
+<li class="chapter" data-level="11.3" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#preparing-for-pca-in-a-marketing-context"><i class="fa fa-check"></i><b>11.3</b> Preparing for PCA in a Marketing Context</a></li>
+<li class="chapter" data-level="11.4" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#pca-modeling"><i class="fa fa-check"></i><b>11.4</b> PCA Modeling</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#fitting-an-initial-pca-model"><i class="fa fa-check"></i><b>11.4.1</b> Fitting an Initial PCA Model</a></li>
+<li class="chapter" data-level="11.4.2" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#final-pca-solution"><i class="fa fa-check"></i><b>11.4.2</b> Final PCA Solution</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#from-pca-to-perceptual-maps"><i class="fa fa-check"></i><b>11.5</b> From PCA to Perceptual Maps</a></li>
+<li class="chapter" data-level="11.6" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#attribute-based-perceptual-maps-using-pca"><i class="fa fa-check"></i><b>11.6</b> Attribute-Based Perceptual Maps Using PCA</a>
+<ul>
+<li class="chapter" data-level="11.6.1" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#creating-pca-based-maps"><i class="fa fa-check"></i><b>11.6.1</b> Creating PCA-Based Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="11.7" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#managerial-interpretation-and-strategic-insights"><i class="fa fa-check"></i><b>11.7</b> Managerial Interpretation and Strategic Insights</a></li>
+<li class="chapter" data-level="11.8" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#chapter-summary-1"><i class="fa fa-check"></i><b>11.8</b> Chapter Summary</a></li>
+<li class="chapter" data-level="11.9" data-path="pca-and-perceptual-maps.html"><a href="pca-and-perceptual-maps.html#whats-next-11"><i class="fa fa-check"></i><b>11.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html"><i class="fa fa-check"></i><b>12</b> A/B Testing and Uplift Modeling</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#introduction-from-average-effects-to-targeted-marketing"><i class="fa fa-check"></i><b>12.1</b> Introduction: From Average Effects to Targeted Marketing</a></li>
+<li class="chapter" data-level="12.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#the-email-campaign-experiment"><i class="fa fa-check"></i><b>12.2</b> The Email Campaign Experiment</a></li>
+<li class="chapter" data-level="12.3" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#checking-the-randomization-assumption"><i class="fa fa-check"></i><b>12.3</b> Checking the Randomization Assumption</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-balance-checks-matter"><i class="fa fa-check"></i><b>12.3.1</b> Why Balance Checks Matter</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#randomization-check-using-rand_check"><i class="fa fa-check"></i><b>12.3.2</b> Randomization Check Using <code>rand_check()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#estimating-the-average-treatment-effect-ate"><i class="fa fa-check"></i><b>12.4</b> Estimating the Average Treatment Effect (ATE)</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#what-is-the-ate"><i class="fa fa-check"></i><b>12.4.1</b> What Is the ATE?</a></li>
+<li class="chapter" data-level="12.4.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#ate-via-regression"><i class="fa fa-check"></i><b>12.4.2</b> ATE via Regression</a></li>
+<li class="chapter" data-level="12.4.3" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#using-easy_ab_ate"><i class="fa fa-check"></i><b>12.4.3</b> Using <code>easy_ab_ate()</code></a></li>
+<li class="chapter" data-level="12.4.4" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-average-effects-are-not-enough"><i class="fa fa-check"></i><b>12.4.4</b> Why Average Effects Are Not Enough</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#introduction-to-uplift-modeling"><i class="fa fa-check"></i><b>12.5</b> Introduction to Uplift Modeling</a>
+<ul>
+<li class="chapter" data-level="12.5.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#what-is-uplift"><i class="fa fa-check"></i><b>12.5.1</b> What Is Uplift?</a></li>
+<li class="chapter" data-level="12.5.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#two-model-indirect-approach"><i class="fa fa-check"></i><b>12.5.2</b> Two-Model (Indirect) Approach</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#estimating-uplift-with-easy_uplift"><i class="fa fa-check"></i><b>12.6</b> Estimating Uplift with <code>easy_uplift()</code></a>
+<ul>
+<li class="chapter" data-level="12.6.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#model-specification"><i class="fa fa-check"></i><b>12.6.1</b> Model Specification</a></li>
+<li class="chapter" data-level="12.6.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#interpreting-core-outputs"><i class="fa fa-check"></i><b>12.6.2</b> Interpreting Core Outputs</a></li>
+</ul></li>
+<li class="chapter" data-level="12.7" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#diagnosing-uplift-with-lift-plots"><i class="fa fa-check"></i><b>12.7</b> Diagnosing Uplift with Lift Plots</a>
+<ul>
+<li class="chapter" data-level="12.7.1" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#why-lift-diagnostics-matter"><i class="fa fa-check"></i><b>12.7.1</b> Why Lift Diagnostics Matter</a></li>
+<li class="chapter" data-level="12.7.2" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#using-easy_liftplots"><i class="fa fa-check"></i><b>12.7.2</b> Using <code>easy_liftplots()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#from-analysis-to-action"><i class="fa fa-check"></i><b>12.8</b> From Analysis to Action</a></li>
+<li class="chapter" data-level="12.9" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#summary-1"><i class="fa fa-check"></i><b>12.9</b> Summary</a></li>
+<li class="chapter" data-level="12.10" data-path="ab-testing-and-uplift-modeling.html"><a href="ab-testing-and-uplift-modeling.html#whats-next-12"><i class="fa fa-check"></i><b>12.10</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html"><i class="fa fa-check"></i><b>13</b> Standard Multinomial Logit Models</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#introduction-to-multinomial-choice-in-marketing"><i class="fa fa-check"></i><b>13.1</b> Introduction to Multinomial Choice in Marketing</a></li>
+<li class="chapter" data-level="13.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#the-bfast-dataset"><i class="fa fa-check"></i><b>13.2</b> The <code>bfast</code> Dataset</a></li>
+<li class="chapter" data-level="13.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#training-and-test-samples"><i class="fa fa-check"></i><b>13.3</b> Training and Test Samples</a></li>
+<li class="chapter" data-level="13.4" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#estimating-a-standard-multinomial-logit-model"><i class="fa fa-check"></i><b>13.4</b> Estimating a Standard Multinomial Logit Model</a></li>
+<li class="chapter" data-level="13.5" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#evaluating-model-fit"><i class="fa fa-check"></i><b>13.5</b> Evaluating Model Fit</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#interpreting-coefficients"><i class="fa fa-check"></i><b>13.5.1</b> Interpreting Coefficients</a></li>
+<li class="chapter" data-level="13.5.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#classification-performance"><i class="fa fa-check"></i><b>13.5.2</b> Classification Performance</a></li>
+<li class="chapter" data-level="13.5.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#holdout-sample-evaluation"><i class="fa fa-check"></i><b>13.5.3</b> Holdout Sample Evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#predicted-probabilities-1"><i class="fa fa-check"></i><b>13.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="13.7" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#marketing-interpretation"><i class="fa fa-check"></i><b>13.7</b> Marketing Interpretation</a></li>
+<li class="chapter" data-level="13.8" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#summary-2"><i class="fa fa-check"></i><b>13.8</b> Summary</a></li>
+<li class="chapter" data-level="13.9" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#whats-next-13"><i class="fa fa-check"></i><b>13.9</b> What’s Next</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html"><i class="fa fa-check"></i><b>14</b> Alternative-Specific Multinomial Logit Models</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#introduction-why-alternative-specific-mnl"><i class="fa fa-check"></i><b>14.1</b> Introduction: Why Alternative-Specific MNL?</a></li>
+<li class="chapter" data-level="14.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#the-yogurt-choice-data"><i class="fa fa-check"></i><b>14.2</b> The Yogurt Choice Data</a></li>
+<li class="chapter" data-level="14.3" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#preparing-the-data-for-modeling"><i class="fa fa-check"></i><b>14.3</b> Preparing the Data for Modeling</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-splitting-is-different-for-choice-data"><i class="fa fa-check"></i><b>14.3.1</b> Why Splitting Is Different for Choice Data</a></li>
+<li class="chapter" data-level="14.3.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#creating-training-and-test-samples"><i class="fa fa-check"></i><b>14.3.2</b> Creating Training and Test Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#specifying-an-alternative-specific-mnl-model"><i class="fa fa-check"></i><b>14.4</b> Specifying an Alternative-Specific MNL Model</a></li>
+<li class="chapter" data-level="14.5" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#evaluating-model-performance"><i class="fa fa-check"></i><b>14.5</b> Evaluating Model Performance</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#model-fit-and-coefficients"><i class="fa fa-check"></i><b>14.5.1</b> Model Fit and Coefficients</a></li>
+<li class="chapter" data-level="14.5.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#classification-performance-1"><i class="fa fa-check"></i><b>14.5.2</b> Classification Performance</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#predicted-probabilities-and-marginal-effects"><i class="fa fa-check"></i><b>14.6</b> Predicted Probabilities and Marginal Effects</a>
+<ul>
+<li class="chapter" data-level="14.6.1" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-predicted-probabilities-matter"><i class="fa fa-check"></i><b>14.6.1</b> Why Predicted Probabilities Matter</a></li>
+<li class="chapter" data-level="14.6.2" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#why-marginal-effects-are-useful"><i class="fa fa-check"></i><b>14.6.2</b> Why Marginal Effects Are Useful</a></li>
+<li class="chapter" data-level="14.6.3" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#the-pp_as_mnl-function"><i class="fa fa-check"></i><b>14.6.3</b> The <code>pp_as_mnl()</code> Function</a></li>
+<li class="chapter" data-level="14.6.4" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#case-specific-predictors"><i class="fa fa-check"></i><b>14.6.4</b> Case-Specific Predictors</a></li>
+<li class="chapter" data-level="14.6.5" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#alternative-specific-predictors"><i class="fa fa-check"></i><b>14.6.5</b> Alternative-Specific Predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="alternative-specific-multinomial-logit-models.html"><a href="alternative-specific-multinomial-logit-models.html#managerial-insights"><i class="fa fa-check"></i><b>14.7</b> Managerial Insights</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R Tutorial for MKT 4320</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="dplyr-package" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> <em>dplyr</em> Package<a href="dplyr-package.html#dplyr-package" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this course, data transformations are primarily performed using the <code>dplyr</code> package (pronounced DEE ply er). This package makes data manipulation easier and more intuitive (for most). <code>dplyr</code> is built around the five main “verbs” shown below that make up a majority of data manipulation. However, there are other functions that dplyr uses to also help with data manipulation.</p>
+<ul>
+<li><code>select</code> is used to subset columns</li>
+<li><code>filter</code> is used to subset rows</li>
+<li><code>mutate</code> is used to add new columns based on calculations (usually with other columns)</li>
+<li><code>summarise</code> is use to perform summary calculations (e.g., mean, max, etc.) on data set</li>
+<li><code>group_by</code> is used to group rows of a data frame with the same value in specified columns</li>
+</ul>
+<p>In addition, <code>dplyr</code> uses the pipe, <code>%&gt;%</code>, to string together a series of functions. Think of functions strung together as upstream and downstream functions. The function to the left of <code>%&gt;%</code> is the upstream function, while the function to the right is the downstream function.</p>
+<p>By default, the downstream function assumes the value coming from the upstream function is the first argument in its function. Therefore, the first argument can be omitted. If the downstream function needs to use the value from the upstream function assigned to a different argument, a <code>.</code> is simply put in the position of that argument</p>
+<hr />
+<div id="the-dplyr-workflow" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> The <em>dplyr</em> workflow<a href="dplyr-package.html#the-dplyr-workflow" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <code>dplyr</code> package is designed to make data manipulation clear and readable.</p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="dplyr-package.html#cb149-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<p>A typical <code>dplyr</code> workflow:</p>
+<ol style="list-style-type: decimal">
+<li>Start with a data frame</li>
+<li>Apply a sequence of transformation verbs</li>
+<li>Save or display the result</li>
+</ol>
+<hr />
+</div>
+<div id="selecting-variables" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Selecting variables<a href="dplyr-package.html#selecting-variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Use <code>select()</code> to keep only the variables you need. This does not modify the original dataset unless you save the result.</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="dplyr-package.html#cb150-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb150-2"><a href="dplyr-package.html#cb150-2" tabindex="-1"></a>  <span class="fu">select</span>(userid, age, gender) <span class="sc">%&gt;%</span></span>
+<span id="cb150-3"><a href="dplyr-package.html#cb150-3" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>    userid age gender
+1 15624510  19   Male
+2 15810944  35   Male
+3 15668575  26 Female
+4 15603246  27 Female
+5 15804002  19   Male
+6 15728773  27   Male</code></pre>
+<p>“Negative” selection can also be done by using the <code>-</code> (minus sign) before a variable name or a vector of variable names.</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="dplyr-package.html#cb152-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb152-2"><a href="dplyr-package.html#cb152-2" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>gender) <span class="sc">%&gt;%</span></span>
+<span id="cb152-3"><a href="dplyr-package.html#cb152-3" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>    userid age buy salary age10 buy_binary salary_cat
+1 15624510  19  No     19   1.9          0        Low
+2 15810944  35  No     20   3.5          0        Low
+3 15668575  26  No     43   2.6          0        Low
+4 15603246  27  No     57   2.7          0        Med
+5 15804002  19  No     76   1.9          0        Med
+6 15728773  27  No     58   2.7          0        Med</code></pre>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="dplyr-package.html#cb154-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb154-2"><a href="dplyr-package.html#cb154-2" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(age,gender)) <span class="sc">%&gt;%</span></span>
+<span id="cb154-3"><a href="dplyr-package.html#cb154-3" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>    userid buy salary age10 buy_binary salary_cat
+1 15624510  No     19   1.9          0        Low
+2 15810944  No     20   3.5          0        Low
+3 15668575  No     43   2.6          0        Low
+4 15603246  No     57   2.7          0        Med
+5 15804002  No     76   1.9          0        Med
+6 15728773  No     58   2.7          0        Med</code></pre>
+<hr />
+</div>
+<div id="filtering-observations" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Filtering observations<a href="dplyr-package.html#filtering-observations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Use <code>filter()</code> to keep rows that meet certain conditions. (Note: the <code>nrow(object_name)</code> from base R provides the number of rows in the data frame).</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="dplyr-package.html#cb156-1" tabindex="-1"></a><span class="fu">nrow</span>(directmktg)</span></code></pre></div>
+<pre><code>[1] 400</code></pre>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="dplyr-package.html#cb158-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb158-2"><a href="dplyr-package.html#cb158-2" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">35</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb158-3"><a href="dplyr-package.html#cb158-3" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code></pre></div>
+<pre><code>[1] 254</code></pre>
+<p>Multiple conditions can be combined:</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="dplyr-package.html#cb160-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb160-2"><a href="dplyr-package.html#cb160-2" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">35</span>, </span>
+<span id="cb160-3"><a href="dplyr-package.html#cb160-3" tabindex="-1"></a>         gender <span class="sc">==</span> <span class="st">&quot;Male&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb160-4"><a href="dplyr-package.html#cb160-4" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code></pre></div>
+<pre><code>[1] 124</code></pre>
+<hr />
+</div>
+<div id="creating-new-variables" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Creating new variables<a href="dplyr-package.html#creating-new-variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Use <code>mutate()</code> to create or transform variables. New variables are added to the data frame.</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="dplyr-package.html#cb162-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb162-2"><a href="dplyr-package.html#cb162-2" tabindex="-1"></a>  <span class="fu">select</span>(userid, age) <span class="sc">%&gt;%</span></span>
+<span id="cb162-3"><a href="dplyr-package.html#cb162-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age10 =</span> age <span class="sc">/</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb162-4"><a href="dplyr-package.html#cb162-4" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>    userid age age10
+1 15624510  19   1.9
+2 15810944  35   3.5
+3 15668575  26   2.6
+4 15603246  27   2.7
+5 15804002  19   1.9
+6 15728773  27   2.7</code></pre>
+<hr />
+</div>
+<div id="summaries-with-summarise" class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> Summaries with <code>summarise()</code><a href="dplyr-package.html#summaries-with-summarise" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <code>summarise()</code> function is used to compute <strong>summary statistics</strong> from a data frame.
+It can be used <strong>with or without grouping</strong>.</p>
+<p>When <code>summarise()</code> is used <strong>without</strong> <code>group_by()</code>, it computes summaries over the
+entire dataset.</p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="dplyr-package.html#cb164-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb164-2"><a href="dplyr-package.html#cb164-2" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb164-3"><a href="dplyr-package.html#cb164-3" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb164-4"><a href="dplyr-package.html#cb164-4" tabindex="-1"></a>    <span class="at">mean_age =</span> <span class="fu">mean</span>(age),</span>
+<span id="cb164-5"><a href="dplyr-package.html#cb164-5" tabindex="-1"></a>    <span class="at">buy_rate =</span> <span class="fu">mean</span>(buy <span class="sc">==</span> <span class="st">&quot;Yes&quot;</span>)</span>
+<span id="cb164-6"><a href="dplyr-package.html#cb164-6" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>    n mean_age buy_rate
+1 400   37.655   0.3575</code></pre>
+<p>Here’s what this code is doing:</p>
+<ul>
+<li><code>n()</code> counts the total number of observations in the dataset</li>
+<li><code>mean(age)</code> computes the overall average age</li>
+<li><code>mean(buy == "Yes")</code> computes the overall purchase rate</li>
+</ul>
+<p>The result is a data frame with <strong>one row</strong>, where each column represents a summary
+statistic for the full dataset.</p>
+<hr />
+</div>
+<div id="grouped-summaries-with-group_by-and-summarise" class="section level2 hasAnchor" number="5.6">
+<h2><span class="header-section-number">5.6</span> Grouped summaries with <code>group_by()</code> and <code>summarise()</code><a href="dplyr-package.html#grouped-summaries-with-group_by-and-summarise" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Often, you want to compute summaries <strong>separately for different groups</strong>, such as
+customer segments or demographic categories.</p>
+<p>In <code>dplyr</code>, this is done by combining <code>group_by()</code> with <code>summarize()</code>.</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="dplyr-package.html#cb166-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb166-2"><a href="dplyr-package.html#cb166-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender)</span></code></pre></div>
+<pre><code># A tibble: 400 × 8
+# Groups:   gender [2]
+     userid   age buy   gender salary age10 buy_binary salary_cat
+      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;     
+ 1 15624510    19 No    Male       19   1.9          0 Low       
+ 2 15810944    35 No    Male       20   3.5          0 Low       
+ 3 15668575    26 No    Female     43   2.6          0 Low       
+ 4 15603246    27 No    Female     57   2.7          0 Med       
+ 5 15804002    19 No    Male       76   1.9          0 Med       
+ 6 15728773    27 No    Male       58   2.7          0 Med       
+ 7 15598044    27 No    Female     84   2.7          0 High      
+ 8 15694829    32 Yes   Female    150   3.2          1 High      
+ 9 15600575    25 No    Male       33   2.5          0 Low       
+10 15727311    35 No    Female     65   3.5          0 Med       
+# ℹ 390 more rows</code></pre>
+<p>The <code>group_by()</code> function does not change the data values. Instead, it tells R how
+the data should be <strong>temporarily divided into groups</strong> for the next operation.</p>
+<p>At this point, no calculations have been performed. Once the data are grouped, <code>summarise()</code> computes statistics <strong>within each group</strong>.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="dplyr-package.html#cb168-1" tabindex="-1"></a>directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb168-2"><a href="dplyr-package.html#cb168-2" tabindex="-1"></a>  <span class="fu">group_by</span>(gender) <span class="sc">%&gt;%</span></span>
+<span id="cb168-3"><a href="dplyr-package.html#cb168-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb168-4"><a href="dplyr-package.html#cb168-4" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb168-5"><a href="dplyr-package.html#cb168-5" tabindex="-1"></a>    <span class="at">mean_age =</span> <span class="fu">mean</span>(age),</span>
+<span id="cb168-6"><a href="dplyr-package.html#cb168-6" tabindex="-1"></a>    <span class="at">buy_rate =</span> <span class="fu">mean</span>(buy <span class="sc">==</span> <span class="st">&quot;Yes&quot;</span>)</span>
+<span id="cb168-7"><a href="dplyr-package.html#cb168-7" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code># A tibble: 2 × 4
+  gender     n mean_age buy_rate
+  &lt;fct&gt;  &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 Male     196     36.9    0.337
+2 Female   204     38.4    0.377</code></pre>
+<p>Step by step:</p>
+<ul>
+<li><code>group_by(gender)</code> splits the data into separate groups based on gender</li>
+<li><code>n()</code> counts observations within each group</li>
+<li><code>mean(age)</code> computes the average age within each group</li>
+<li><code>mean(buy == "Yes")</code> computes the purchase rate within each group</li>
+</ul>
+<p>The result is a data frame with <strong>one row per group</strong> and <strong>one column per summary statistic</strong>.</p>
+<p>After <code>summarise()</code> runs, the grouping structure is automatically dropped, so the
+result behaves like a regular data frame.</p>
+<hr />
+</div>
+<div id="connecting-summarize-to-base-r" class="section level2 hasAnchor" number="5.7">
+<h2><span class="header-section-number">5.7</span> Connecting <code>summarize()</code> to base R<a href="dplyr-package.html#connecting-summarize-to-base-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Conceptually, grouped summaries in <code>dplyr</code> perform the same task as a multi-step
+process in base R:</p>
+<ol style="list-style-type: decimal">
+<li>Split the data into groups</li>
+<li>Compute summary statistics for each group</li>
+<li>Combine the results into a table</li>
+</ol>
+<p>For example, in base R you might compute group means using functions such as
+<code>aggregate()</code> or by manually subsetting the data.</p>
+<p>The advantage of <code>group_by()</code> and <code>summarise()</code> is that these steps are expressed
+<strong>explicitly and readably</strong>, making your data transformations easier to follow,
+debug, and modify.</p>
+<hr />
+</div>
+<div id="combining-transformations" class="section level2 hasAnchor" number="5.8">
+<h2><span class="header-section-number">5.8</span> Combining transformations<a href="dplyr-package.html#combining-transformations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As you’ve seen, one of the main advantages of <code>dplyr</code> is that multiple steps can be chained together.</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="dplyr-package.html#cb170-1" tabindex="-1"></a>directmktg_clean <span class="ot">&lt;-</span> directmktg <span class="sc">%&gt;%</span></span>
+<span id="cb170-2"><a href="dplyr-package.html#cb170-2" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;=</span> <span class="dv">35</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb170-3"><a href="dplyr-package.html#cb170-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age10 =</span> age <span class="sc">/</span> <span class="dv">10</span>,</span>
+<span id="cb170-4"><a href="dplyr-package.html#cb170-4" tabindex="-1"></a>         <span class="at">buy_binary =</span> <span class="fu">ifelse</span>(buy <span class="sc">==</span> <span class="st">&quot;Yes&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb170-5"><a href="dplyr-package.html#cb170-5" tabindex="-1"></a>  <span class="fu">select</span>(userid, age10, gender, buy_binary)</span>
+<span id="cb170-6"><a href="dplyr-package.html#cb170-6" tabindex="-1"></a></span>
+<span id="cb170-7"><a href="dplyr-package.html#cb170-7" tabindex="-1"></a><span class="fu">head</span>(directmktg_clean)</span></code></pre></div>
+<pre><code>    userid age10 gender buy_binary
+1 15810944   3.5   Male          0
+2 15727311   3.5 Female          0
+3 15733883   4.7   Male          1
+4 15617482   4.5   Male          1
+5 15704583   4.6   Male          1
+6 15621083   4.8 Female          1</code></pre>
+<p>This approach keeps data preparation transparent and reproducible.</p>
+<hr />
+</div>
+<div id="key-takeaway-1" class="section level2 hasAnchor" number="5.9">
+<h2><span class="header-section-number">5.9</span> Key takeaway<a href="dplyr-package.html#key-takeaway-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before any modeling or visualization, you should be able to:
+- load data reliably,
+- inspect variable types and values,
+- identify missing or problematic data, and
+- transform data into a usable analytical form.</p>
+<p>These steps are essential for sound marketing analytics.</p>
+<hr />
+</div>
+<div id="whats-next-5" class="section level2 hasAnchor" number="5.10">
+<h2><span class="header-section-number">5.10</span> What’s next<a href="dplyr-package.html#whats-next-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the next chapter, we will use cleaned and well-understood data to perform <strong>descriptive analysis</strong>, including frequency tables, crosstabs, measures of central tendency and dispersion, and correlation.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="working-with-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="descriptive-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/USERNAME/REPO/edit/BRANCH/05-package-dplyr.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["mybook.pdf", "mybook.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

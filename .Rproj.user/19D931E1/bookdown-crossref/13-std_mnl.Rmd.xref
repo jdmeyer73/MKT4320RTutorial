@@ -1,0 +1,14 @@
+h1:standard-multinomial-logit-models Standard Multinomial Logit Models
+h2:introduction-to-multinomial-choice-in-marketing Introduction to Multinomial Choice in Marketing
+h2:the-bfast-dataset The  Dataset
+h2:training-and-test-samples Training and Test Samples
+h2:estimating-a-standard-multinomial-logit-model Estimating a Standard Multinomial Logit Model
+h2:evaluating-model-fit Evaluating Model Fit
+h3:interpreting-coefficients Interpreting Coefficients
+h3:classification-performance Classification Performance
+h3:holdout-sample-evaluation Holdout Sample Evaluation
+h2:predicted-probabilities Predicted Probabilities
+h2:marketing-interpretation Marketing Interpretation
+h2:summary Summary
+h2:whats-next What’s Next
+

@@ -1,0 +1,7 @@
+"0","tab_corr(mycorr_df,"
+"0","         triangle = ""lower"","
+"0","         show.p = TRUE,"
+"0","         show.est = TRUE)"
+"2","Error in tab_corr(mycorr_df, triangle = ""lower"", show.p = TRUE, show.est = TRUE) : 
+  unused argument (show.est = TRUE)
+"

@@ -1,0 +1,199 @@
+# Working with Data
+
+This chapter focuses on working with real datasets used throughout the course. You will learn how course data are made available, how to inspect and understand variables, and how to perform basic data transformations using the `dplyr` package.
+
+The goal is to help you move from small, isolated examples to working confidently with full datasets.
+
+---
+
+## Course data vs importing data
+
+In this course, many datasets are provided directly through the **MKT4320BGSU** package. These datasets are accessed using the `data()` function.  For the next two chapters, we'll be using the `directmktg` dataset.
+
+```{r coursedata}
+data("directmktg")
+```
+
+```{r directmktg_asdataframe, include=FALSE}
+directmktg <- data.frame(directmktg)
+```
+
+Using `data()` has several advantages:
+
+- Everyone is working with the same dataset
+- No file paths are required
+- Fewer import-related errors
+
+When possible, labs will rely on datasets loaded with `data()`.
+
+### Importing external data
+
+In some cases, you may work with your own data files (e.g., CSV files).
+
+```{r import-csv, eval=FALSE}
+mydata <- read.csv("mydata.csv")
+```
+
+Imported data behave the same way as course datasets once they are loaded into R. The key difference is how they enter your workspace.
+
+As a general rule:
+
+- Use `data()` for course-provided datasets
+- Use `read.csv()` (or similar functions) for your own files
+
+---
+
+## Inspecting datasets and variables
+
+Before analyzing data, it is critical to understand what is in the dataset.
+
+### Viewing the data
+
+The `head(data_object)` first few rows (the default is `n=6`) and helps you understand the structure of the data. There is a similar function, `tail()`, that looks at the last `n` rows.
+
+```{r head-data}
+head(directmktg)
+head(directmktg, n=5)
+tail(directmktg, n=5)
+```
+
+To see the entire data object, you can use the `View(data_object)` function, which will open the data in a spreadsheet-like format in the Source pane.
+
+```{r view_in_source, eval=FALSE}
+View(directmktg)
+```
+
+### Dataset structure
+
+The `str(object)` function is one of the most important commands in R. When used with a dataset object, it shows:
+
+- Variable names
+- Variable types (numeric, factor, character)
+- A preview of values
+
+```{r structure-data}
+str(directmktg)
+```
+
+### Variable summaries
+
+When used on the entire dataset, the `summary(object_name)` function provides a summary of all variables. The output depends on the variable type:
+
+- Numeric variables: min, max, mean, quartiles
+- Factor variables: counts by level
+
+```{r summary-data}
+summary(directmktg)
+```
+
+---
+
+## Data frames, variables, and indexing
+
+A **data frame** is a table of rows and columns. In R, you will often need to reference a specific variable (column) or select a subset of rows/columns.
+
+### Accessing a variable (a column)
+
+Use the `$` operator to access a column by name.
+
+```{r df-dollar}
+directmktg$age
+```
+
+A column is often a vector, which means you can use vector functions on it.
+
+```{r df-column-functions}
+mean(directmktg$age)
+summary(directmktg$age)
+```
+
+### Indexing a data frame
+
+Data frames can be indexed (or subsetted) using:
+
+- `data[rows, cols]`
+- leave rows blank to keep all rows: `data[, cols]`
+- leave cols blank to keep all columns: `data[rows, ]`
+
+In addition, sequencing can be used to get multiple rows and/or columns. By default, subsetting a single column returns a vector.  To retain it as a data frame, use the `drop = FALSE` argument.
+
+```{r df-index-basic, eval=FALSE}
+directmktg[1, ]               # first row, all columns
+directmktg[1:5, ]             # first 5 rows, all columns
+directmktg[, 2]               # all rows, column 2 only (age), as a vector
+directmktg[, 2, drop=FALSE]   # all rows, column 2 only (age), as a data frame
+```
+
+You can also access index columns using the column name columns. in two other ways. First, if you know the column number, you can using `[[ ]]` (useful when column names are stored in an object).
+
+```{r df-index-colname, eval=FALSE}
+directmktg[1, "age"]                 # first row, age column
+directmktg[1:5, c("age", "gender")]  # first 5 rows, age and gender columns
+```
+
+### Filtering rows using a condition (base R)
+
+You can filter rows by using a logical condition inside the row index.
+
+```{r df-filter-base}
+directmktg[directmktg$age >= 55, ]
+```
+
+This keeps only rows where `age >= 55`.
+
+---
+
+### Specific variable summaries (base R)
+
+You can use variable naming or indexing to get specific variable summaries using the `summary()` function.
+
+```{r df-specific_summaries}
+summary(directmktg$age)
+summary(directmktg[,2:3])
+```
+
+---
+
+## Data transformations (base R)
+
+Data transformation refers to modifying or creating variables so they are more useful for analysis. This includes:
+
+- creating new variables
+- recoding variables
+
+Base R can do all of these. Even if you prefer `dplyr` (covered later), it is helpful to understand what is happening “under the hood.”
+
+### Creating a new variable
+
+This example creates a **new variable** in the data frame using base R. The expression on the right-hand side,
+`directmktg$age / 10`, is evaluated first. Because `directmktg$age` is a vector, the division is applied to **each observation**, and the result is a new vector of the same length.
+
+Using the assignment operator `<-`, this new vector is stored as a column named `age10` in the `directmktg` data frame.
+
+```{r base-newvar}
+directmktg$age10 <- directmktg$age / 10
+head(directmktg, n=5)
+```
+
+### Recoding with `ifelse()`
+
+A common transformation is converting a categorical outcome into a numeric indicator.
+
+```{r base-ifelse}
+directmktg$buy_binary <- ifelse(directmktg$buy == "Yes", 1, 0)
+table(directmktg$buy, directmktg$buy_binary)
+```
+
+Another common recoding is converting a numeric value into categories, which can be done with nested `ifelse()` statements.
+
+``` {r nexted-ifelse}
+directmktg$salary_cat <- ifelse(directmktg$salary <=50, "Low",
+                               ifelse(directmktg$salary <=80, "Med", "High"))
+head(directmktg[,c("salary","salary_cat")], 10)
+```
+
+---
+
+## What’s next
+
+In the next chapter, we introduce the **`dplyr` package** for data manipulation. While the tasks performed with `dplyr` are similar to those you have already seen using base R, `dplyr` provides a more consistent and expressive way to work with data. These tools will be used extensively in later chapters for descriptive analysis, visualization, and modeling.

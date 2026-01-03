@@ -1,0 +1,213 @@
+# *dplyr* Package
+
+In this course, data transformations are primarily performed using the `dplyr` package (pronounced DEE ply er). This package makes data manipulation easier and more intuitive (for most). `dplyr` is built around the five main “verbs” shown below that make up a majority of data manipulation. However, there are other functions that dplyr uses to also help with data manipulation.
+
+- `select` is used to subset columns
+- `filter` is used to subset rows
+- `mutate` is used to add new columns based on calculations (usually with other columns)
+- `summarise` is use to perform summary calculations (e.g., mean, max, etc.) on data set
+- `group_by` is used to group rows of a data frame with the same value in specified columns
+
+In addition, `dplyr` uses the pipe, `%>%`, to string together a series of functions. Think of functions strung together as upstream and downstream functions. The function to the left of `%>%` is the upstream function, while the function to the right is the downstream function.
+
+By default, the downstream function assumes the value coming from the upstream function is the first argument in its function. Therefore, the first argument can be omitted. If the downstream function needs to use the value from the upstream function assigned to a different argument, a `.` is simply put in the position of that argument
+
+---
+
+## The *dplyr* workflow
+
+The `dplyr` package is designed to make data manipulation clear and readable.
+
+```{r load-dplyr}
+library(dplyr)
+```
+
+A typical `dplyr` workflow:
+
+1. Start with a data frame
+2. Apply a sequence of transformation verbs
+3. Save or display the result
+
+---
+
+## Selecting variables
+
+Use `select()` to keep only the variables you need. This does not modify the original dataset unless you save the result.
+
+```{r select-vars}
+directmktg %>%
+  select(userid, age, gender) %>%
+  head()
+```
+
+"Negative" selection can also be done by using the `-` (minus sign) before a variable name or a vector of variable names.
+
+```{r neg-select-vars}
+directmktg %>%
+  select(-gender) %>%
+  head()
+
+directmktg %>%
+  select(-c(age,gender)) %>%
+  head()
+```
+
+---
+
+## Filtering observations
+
+Use `filter()` to keep rows that meet certain conditions. (Note: the `nrow(object_name)` from base R provides the number of rows in the data frame).
+
+```{r filter-rows}
+nrow(directmktg)
+directmktg %>%
+  filter(age >= 35) %>%
+  nrow()
+```
+
+Multiple conditions can be combined:
+
+```{r filter-multiple}
+directmktg %>%
+  filter(age >= 35, 
+         gender == "Male") %>%
+  nrow()
+```
+
+---
+
+## Creating new variables
+
+Use `mutate()` to create or transform variables. New variables are added to the data frame.
+
+```{r mutate-vars}
+directmktg %>%
+  select(userid, age) %>%
+  mutate(age10 = age / 10) %>%
+  head()
+```
+
+
+
+---
+
+## Summaries with `summarise()`
+
+The `summarise()` function is used to compute **summary statistics** from a data frame.
+It can be used **with or without grouping**.
+
+When `summarise()` is used **without** `group_by()`, it computes summaries over the
+entire dataset.
+
+```{r summarise-overall}
+directmktg %>%
+  summarise(
+    n = n(),
+    mean_age = mean(age),
+    buy_rate = mean(buy == "Yes")
+  )
+```
+
+Here’s what this code is doing:
+
+- `n()` counts the total number of observations in the dataset
+- `mean(age)` computes the overall average age
+- `mean(buy == "Yes")` computes the overall purchase rate
+
+The result is a data frame with **one row**, where each column represents a summary
+statistic for the full dataset.
+
+---
+
+## Grouped summaries with `group_by()` and `summarise()`
+
+Often, you want to compute summaries **separately for different groups**, such as
+customer segments or demographic categories.
+
+In `dplyr`, this is done by combining `group_by()` with `summarize()`.
+
+```{r groupby-only}
+directmktg %>%
+  group_by(gender)
+```
+
+The `group_by()` function does not change the data values. Instead, it tells R how
+the data should be **temporarily divided into groups** for the next operation.
+
+At this point, no calculations have been performed. Once the data are grouped, `summarise()` computes statistics **within each group**.
+
+```{r summarize-grouped}
+directmktg %>%
+  group_by(gender) %>%
+  summarise(
+    n = n(),
+    mean_age = mean(age),
+    buy_rate = mean(buy == "Yes")
+  )
+```
+
+Step by step:
+
+- `group_by(gender)` splits the data into separate groups based on gender
+- `n()` counts observations within each group
+- `mean(age)` computes the average age within each group
+- `mean(buy == "Yes")` computes the purchase rate within each group
+
+The result is a data frame with **one row per group** and **one column per summary statistic**.
+
+After `summarise()` runs, the grouping structure is automatically dropped, so the
+result behaves like a regular data frame.
+
+---
+
+## Connecting `summarize()` to base R
+
+Conceptually, grouped summaries in `dplyr` perform the same task as a multi-step
+process in base R:
+
+1. Split the data into groups
+2. Compute summary statistics for each group
+3. Combine the results into a table
+
+For example, in base R you might compute group means using functions such as
+`aggregate()` or by manually subsetting the data.
+
+The advantage of `group_by()` and `summarise()` is that these steps are expressed
+**explicitly and readably**, making your data transformations easier to follow,
+debug, and modify.
+
+---
+
+## Combining transformations
+
+As you've seen, one of the main advantages of `dplyr` is that multiple steps can be chained together.
+
+```{r combine-transform}
+directmktg_clean <- directmktg %>%
+  filter(age >= 35) %>%
+  mutate(age10 = age / 10,
+         buy_binary = ifelse(buy == "Yes", 1, 0)) %>%
+  select(userid, age10, gender, buy_binary)
+
+head(directmktg_clean)
+```
+
+This approach keeps data preparation transparent and reproducible.
+
+---
+
+## Key takeaway
+
+Before any modeling or visualization, you should be able to:
+- load data reliably,
+- inspect variable types and values,
+- identify missing or problematic data, and
+- transform data into a usable analytical form.
+
+These steps are essential for sound marketing analytics.
+
+---
+
+## What’s next
+
+In the next chapter, we will use cleaned and well-understood data to perform **descriptive analysis**, including frequency tables, crosstabs, measures of central tendency and dispersion, and correlation.

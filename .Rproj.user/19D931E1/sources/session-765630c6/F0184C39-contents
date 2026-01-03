@@ -1,0 +1,233 @@
+
+# Linear Regression
+
+Linear regression is one of the most widely used tools in marketing analytics.
+It allows us to quantify relationships between an outcome variable and one or
+more predictors, helping us explain variation, estimate marginal effects, and
+generate predictions.
+
+In earlier chapters, we summarized data numerically and visually. In this
+chapter, we move beyond description to modeling relationships between variables.
+
+Throughout this chapter, we use the `airlinesat_small` dataset and focus on
+interpretation rather than mathematical derivation.
+
+---
+
+## The Linear Regression Model
+
+A linear regression model relates an outcome variable to one or more predictors.
+In R, linear regression models are estimated using the `lm()` function.
+
+The general structure is:
+
+```{r lm-syntax, eval=FALSE}
+lm(outcome ~ predictors, data = dataset)
+```
+
+---
+
+## Simple Linear Regression
+
+We begin with a simple linear regression model containing a single predictor.
+
+In this example, we model Net Promoter Score (`nps`) as a function of the number
+of flights taken (`nflights`). If we don't ask for a summary we **only** get the coefficients.  If we save the result as an object and then ask for a summary, we get the full, expected results.
+
+```{r lr-simple-fit}
+lm(nps ~ nflights, data = airlinesat_small)
+
+model_simple <- lm(nps ~ nflights, data = airlinesat_small)
+summary(model_simple)
+```
+
+Interpretation focuses on:
+
+- The intercept: the predicted net promoter score (NPS) when the number of flights is zero
+- The slope on `nflights`: the expected change in NPS for one additional flight
+- R-squared: the proportion of variation in NPS explained by the model
+
+### "Nice" Output
+
+For nicer looking output, we can use either the `summ` function from the `jtools` package. It easily allows us to adjust the number of digits shown (`digits = #` option). It can also show the standardized beta coefficients by using the `scale=TRUE` and `transform.response=TRUE` options together.
+
+```{r lm-jtoolsoutput}
+summ(model_simple, digits = 4)
+summ(model_simple, digits = 4, scale = TRUE, transform.response = TRUE)
+```
+
+---
+
+## Multiple Linear Regression
+
+In practice, outcomes are influenced by more than one factor. Multiple linear
+regression allows us to include additional predictors to control for other
+characteristics.
+
+### Adding Additional Variables
+
+```{r lr-multi-fit}
+model_multi <- lm(nps ~ nflights + age, data = airlinesat_small)
+summ(model_multi, digits = 4)
+```
+
+When additional predictors are included, coefficients are interpreted as
+marginal effects holding other variables constant.
+
+---
+
+## Categorical Predictors and Reference Groups
+
+Regression models can include categorical predictors. In R, factor variables
+are automatically converted into indicator (dummy) variables.
+
+### Example: Flight Class
+
+```{r lr-cat-fit}
+model_cat <- lm(nps ~ nflights + flight_class,  data = airlinesat_small)
+summ(model_cat, digits = 4)
+```
+
+One category is treated as the reference group. Coefficients for other categories
+represent differences relative to that reference. In the example above, "Business" is treated as the reference group.
+
+To change the reference group, use `relevel()`. It can be changed temporarily within the call to `lm()`, or it can be changed permanently in the dataframe.
+
+```{r lr-cat-relevel}
+# Temporary level chance in formula
+model_cat_relevel <- lm(nps ~ nflights + relevel(flight_class, ref="Economy"),  
+                        data = airlinesat_small)
+summ(model_cat_relevel, digits = 4)
+
+airlinesat_small$flight_class <- relevel(airlinesat_small$flight_class, 
+                                         ref = "Economy")
+```
+
+---
+
+## Interaction Effects
+
+An interaction allows the effect of one predictor to depend on the level of
+another predictor. Interactions can be included in the formula using `*` or `:`
+
+- `*` will include the interaction term **AND** each main effect
+- `:` will include **ONLY** the interaction term
+- Examples:
+  - `y ~ x1 + x2 * x3` is the same as:  
+  $y = x1 + x2 + x3 + (x2 \times x3)$
+  - `y ~ x1 + x2:x3 is the same as:  
+  $y = x1 + (x2 \times x3)$
+  0 `y ~ x1 + x2 + x2:x3` is the same as:  
+  $y = x1 + x2 + (x2 \times x3)$
+
+### Example: Flights and Frequent Flier Status
+
+```{r lr-interaction-fit}
+model_inter <- lm(nps ~ age + nflights * status, data = airlinesat_small)
+summ(model_inter, digits = 4)
+```
+
+---
+
+## Margin Plots with `easy_mp` {#sec-margin-plots}
+
+Rather than using exploratory plots or manually creating margin plots, we use the `easy_mp()` function from the
+`MKT4320BGSU` package to visualize predicted values and marginal effects.
+
+### The `easy_mp()` Function
+
+This function creates marginal effects plots for a focal predictor (with or without an interaction) from a linear regression (`lm`) or binary logistic regression (`glm` with `family = "binomial"`).
+
+Usage: `easy_mp(model, focal, int = NULL)`
+
+Arguments: 
+
+- `model` is a fitted `lm` model or binary logistic `glm` model (`family = "binomial"`).
+- `focal` is the name of the focal predictor variable in quotations
+- `int` is the name of the interaction variable in quotations. Can be excluded if only the focal variable is wanted or no interaction exists.
+
+Returns:
+- `$plot` is the margin plot
+- `$ptable` is the marginal effects table used to produce the plot
+
+### WITHOUT Interactions
+
+Below are examples of a margin plot for a continuous independent variable and for a categorical/factor independent variable.  Note how the returned `$plot` object is a `ggplot` that can be modified by adding layers.
+
+```{r lr-easymp-main}
+model_mp_nointer <- lm(nps ~ age + gender, data = airlinesat_small)
+
+# Continuous Focal WITHOUT Interaction
+mp_age <- easy_mp(model_mp_nointer, focal="age")
+mp_age$plot +
+  labs(title="No Interaction: Continuous Variable")
+  
+# Factor Focal WITHOUT Interaction
+mp_gender <- easy_mp(model_mp_nointer, focal="gender")
+mp_gender$plot +
+  labs(title="No Interaction: Factor Variable")
+```
+
+### WITH Interactions
+
+Ultimately, there are four types of margin plots that can be created depending on the focal variable type and the interaction variable type:
+
+- Continuous Focal IV $\times$ Continuous Interaction IV
+- Continuous Focal IV $\times$ Factor Interaction IV
+- Factor Focal IV $\times$ Continuous Interaction IV
+- Factor Focal IV $\times$ Factor Interaction IV
+
+When the interaction term is continuous, the plot is created with representative values of the continuous variable (roughly the 1st percentile, the 99th percentile, and two evenly spaced values between those two).
+
+```{r lr-easymp-interaction}
+model_mp_inter <- lm(nps ~ age*gender + age*reputation + gender*status, data = airlinesat_small)
+
+# Continuous Focal WITH Continuous Interaction
+mp_age_reputation <- easy_mp(model_mp_inter, focal = "age", int = "reputation")
+mp_age_reputation$plot +
+  labs(title="Interaction: Continuous Focal IV by Continuous Interaction IV")
+
+# Continuous Focal WITH Factor Interaction
+mp_age_gender <- easy_mp(model_mp_inter, focal = "age", int = "gender")
+mp_age_gender$plot +
+  labs(title="Interaction: Continuous Focal IV by Factor Interaction IV")
+
+# Factor Focal WITH Continuous Interaction
+mp_gender_age <- easy_mp(model_mp_inter, focal = "gender", int = "age")
+mp_gender_age$plot +
+  labs(title="Interaction: Factor Focal IV by Continuous Interaction IV")
+
+# Factor Focal WITH Factor Interaction
+mp_gender_status <- easy_mp(model_mp_inter, focal = "gender", int = "status")
+mp_gender_status$plot +
+  labs(title="Interaction: Factor Focal IV by Factor Interaction IV")
+```
+
+---
+
+## Prediction
+
+Regression models can also be used for prediction. The function `predict()` can be used to predict the DV based on values of the IVs. We can either: (1) predict the expected value of the DV for each observation in the data, or (2) predict the expected value of the DV for new values of the IV(s). To use this function for (2), we must pass a data frame of values to the function, where the data frame contains ALL of the IVs and the value for each IV that we want.
+
+Suppose we wanted to predict, with a confidence interval, the `nps` of someone that is 45 years old and had 25 flights on the airline, and also someone that is 25 years old and had 45 flights on the airline, based on our `model_multi <- lm(nps ~ nflights + age, data = airlinesat_small)` from above. First, we create the data frame of values
+
+```{r lr-predict_values}
+values <- data.frame(age=c(45, 25), nflights=c(25, 45))
+values
+```
+
+Second, the data frame is passed to the `predict()` function with confidence intervals requested.
+
+```{r lr-predict_outcome}
+predict(model_multi, values, interval="confidence")
+```
+
+---
+
+## What’s Next
+
+In this chapter, you learned how to use linear regression to model relationships when the outcome variable is continuous, such as satisfaction or Net Promoter Score. Linear regression works well when predicted values can reasonably fall anywhere along a numeric scale.
+
+Many marketing outcomes, however, are binary—for example, purchase vs. no purchase, churn vs. retention, or click vs. no click. In these cases, linear regression is no longer appropriate.
+
+In the next chapter, we introduce binary logistic regression, a modeling approach designed specifically for yes/no outcomes. You will learn how to estimate probabilities, interpret coefficients and marginal effects, and evaluate model performance in a way that is well-suited to common marketing decision problems.

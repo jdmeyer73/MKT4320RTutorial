@@ -1,0 +1,6 @@
+"0","describe_vars <- c(""usertype"", ""spend"", ""hours"", ""eatin"", ""mealplan"", ""gender"")"
+"0","easy_cluster_describe(data = hc_final$data, cluster_col = ""hc_cluster"","
+"0","                      vars=describe_vars)"
+"1","
+Continuous variables (p-values):
+"

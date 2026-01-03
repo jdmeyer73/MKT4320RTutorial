@@ -1,0 +1,2 @@
+"0","pp_age <- pp_std_mnl(model = mnl_fit, focal = ""age"", xlab  = ""Age"")"
+"0","pp_age$table"

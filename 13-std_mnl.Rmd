@@ -1,0 +1,239 @@
+# Standard Multinomial Logit Models
+
+## Introduction to Multinomial Choice in Marketing
+
+Many marketing decisions involve choices among more than two discrete
+alternatives. Consumers may choose among competing brands, subscription
+plans, service providers, or product variants. When the outcome variable
+has more than two unordered categories, linear regression and binary
+logistic regression are no longer appropriate.
+
+The **standard multinomial logit (MNL)** model is the most common baseline
+model for analyzing and predicting such outcomes. In marketing analytics,
+it is widely used for brand choice, product selection, and competitive
+response analysis. The focus of this chapter is on **applied interpretation**
+rather than mathematical derivation.
+
+---
+
+## The `bfast` Dataset
+
+In this chapter, we use the `bfast` dataset, which contains data on
+breakfast food preferences. Each observation represents a consumer choice
+occasion in which one type of food was selected from a competitive set.
+
+The outcome variable records the chosen type, while predictor variables
+capture marketing mix and consumer characteristics that may influence
+choice. Our core marketing question is:
+Which factors increase or decrease the probability that a consumer
+chooses a particular fast-food brand?
+
+---
+
+## Training and Test Samples
+
+To evaluate predictive performance, we split the data into training and
+test samples. As with binary logistic regression, we use the `splitsample()` function from the `MKT4320BGSU` package. This function creates reproducible partitions and supports stratification on the outcome variable.
+
+Usage:
+
+- `splitsample(data, outcome = NULL, group = NULL, choice = NULL, alt = NULL,`    
+`p = 0.75, seed = 4320)`
+- where:
+  - `data` is the data frame to split.
+  - `outcome` is the outcome variable in quotes used for stratification. Required when group is `NULL`. Optional when group is provided. For standard MNL, it is required.
+  - `group` is NOT USED FOR STANDARD MNL
+  - `choice` is NOT USED FOR STANDARD MNL
+  - `alt` is NOT USED FOR STANDARD MNL
+  - `p` is the proportion of observations to place in the training set. Must be strictly between 0 and 1. Default is 0.75.
+  - `seed` is the random seed for reproducibility. Default is 4320.
+  
+Below, we create are training and test samples.  We also check the outcome variable in the two samples to ensure they are similar proportions in each.
+
+```{r split-sample-stdmnl}
+sp <- splitsample(data = bfast, outcome = "bfast")
+train <- sp$train
+test  <- sp$test
+
+proportions(table(train$bfast))
+proportions(table(test$bfast))
+```
+
+---
+
+## Estimating a Standard Multinomial Logit Model
+
+We estimate the standard multinomial logit model using
+`nnet::multinom()`. It is important to include `model = TRUE` so that
+model diagnostics and classification results can be computed later.
+
+Using the `summary()` function in base R will provide the raw coefficients from the model. The estimated coefficients describe how each predictor affects the relative log-odds of choosing one product versus the reference product.
+
+```{r fit-mnl}
+library(nnet)
+mnl_fit <- multinom(bfast ~ gender + marital + lifestyle + age, 
+                    model = TRUE, data=train)
+summary(mnl_fit)
+```
+
+---
+
+## Evaluating Model Fit
+
+Raw coefficients alone do not indicate whether a model performs well.
+We use `eval_std_mnl()` from the `MKT4320BGSU` package to compute model-fit statistics and diagnostics.
+
+Usage:
+
+- `eval_std_mnl(OBJ, exp = FALSE, digits = 4, ft = FALSE, newdata = NULL,`  
+`label_model = "Model data", label_newdata = "New data", class_digits = 3)`
+- where:
+  - `model` is a fitted `multinom` model.
+  - `exp` is logical; if TRUE, return relative risk ratios (exp(beta)). If FALSE, return log-odds coefficients (default = FALSE).
+  - `digits` is an integer; number of decimals used to round coefficient and model-fit results (default = 4).
+  - `ft` is logical; if TRUE, return coefficient and classification tables as flextable objects (default = FALSE).
+  - `newdata` is an optional data frame for an additional classification matrix (e.g., a holdout or test set). If NULL, only the model-data classification is produced.
+  - `label_model` is a character string; label for the model-data classification output (default = "Model data").
+  - `label_newdata` is a character string; label for the newdata classification output (default = "New data").
+  - `class_digits` is an integer; number of decimals used to round classification statistics (default = 3).
+  
+Key outputs include:
+
+- A likelihood-ratio test comparing the fitted model to an intercept-only model
+- McFadden’s pseudo R-squared
+- Classification accuracy and diagnostics
+
+In applied marketing contexts, even modest pseudo R-squared values can
+indicate meaningful improvements over random choice.
+
+```{r eval-model-student, eval=FALSE}
+mnl_eval <- eval_std_mnl(model = mnl_fit, newdata = test, ft = TRUE)
+mnl_eval
+```
+```{r eval-model, echo=FALSE, results='asis'}
+mnl_eval <- eval_std_mnl(model = mnl_fit, newdata = test, ft = TRUE)
+
+flextable::flextable_to_rmd(mnl_eval$coef_table)
+flextable::flextable_to_rmd(mnl_eval$classify$model$table)
+flextable::flextable_to_rmd(mnl_eval$classify$newdata$table)
+```
+
+### Interpreting Coefficients
+
+Coefficient estimates in a standard MNL model are interpreted **relative
+to the reference brand**. A positive coefficient means that higher values
+of the predictor increase the likelihood of choosing that brand relative
+to the baseline.
+
+To aid interpretation, coefficients can also be expressed as **relative
+risk ratios (RRRs)**. RRRs greater than 1 indicate increased relative likelihood, while values
+below 1 indicate decreased likelihood. These interpretations are often
+more intuitive for managerial audiences.
+
+```{r coef-rrr}
+mnl_eval_rrr <- eval_std_mnl(model = mnl_fit, exp = TRUE, 
+                             newdata = test, ft=TRUE)
+mnl_eval_rrr$coef_table
+```
+
+### Classification Performance
+
+Beyond fit statistics, classification results help assess how well the
+model predicts observed choices.
+
+The output includes:
+
+- Overall accuracy
+- Proportional Chance Criterion (PCC)
+- Product-specific sensitivity, specificity, and precision
+
+These metrics help identify which brands are easier or harder to predict
+based on observed covariates.
+
+### Holdout Sample Evaluation
+
+Evaluating the model on a test sample provides insight into how well it
+generalizes to new data. Large discrepancies between training and test
+performance may indicate overfitting.
+
+In practice, marketing data often contain substantial noise, so perfect
+prediction is neither expected nor required for managerial usefulness.
+
+---
+
+## Predicted Probabilities
+
+Coefficients and classification tables are not always the most intuitive
+outputs for decision-makers. Predicted probabilities translate model
+results into directly interpretable quantities.
+
+We use the `pp_std_mnl()` function from the `MKT4320BGSU` package to compute and visualize average predicted
+probabilities for a focal predictor.
+
+Usage:
+
+- `pp_std_mnl(model, focal, xlab = NULL, ft_table = FALSE)`
+- where:
+  - `model` is a fitted `multinom` model.
+  - `focal` is a character string; name of the focal predictor variable.
+  - `xlab` is an optional character string; label for the x-axis in the plot.
+  - `ft_table` is logical; if TRUE, return the probability table as a flextable (default = FALSE).
+  
+Below, examples are provided for `age` (a continuous variable) and `lifestyle` (a categorical variable).
+
+```{r pp-price}
+pp_age <- pp_std_mnl(model = mnl_fit, focal = "age", xlab  = "Age")
+pp_age$table
+pp_age$plot
+
+pp_lifestyle <- pp_std_mnl(model = mnl_fit, focal= "lifestyle", 
+                           xlab = "Lifestyle")
+pp_lifestyle$table
+pp_lifestyle$plot
+```
+
+Predicted probabilities help answer questions such as:
+
+- How does increasing price shift brand choice probabilities?
+- Which brands are most sensitive to changes in a given variable?
+
+---
+
+## Marketing Interpretation
+
+The standard multinomial logit model provides a powerful yet accessible
+framework for understanding brand choice. It allows marketers to:
+
+- Compare competitive positioning across brands
+- Assess price and promotion sensitivity
+- Translate statistical estimates into actionable probabilities
+
+However, it also has limitations, including restrictive substitution
+patterns across alternatives.
+
+## Summary
+
+In this chapter, you learned how to:
+
+- Estimate a standard multinomial logit model
+- Evaluate model fit and predictive performance
+- Interpret coefficients and relative risk ratios
+- Use predicted probabilities for marketing insight
+
+The standard MNL model serves as a foundational tool in marketing
+analytics and provides a benchmark against which more advanced choice
+models can be compared.
+
+## What’s Next
+
+In this chapter, we treated brand choice as a function of consumer-level characteristics and marketing variables that affect all alternatives in the same way. This approach works well as a baseline, but it imposes an important limitation: it assumes that predictors influence every brand symmetrically.
+
+In the next chapter, we relax this restriction by introducing the alternative-specific multinomial logit (AS-MNL) model. This framework allows predictors—such as price, promotions, or product attributes—to vary by brand, more closely reflecting how consumers actually evaluate competing options.
+
+You will learn how to:
+- Specify predictors that differ across alternatives
+- Interpret coefficients that are specific to each brand
+- Compare alternative-specific results to the standard MNL model
+- Gain deeper insight into competitive positioning and substitution patterns
+
+Alternative-specific MNL models provide a major step forward in realism and interpretability, especially in marketing settings where attributes like price, availability, or features differ meaningfully across brands.

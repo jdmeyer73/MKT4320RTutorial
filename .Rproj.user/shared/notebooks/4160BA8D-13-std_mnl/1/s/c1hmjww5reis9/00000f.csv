@@ -1,0 +1,2 @@
+"0","mnl_eval <- eval_std_mnl(model = mnl_fit, newdata = test, ft = TRUE)"
+"0","mnl_eval"

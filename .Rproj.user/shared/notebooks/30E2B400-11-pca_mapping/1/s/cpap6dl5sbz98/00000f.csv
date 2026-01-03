@@ -1,0 +1,7 @@
+"0","pca_maps <- easy_pca_maps(data = greekbrands, vars = attr_vars, "
+"0","                          group = ""brand"", pref = ""pref"", comp = 2)"
+"0","pca_maps$plots"
+"1","$Comp_1_vs_Comp_2
+"
+"1","
+"

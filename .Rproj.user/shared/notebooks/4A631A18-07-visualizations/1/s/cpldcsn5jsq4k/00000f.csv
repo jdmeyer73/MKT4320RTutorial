@@ -1,0 +1,8 @@
+"0","status_counts <- table(airlinesat_small$status)"
+"0",""
+"0","barplot("
+"0","  status_counts,"
+"0","  main = ""Loyalty Status"","
+"0","  ylab = ""Frequency"","
+"0","  col = ""lightblue"""
+"0",")"

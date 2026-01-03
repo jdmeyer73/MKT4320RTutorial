@@ -1,0 +1,3 @@
+"0","tab_xtab(airlinesat_small$flight_class,"
+"0","         airlinesat_small$gender,"
+"0","         show.col.prc = TRUE)"

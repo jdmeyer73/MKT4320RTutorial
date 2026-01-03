@@ -1,0 +1,17 @@
+h1:working-with-data Working with Data
+h2:course-data-vs-importing-data Course data vs importing data
+h3:importing-external-data Importing external data
+h2:inspecting-datasets-and-variables Inspecting datasets and variables
+h3:viewing-the-data Viewing the data
+h3:dataset-structure Dataset structure
+h3:variable-summaries Variable summaries
+h2:data-frames-variables-and-indexing Data frames, variables, and indexing
+h3:accessing-a-variable-a-column Accessing a variable (a column)
+h3:indexing-a-data-frame Indexing a data frame
+h3:filtering-rows-using-a-condition-base-r Filtering rows using a condition (base R)
+h3:specific-variable-summaries-base-r Specific variable summaries (base R)
+h2:data-transformations-base-r Data transformations (base R)
+h3:creating-a-new-variable Creating a new variable
+h3:recoding-with-ifelse Recoding with 
+h2:whats-next What’s next
+

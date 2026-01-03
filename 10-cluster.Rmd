@@ -1,0 +1,245 @@
+# Cluster Analysis
+
+## Why Cluster Analysis Matters in Marketing
+
+Cluster analysis is one of the most widely used tools in marketing analytics for market segmentation. Unlike regression or classification models, cluster analysis is an unsupervised learning technique: there is no dependent variable. Instead, the objective is to identify groups of customers who are similar to one another and meaningfully different from customers in other groups.
+
+In marketing contexts, cluster analysis is commonly used to:
+
+- Identify distinct customer segments
+- Support targeting and positioning decisions
+- Inform product design and messaging strategy
+- Provide structure for downstream analysis and managerial reporting
+
+Because cluster analysis does not optimize a predictive objective, interpretation and managerial judgment play a central role in determining whether a solution is useful.
+
+---
+
+## The `ffseg` Dataset
+
+This chapter uses the `ffseg` dataset, which contains survey responses related to fast-food consumption behaviors, attitudes, and demographics. Each row represents an individual consumer.
+
+The dataset includes:
+
+- Numeric attitudinal and behavioral variables suitable for segmentation
+- Demographic and categorical variables used for describing clusters after they are formed
+
+---
+
+## Hierarchical Agglomerative Clustering
+
+### Conceptual Overview
+
+Hierarchical agglomerative clustering builds clusters from the bottom up. Each observation starts as its own cluster, and clusters are successively merged based on similarity until all observations belong to a single cluster.
+
+Key features of hierarchical clustering include:
+
+- No need to specify the number of clusters in advance
+- A dendrogram that visualizes the clustering process
+- Strong transparency for exploratory segmentation
+
+### Initial Hierarchical Clustering Fit
+
+We begin by fitting a hierarchical clustering model using selected segmentation variables from the `ffseg` dataset. While base R can do this for us in a number of steps, we can more easily do the initial fit using the `easy_hc_fit()` function from the `MKT4320BGSU` package.
+
+Usage: 
+
+- `easy_hc_fit(data, vars, dist = c("euc", "euc2", "max", "abs", "bin"),`  
+`method = c("ward", "single", "complete", "average"), k_range = 1:10,`  
+`standardize = TRUE, show_dend = TRUE, dend_max_n = 300)`
+- where:
+  - `data` is a data frame containing the full dataset.
+  - `vars` is a character vector of numeric segmentation variable names.
+  - `dist` is a distance measure to use. One of: "euc", "euc2", "max", "abs", "bin".
+  - `method` is a linkage method to use. One of: "ward", "single", "complete", "average".
+  - `k_range` is an integer vector of cluster solutions to evaluate (default 1:10; allowed 1–20).
+  - `standardize` is logical; if TRUE (default), standardizes segmentation variables prior to clustering.
+  - `show_dend` is logical; if TRUE (default), plots a dendrogram (skipped if n > dend_max_n).
+  - `dend_max_n` is an integer for the maximum sample size for drawing a dendrogram (default 300).
+
+When using the `easy_hc_fit()` function, the results should be saved to an object. The `$stop` diagnostics table saved in the object provides the necessary results to help decide on a (potential) final solution. The diagnostics table summarizes multiple stopping rules and balance checks across different values of $k$. No single statistic should be used in isolation when choosing the number of clusters. You can also view the `$size_prop` table to see the cluster sizes for all potential solutions. 
+  
+```{r hc_fit}
+hc_vars <- c("quality", "price", "healthy", "variety", "speed")
+hc_fit <- easy_hc_fit(data = ffseg, vars = hc_vars, dist = "euc", 
+                      method = "ward", k_range = 2:8)
+hc_fit$stop
+hc_fit$size_prop
+```
+
+### Selecting the Number of Clusters
+
+When selecting the number of clusters, consider:
+
+- Statistical indicators such as the Gap statistic
+- Whether clusters are reasonably balanced in size
+- Whether the resulting segments are interpretable and actionable
+
+Extremely small clusters or one dominant cluster are often warning signs in marketing segmentation.
+
+### Final Hierarchical Clustering Solution
+
+Once a reasonable number of clusters has been selected, we finalize the hierarchical clustering solution and attach cluster membership back to the full dataset using the `easy_hc_final()` function from the `MKT4320BGSU` package.
+
+Usage:
+
+- `easy_hc_final(fit, data, k, cluster_col = "cluster", conf_level = 0.95,`  
+`auto_print = TRUE)`
+- where:
+  - `fit` is the object returned by `easy_hc_fit`.
+  - `data` is the original full dataset used to create fit.
+  - `k` is an integer representing the number of clusters to extract.
+  - `cluster_col` is the name of the cluster column to append to `data` (default "cluster"). Must not already exist in data.
+  - `conf_level` confidence level for CI error bars when plotting (default 0.95).
+  - `auto_print` is logical; if TRUE (default), prints props and profile and displays the plot (if available).
+  
+Using the example from above with a 3-cluster solution, the cluster profile table reports mean values of the segmentation variables for each cluster. These means should be interpreted in relative terms across clusters. The cluster plot visualizes those means.
+
+```{r hc_final}
+hc_final <- easy_hc_final(fit = hc_fit, data = ffseg, k = 3, 
+                          cluster_col = "hc_cluster", auto_print = FALSE)
+hc_final$props
+hc_final$profile
+hc_final$plot
+```
+
+---
+
+## Describing and Labeling Hierarchical Clusters {#sec-describe-clusters}
+
+Segmentation variables alone rarely provide enough context to understand who the clusters represent. Additional variables are used to describe and label the clusters. For both hierarchical clustering and *k*-means clustering (see below), use the `easy_cluster_decribe()` function from the `MKT4320BGSU` package to automate this process. 
+
+Usage:
+
+- `easy_cluster_describe(data, cluster_col = "cluster", vars = NULL, `  
+`alpha = 0.05,drop_missing = TRUE, auto_print = TRUE)`
+- where:
+  - `data` is the data frame containing the cluster membership column and variables to describe that was saved to the `easy_hc_final` object; should be `objectname$data`.
+  - `cluster_col` is a character string naming the cluster membership column in data (default = "cluster").
+  - `vars` is an optional character vector of variables to describe. If `NULL` (default), all columns except `cluster_col` are used. 
+  - `alpha` is the significance level for hypothesis tests (default = 0.05).
+  - `drop_missing` is logical; if TRUE (default), rows with missing cluster membership are dropped prior to analysis.
+  - `auto_print` is logical; if TRUE (default), prints summaries to the console.
+  
+Using the results from above, the output highlights which variables significantly differentiate clusters and provides detailed summaries only where differences are statistically meaningful. Note that if we do not indicate which `vars` we want to use, the amount of results is usually very large.
+
+```{r hc_describe}
+describe_vars <- c("usertype", "spend", "hours", "eatin", "mealplan", "gender")
+easy_cluster_describe(data = hc_final$data, cluster_col = "hc_cluster",
+                      vars=describe_vars)
+```
+
+---
+
+## K-Means Clustering
+
+### Conceptual Overview
+
+*k*-means clustering is a partition-based method that assigns observations to a fixed number of clusters by minimizing within-cluster variation. Unlike hierarchical clustering, *k*-means requires the analyst to specify the number of clusters in advance.
+
+*k*-means is often preferred when:
+
+- Working with larger datasets
+- Refining a solution suggested by hierarchical clustering
+- Stability and computational efficiency are priorities
+
+The process used for *k*-means clustering follows the process used above in hierarchical agglomerative clustering. That is, we first initially fit a number of potential solutions, and then we anlayze a final solution.
+
+### Initial K-Means Clustering Fit
+
+We first fit *k*-means clustering solutions across a range of cluster counts using the `easy_km_fit()` function from the `MKT4320BGSU` package.  
+
+Usage:
+
+- `easy_km_fit(data, vars, k_range = 1:10, standardize = TRUE, nstart = 25,`  
+`iter.max = 100, B = 20, seed = 4320)`
+- where:
+  - `data` is a data frame containing the full dataset.
+  - `vars` is a character vector of numeric variable names used for clustering.
+  - `k_range` is an integer vector of cluster counts to evaluate (default = 1:10; allowed values 1–20).
+  - `standardize` is logical; if TRUE (default), clustering variables are standardized before fitting k-means.
+  - `nstart` is an integer; number of random starts for each k-means solution (default = 25).
+  - `iter.max` is an integer; maximum number of iterations allowed for each k-means run (default = 100).
+  - `B` is an integer; number of Monte Carlo bootstrap samples used to compute the Gap statistic (default = 20).
+  - `seed` is an integer; random seed for reproducible results (default = 4320).
+  
+We now fit the same variables we used above in hierarchical clustering. As before, the results should be saved to an object. The `$diag` diagnostics table saved in the object provides the necessary results to help decide on a (potential) final solution. The diagnostics table summarizes multiple stopping rules and balance checks across different values of $k$. No single statistic should be used in isolation when choosing the number of clusters. You can also view the `$size_prop` table to see the cluster sizes for all potential solutions.
+
+```{r km_fit}
+km_vars <- c("quality", "price", "healthy", "variety", "speed")
+km_fit <- easy_km_fit(data = ffseg, vars = km_vars, k_range = 2:8)
+km_fit$diag
+km_fit$size_prop
+```
+
+### Final K-Means Clustering Solution
+
+After selecting a value for $k$, we finalize the *k*-means solution using the `easy_km_final()` function from the `MKT4320BGSU` package.
+
+Usage:
+
+- `easy_km_final(fit, data, k, cluster_col = "cluster", conf_level = 0.95,` 
+`auto_print = TRUE)`
+- where:
+  - `fit` is an object returned by `easy_km_fit()`.
+  - `data` is the original full dataset used in `easy_km_fit()`.
+  - `k` is an integer; number of clusters to extract.
+  - `cluster_col` is a character string; name of the cluster column to append to data (default = "cluster").
+  - `conf_level` is numeric; confidence level for CI error bars (default = 0.95).
+  - `auto_print` is logical; if TRUE (default), prints selected outputs and displays the plot when the function is run.
+  
+Using the example from above with a 3-cluster solution, the cluster profile table reports mean values of the segmentation variables for each cluster. These means should be interpreted in relative terms across clusters. The cluster plot visualizes those means.
+
+```{r km_final}
+km_final <- easy_km_final(fit = km_fit, data = ffseg, k = 3, 
+                          cluster_col = "km_cluster", auto_print = FALSE)
+km_final$props
+km_final$plot
+km_final$profile
+```
+
+---
+
+## Describing and Labeling *k*-Means Clusters
+
+As with hierarchical clustering, segmentation variables alone rarely provide enough context to understand who the clusters represent. Additional variables are used to describe and label the clusters. As with hierarchical clustering, use the `easy_cluster_decribe()` function from the `MKT4320BGSU` package to automate this process. See Section \@ref(sec-describe-clusters)
+
+---
+
+## Comparing Clustering Approaches
+
+Hierarchical and *k*-means clustering often produce similar but not identical segmentation results. Differences between solutions can be informative and may reveal alternative ways to think about the market.
+
+In practice, analysts often:
+
+- Use hierarchical clustering to explore the structure of the data
+- Use k-means clustering to refine and stabilize the final solution
+
+---
+
+## Chapter Summary
+
+In this chapter, we:
+
+- Introduced cluster analysis as a tool for marketing segmentation
+- Applied hierarchical and k-means clustering to the `ffseg` dataset
+- Used diagnostics to guide the choice of the number of clusters
+- Described and interpreted clusters in a marketing context
+
+---
+
+## What's Next
+
+In the next chapter, we shift from grouping customers to summarizing and visualizing variables. Specifically, we will introduce Principal Components Analysis (PCA) and then extend it to PCA perceptual maps. PCA is a dimensionality-reduction technique that helps simplify complex datasets by transforming many correlated variables into a smaller set of components that capture the most important patterns in the data.
+
+You will learn how PCA can be used to:
+
+- Reduce a large set of variables into a smaller number of interpretable dimensions
+- Identify underlying structures in consumer perceptions and evaluations
+- Prepare data for visualization and communication
+
+We will then use these components to create perceptual maps, which are widely used in marketing to:
+
+- Visualize brand or product positions
+- Understand competitive structure
+- Support positioning and differentiation decisions

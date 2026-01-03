@@ -1,0 +1,3 @@
+"0","sumtable(airlinesat_small, c(""age"", ""nflights"", ""status""),"
+"0","         add.median=TRUE, "
+"0","         group=""gender"")"

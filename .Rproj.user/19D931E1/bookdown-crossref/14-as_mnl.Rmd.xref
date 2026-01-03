@@ -1,0 +1,18 @@
+h1:alternative-specific-multinomial-logit-models Alternative-Specific Multinomial Logit Models
+h2:introduction-why-alternative-specific-mnl Introduction: Why Alternative-Specific MNL?
+h2:the-yogurt-choice-data The Yogurt Choice Data
+h2:preparing-the-data-for-modeling Preparing the Data for Modeling
+h3:why-splitting-is-different-for-choice-data Why Splitting Is Different for Choice Data
+h3:creating-training-and-test-samples Creating Training and Test Samples
+h2:specifying-an-alternative-specific-mnl-model Specifying an Alternative-Specific MNL Model
+h2:evaluating-model-performance Evaluating Model Performance
+h3:model-fit-and-coefficients Model Fit and Coefficients
+h3:classification-performance Classification Performance
+h2:predicted-probabilities-and-marginal-effects Predicted Probabilities and Marginal Effects
+h3:why-predicted-probabilities-matter Why Predicted Probabilities Matter
+h3:why-marginal-effects-are-useful Why Marginal Effects Are Useful
+h3:the-pp_as_mnl-function The  Function
+h3:case-specific-predictors Case-Specific Predictors
+h3:alternative-specific-predictors Alternative-Specific Predictors
+h2:managerial-insights Managerial Insights
+

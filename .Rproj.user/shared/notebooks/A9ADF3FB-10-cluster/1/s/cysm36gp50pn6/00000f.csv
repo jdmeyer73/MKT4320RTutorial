@@ -1,0 +1,2 @@
+"0","mp_gender <- easy_mp(mod, focal = ""gender"")"
+"0","mp_gender$plot"

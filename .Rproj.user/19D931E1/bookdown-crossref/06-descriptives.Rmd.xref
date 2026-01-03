@@ -1,0 +1,20 @@
+h1:descriptive-analysis Descriptive Analysis
+h2:descriptive-analysis-1 Descriptive Analysis
+h3:inspecting-the-dataset Inspecting the dataset
+h3:missing-values-quick-checks Missing values (quick checks)
+h2:frequency-tables Frequency Tables
+h3:one-way-frequency-table One-way frequency table
+h2:crosstabs Crosstabs
+h3:base-r Base R
+h3:using-package-sjplot Using package 
+h2:measures-of-central-tendency-and-dispersion Measures of Central Tendency and Dispersion
+h3:base-r-1 Base R
+h3:using-package-dplyr Using package 
+h3:using-package-vtable Using package 
+h2:correlation Correlation
+h3:base-r-2 Base R
+h3:using-package-hmisc Using package 
+h3:using-package-sjplot-1 Using package 
+h2:why-descriptive-analysis-matters Why descriptive analysis matters
+h2:whats-next What’s next
+

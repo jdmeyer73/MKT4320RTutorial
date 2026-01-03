@@ -1,0 +1,277 @@
+```{css, echo=FALSE}
+li p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+```
+# R Basics
+
+This chapter introduces the core R concepts you will use throughout the course. The goal is not to be exhaustive, but to give you enough familiarity with R’s basic building blocks so that later analytical methods make sense.
+
+By the end of this chapter, you should be comfortable creating objects, working with vectors and data frames, indexing data, and performing simple data manipulation tasks.
+
+---
+
+## Basics of R Commands
+
+- R is case sensitive
+- When using the console, use the keyboard <span style="background-color: #f7f7f7;">&nbsp;&#8593;&nbsp;</span> and <span style="background-color: #f7f7f7;">&nbsp;&#8595;&nbsp;</span> arrow keys to easily cycle through previous commands typed.
+- When using the text editor (i.e., a script file) in the source pane, use the `Ctrl`+`Enter` (Windows/Linux) or `Cmd` + `Enter` (Mac) keyboard shortcut to submit a line of code directly to the console.
+  - The entire line does **not** need to be highlighted; the cursor needs to be anywhere on the line to be submitted.
+- When using the text editor/script file, the "#" symbol signifies a comment
+  - Everything after is ignored
+  - It can be on the same line:
+    ```{r, eval=FALSE}
+    x <- 100   # Assign 100 to x
+    ```
+  - It can be on separate lines:  
+    ```{r, eval=FALSE}
+    # Assign 100 to x
+    x <- 100
+    ```
+
+---
+
+## Operators
+
+Mathematical and logical operators are used frequently.
+```{r roperators, echo=FALSE}
+operators %>% 
+   select(-Type) %>% 
+   kbl(caption="R Operators") %>%
+   pack_rows(index=c("Mathematical"=5, "Logical"= 10))
+```
+
+---
+
+## Objects and assignment
+
+In R, almost everything you work with is an **object**. Objects store values, data, or results from functions.
+
+You create objects using the assignment operator `<-`.  In an RStudio script file or in the console, you can use a keyboard shortcut to produce the assignment operator. For Windows/Linux, `Alt` + `-`.  For Mac, `Option` + `-`.
+
+```{r assignment}
+x <- 10
+x
+```
+
+You can overwrite objects by assigning a new value:
+
+```{r overwrite}
+x <- 25
+x
+```
+
+As stated before, object names are case sensitive
+```{r, comment=NA, error=TRUE}
+    x <- 100
+    X
+```
+
+---
+
+## Vectors
+
+A **vector** is a collection of values of the same type.
+
+### Creating vectors
+
+Vectors are aften created using the concatenate function, `c(item1, item2, ...)`
+
+```{r vectors}
+ages <- c(18, 21, 25, 30)
+ages
+```
+
+Common vector types include:
+
+- Numeric
+- Character
+- Logical
+
+```{r vector-types}
+names <- c("Alex", "Jamie", "Taylor", "Pat")
+passed <- c(TRUE, FALSE, TRUE, TRUE)
+```
+
+The class of a vector can be checked with the `class(ojbect_name)` or `str(object_name)` function.
+
+```{r vector-classes}
+class(ages)
+str(names)
+class(passed)
+```
+
+Vectors can only hold a single class/type of value. When multiple classes are included, the values are coerced to the most general type.
+
+```{r}
+mixed <- c(1, FALSE, 3.5, "Hello!")
+mixed
+class(mixed)
+```
+
+The `c()` function can be used to add to existing vectors, or combine vectors. Type coercion will be applied as needed.
+
+```{r}
+ages2 <- c(ages, 29, 24)
+ages
+ages2
+ages_names <- c(ages, names)
+ages_names
+class(ages_names)
+```
+
+### Vectorized operations
+
+R is vectorized, meaning operations apply to all elements at once.
+
+```{r vectorized}
+ages
+ages + 1
+ages * 2
+```
+
+### Vector Length
+
+The number of items in a vector can be checked with the `length(object_name)` function, but can also be seen using the `str(object_name)` function from earlier.
+
+```{r vector_length}
+length(ages2)
+str(ages2)
+```
+
+---
+
+## Data frames
+
+A **data frame** is a table where:
+
+- Each column is a variable
+- Each row is an observation
+
+Data frames are the most common way to handle data sets and to provide data to statistical functions.
+
+Data frames can be created using the `data.frame(objects)` function: 
+
+```{r data-frame}
+# Creating a data frame all in one step
+students <- data.frame(
+  id = 1:4,
+  age = c(18, 21, 25, 30),
+  major = c("MKT", "FIN", "MKT", "MKT"))
+students
+
+# Creating a data frame by combining vectors
+new_students <- data.frame(c(names,ages,passed))
+new_students
+```
+
+You will work with data frames constantly in this course.
+
+---
+
+## Indexing and sequencing
+
+Indexing is used to obtain particular elements of a data structure (vectors, matrices, data frames). Sequences are useful for indexing and loops.
+
+### Indexing vectors
+
+Use square brackets `[]` to select elements.
+
+```{r vector-index}
+ages[1]
+ages[2:4]
+```
+
+Logical indexing is also common:
+
+```{r logical-index}
+ages[ages > 21]
+```
+
+### Sequencing
+
+Use the `#:#` coding or the `seq(from = , to = , by = )` function to create a sequence.
+
+```{r sequences}
+1:10
+seq(from = 0, to = 1, by = 0.2)
+seq(0,100,10)
+```
+
+---
+
+## Common functions
+
+Functions take inputs (arguments) and return outputs.
+
+Examples of commonly used functions:
+
+```{r common-functions}
+mean(ages)
+min(ages)
+max(ages)
+summary(ages)
+```
+
+To learn about a function:
+
+```{r help-function, eval=FALSE}
+?mean
+```
+
+---
+
+## Missing (and Other Interesting) Values
+
+In R, missing values are assigned a special constant, <span style="font-family: Courier;">NA</span>.
+
+<span style="font-family: Courier;">NA</span> is not a character value, but a type of its own. Any math performed on a value of <span style="font-family: Courier;">NA</span> becomes <span style="font-family: Courier;">NA</span>.
+
+``` {r missing01}
+ages_missing <- c(ages, NA, NA)
+ages_missing
+mean(ages_missing)
+```
+ 
+However, many commands contain a option, `na.rm=TRUE`, to ignore <span style="font-family: Courier;">NA</span> data when performing the function.
+
+```{r missing02}
+mean(ages_missing, na.rm=TRUE)
+```
+
+R also has special types for infinity, <span style="font-family: Courier;">Inf</span>, and undefined numbers (i.e., "not a number"), <span style="font-family: Courier;">NaN</span>. To see this in action, take the natural log, `log()`, of certain numbers. Notice that R provides a warning when the <span style="font-family: Courier;">NaN</span> is found.
+
+```{r otherspecialvalues}
+log(-1)   # Not a number
+log(0)    # Infinity
+```
+
+--- 
+
+## Factors
+
+Character data can be converted into nominal **factors** using the `as.factor(object_name)` function. Each unique character value will be a level of the factor. Behind the scenes, R stores the values as integers, with a separate list of labels. When the data type is set as a factor, R knows how to handle it appropriately in the model. The levels can be accessed with the `levels(object_name)` function.
+
+```{r factors}
+school_year <- c("JR", "SR", "SR", "SO", "FR", "JR")
+class(school_year)
+school_year <- as.factor(school_year)
+str(school_year)
+levels(school_year)
+```
+
+---
+
+## What’s next
+
+In the next chapter, we focus on **using functions effectively in R**.
+
+You will learn how to:
+
+- pass arguments to functions,
+- work with positional versus named arguments,
+- understand default values, and
+- read function documentation more efficiently.
+
+These skills are essential for working with both built-in R functions and the custom functions provided in the **MKT4320BGSU** package.

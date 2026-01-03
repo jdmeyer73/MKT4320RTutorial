@@ -1,0 +1,24 @@
+h1:ab-testing-and-uplift-modeling A/B Testing and Uplift Modeling
+h2:introduction-from-average-effects-to-targeted-marketing Introduction: From Average Effects to Targeted Marketing
+h2:the-email-campaign-experiment The Email Campaign Experiment
+h2:checking-the-randomization-assumption Checking the Randomization Assumption
+h3:why-balance-checks-matter Why Balance Checks Matter
+h3:randomization-check-using-rand_check Randomization Check Using 
+h2:estimating-the-average-treatment-effect-ate Estimating the Average Treatment Effect (ATE)
+h3:what-is-the-ate What Is the ATE?
+h3:ate-via-regression ATE via Regression
+h3:using-easy_ab_ate Using 
+h3:why-average-effects-are-not-enough Why Average Effects Are Not Enough
+h2:introduction-to-uplift-modeling Introduction to Uplift Modeling
+h3:what-is-uplift What Is Uplift?
+h3:two-model-indirect-approach Two-Model (Indirect) Approach
+h2:estimating-uplift-with-easy_uplift Estimating Uplift with 
+h3:model-specification Model Specification
+h3:interpreting-core-outputs Interpreting Core Outputs
+h2:diagnosing-uplift-with-lift-plots Diagnosing Uplift with Lift Plots
+h3:why-lift-diagnostics-matter Why Lift Diagnostics Matter
+h3:using-easy_liftplots Using 
+h2:from-analysis-to-action From Analysis to Action
+h2:summary Summary
+h2:whats-next What’s Next
+

@@ -1,0 +1,2 @@
+"0","as_eval <- eval_as_mnl(as_mnl_fit, ft = TRUE, newdata = test)"
+"0","as_eval$coef_table"
