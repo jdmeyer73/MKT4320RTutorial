@@ -116,17 +116,27 @@ Usage:
 - where:
   - `data` is the data frame containing the cluster membership column and variables to describe that was saved to the `easy_hc_final` object; should be `objectname$data`.
   - `cluster_col` is a character string naming the cluster membership column in data (default = "cluster").
-  - `vars` is an optional character vector of variables to describe. If `NULL` (default), all columns except `cluster_col` are used. 
+  - `var` is a character string naming the single variable to describe. 
   - `alpha` is the significance level for hypothesis tests (default = 0.05).
   - `drop_missing` is logical; if TRUE (default), rows with missing cluster membership are dropped prior to analysis.
-  - `auto_print` is logical; if TRUE (default), prints summaries to the console.
+  - `auto_print` is logical; if TRUE (default), prints summaries to the console; if FALSE returns results list
+  - `digits` is an integer for rounding/formatting of numeric output (default = 4).
   
-Using the results from above, the output highlights which variables significantly differentiate clusters and provides detailed summaries only where differences are statistically meaningful. Note that if we do not indicate which `vars` we want to use, the amount of results is usually very large.
+Using the results from above (i.e., the `hc_final$data` object) , the output below highlights which variables significantly differentiate clusters and provides detailed summaries only where differences are statistically meaningful. 
 
 ```{r hc_describe}
-describe_vars <- c("usertype", "spend", "hours", "eatin", "mealplan", "gender")
 easy_cluster_describe(data = hc_final$data, cluster_col = "hc_cluster",
-                      vars=describe_vars)
+                      var="usertype")
+easy_cluster_describe(data = hc_final$data, cluster_col = "hc_cluster",
+                      var="spend")
+easy_cluster_describe(data = hc_final$data, cluster_col = "hc_cluster",
+                      var="hours")
+easy_cluster_describe(data = hc_final$data, cluster_col = "hc_cluster",
+                      var="eatin")
+easy_cluster_describe(data = hc_final$data, cluster_col = "hc_cluster",
+                      var="mealplan")
+easy_cluster_describe(data = hc_final$data, cluster_col = "hc_cluster",
+                      var="gender")
 ```
 
 ---
