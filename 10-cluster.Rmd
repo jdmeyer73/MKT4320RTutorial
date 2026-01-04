@@ -111,8 +111,8 @@ Segmentation variables alone rarely provide enough context to understand who the
 
 Usage:
 
-- `easy_cluster_describe(data, cluster_col = "cluster", vars = NULL, `  
-`alpha = 0.05,drop_missing = TRUE, auto_print = TRUE)`
+- `easy_cluster_describe(data, cluster_col = "cluster", var, alpha = 0.05,`  
+`drop_missing = TRUE, auto_print = TRUE), digits = 4`
 - where:
   - `data` is the data frame containing the cluster membership column and variables to describe that was saved to the `easy_hc_final` object; should be `objectname$data`.
   - `cluster_col` is a character string naming the cluster membership column in data (default = "cluster").
