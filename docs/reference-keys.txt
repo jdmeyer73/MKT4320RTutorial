@@ -10,6 +10,13 @@ installing-the-mkt4320bgsu-package
 install-from-github
 load-the-package
 verify-everything-works
+r-notebooks-how-you-will-complete-assignments
+what-is-an-r-notebook
+the-assignment-workflow
+code-chunks-very-important
+running-code-while-you-work
+why-we-use-r-notebooks-in-this-course
+a-final-tip
 getting-help-when-youre-stuck
 how-youll-use-this-book
 whats-next-1
@@ -35,7 +42,6 @@ positional-vs-named-arguments
 positional-arguments
 named-arguments-recommended
 default-argument-values
-mixing-positional-and-named-arguments
 viewing-function-documentation
 common-mistakes-to-avoid
 key-takeaway
