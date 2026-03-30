@@ -443,7 +443,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.5.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#classification-performance"><i class="fa fa-check"></i><b>13.5.2</b> Classification Performance</a></li>
 <li class="chapter" data-level="13.5.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#holdout-sample-evaluation"><i class="fa fa-check"></i><b>13.5.3</b> Holdout Sample Evaluation</a></li>
 </ul></li>
-<li class="chapter" data-level="13.6" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#predicted-probabilities-1"><i class="fa fa-check"></i><b>13.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="13.6" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#predicted-probabilities-1"><i class="fa fa-check"></i><b>13.6</b> Predicted Probabilities</a>
+<ul>
+<li class="chapter" data-level="13.6.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#continuous-focal-variable"><i class="fa fa-check"></i><b>13.6.1</b> Continuous Focal Variable</a></li>
+<li class="chapter" data-level="13.6.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#categorical-focal-variable"><i class="fa fa-check"></i><b>13.6.2</b> Categorical Focal Variable</a></li>
+<li class="chapter" data-level="13.6.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#continuous-by-categorical-interaction"><i class="fa fa-check"></i><b>13.6.3</b> Continuous by Categorical Interaction</a></li>
+</ul></li>
 <li class="chapter" data-level="13.7" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#marketing-interpretation"><i class="fa fa-check"></i><b>13.7</b> Marketing Interpretation</a></li>
 <li class="chapter" data-level="13.8" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#summary-2"><i class="fa fa-check"></i><b>13.8</b> Summary</a></li>
 <li class="chapter" data-level="13.9" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#whats-next-13"><i class="fa fa-check"></i><b>13.9</b> What’s Next</a></li>
@@ -594,23 +599,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">4.3.1</span> Accessing a variable (a column)<a href="working-with-data.html#accessing-a-variable-a-column" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Use the <code>$</code> operator to access a column by name.</p>
 <div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="working-with-data.html#cb126-1" tabindex="-1"></a>directmktg<span class="sc">$</span>age</span></code></pre></div>
-<pre><code>  [1] 19 35 26 27 19 27 27 32 25 35 26 26 20 32 18 29 47 45 46 48 45 47 48 45
- [25] 46 47 49 47 29 31 31 27 21 28 27 35 33 30 26 27 27 33 35 30 28 23 25 27
- [49] 30 31 24 18 29 35 27 24 23 28 22 32 27 25 23 32 59 24 24 23 22 31 25 24
- [73] 20 33 32 34 18 22 28 26 30 39 20 35 30 31 24 28 26 35 22 30 26 29 29 35
- [97] 35 28 35 28 27 28 32 33 19 21 26 27 26 38 39 37 38 37 42 40 35 36 40 41
-[121] 36 37 40 35 41 39 42 26 30 26 31 33 30 21 28 23 20 30 28 19 19 18 35 30
-[145] 34 24 27 41 29 20 26 41 31 36 40 31 46 29 26 32 32 25 37 35 33 18 22 35
-[169] 29 29 21 34 26 34 34 23 35 25 24 31 26 31 32 33 33 31 20 33 35 28 24 19
-[193] 29 19 28 34 30 20 26 35 35 49 39 41 58 47 55 52 40 46 48 52 59 35 47 60
-[217] 49 40 46 59 41 35 37 60 35 37 36 56 40 42 35 39 40 49 38 46 40 37 46 53
-[241] 42 38 50 56 41 51 35 57 41 35 44 37 48 37 50 52 41 40 58 45 35 36 55 35
-[265] 48 42 40 37 47 40 43 59 60 39 57 57 38 49 52 50 59 35 37 52 48 37 37 48
-[289] 41 37 39 49 55 37 35 36 42 43 45 46 58 48 37 37 40 42 51 47 36 38 42 39
-[313] 38 49 39 39 54 35 45 36 52 53 41 48 48 41 41 42 36 47 38 48 42 40 57 36
-[337] 58 35 38 39 53 35 38 47 47 41 53 54 39 38 38 37 42 37 36 60 54 41 40 42
-[361] 43 53 47 42 42 59 58 46 38 54 60 60 39 59 37 46 46 42 41 58 42 48 44 49
-[385] 57 56 49 39 47 48 48 47 45 60 39 46 51 50 36 49</code></pre>
+<pre><code>  [1] 19 35 26 27 19 27 27 32 25 35 26 26 20 32 18 29 47 45 46 48 45 47 48 45 46 47 49 47 29 31 31 27 21 28 27 35 33 30
+ [39] 26 27 27 33 35 30 28 23 25 27 30 31 24 18 29 35 27 24 23 28 22 32 27 25 23 32 59 24 24 23 22 31 25 24 20 33 32 34
+ [77] 18 22 28 26 30 39 20 35 30 31 24 28 26 35 22 30 26 29 29 35 35 28 35 28 27 28 32 33 19 21 26 27 26 38 39 37 38 37
+[115] 42 40 35 36 40 41 36 37 40 35 41 39 42 26 30 26 31 33 30 21 28 23 20 30 28 19 19 18 35 30 34 24 27 41 29 20 26 41
+[153] 31 36 40 31 46 29 26 32 32 25 37 35 33 18 22 35 29 29 21 34 26 34 34 23 35 25 24 31 26 31 32 33 33 31 20 33 35 28
+[191] 24 19 29 19 28 34 30 20 26 35 35 49 39 41 58 47 55 52 40 46 48 52 59 35 47 60 49 40 46 59 41 35 37 60 35 37 36 56
+[229] 40 42 35 39 40 49 38 46 40 37 46 53 42 38 50 56 41 51 35 57 41 35 44 37 48 37 50 52 41 40 58 45 35 36 55 35 48 42
+[267] 40 37 47 40 43 59 60 39 57 57 38 49 52 50 59 35 37 52 48 37 37 48 41 37 39 49 55 37 35 36 42 43 45 46 58 48 37 37
+[305] 40 42 51 47 36 38 42 39 38 49 39 39 54 35 45 36 52 53 41 48 48 41 41 42 36 47 38 48 42 40 57 36 58 35 38 39 53 35
+[343] 38 47 47 41 53 54 39 38 38 37 42 37 36 60 54 41 40 42 43 53 47 42 42 59 58 46 38 54 60 60 39 59 37 46 46 42 41 58
+[381] 42 48 44 49 57 56 49 39 47 48 48 47 45 60 39 46 51 50 36 49</code></pre>
 <p>A column is often a vector, which means you can use vector functions on it.</p>
 <div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="working-with-data.html#cb128-1" tabindex="-1"></a><span class="fu">mean</span>(directmktg<span class="sc">$</span>age)</span></code></pre></div>
 <pre><code>[1] 37.655</code></pre>

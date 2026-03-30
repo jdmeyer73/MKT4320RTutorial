@@ -210,6 +210,9 @@ interpreting-coefficients
 classification-performance
 holdout-sample-evaluation
 predicted-probabilities-1
+continuous-focal-variable
+categorical-focal-variable
+continuous-by-categorical-interaction
 marketing-interpretation
 summary-2
 whats-next-13

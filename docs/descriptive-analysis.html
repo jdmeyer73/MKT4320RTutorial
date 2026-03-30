@@ -443,7 +443,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.5.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#classification-performance"><i class="fa fa-check"></i><b>13.5.2</b> Classification Performance</a></li>
 <li class="chapter" data-level="13.5.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#holdout-sample-evaluation"><i class="fa fa-check"></i><b>13.5.3</b> Holdout Sample Evaluation</a></li>
 </ul></li>
-<li class="chapter" data-level="13.6" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#predicted-probabilities-1"><i class="fa fa-check"></i><b>13.6</b> Predicted Probabilities</a></li>
+<li class="chapter" data-level="13.6" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#predicted-probabilities-1"><i class="fa fa-check"></i><b>13.6</b> Predicted Probabilities</a>
+<ul>
+<li class="chapter" data-level="13.6.1" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#continuous-focal-variable"><i class="fa fa-check"></i><b>13.6.1</b> Continuous Focal Variable</a></li>
+<li class="chapter" data-level="13.6.2" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#categorical-focal-variable"><i class="fa fa-check"></i><b>13.6.2</b> Categorical Focal Variable</a></li>
+<li class="chapter" data-level="13.6.3" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#continuous-by-categorical-interaction"><i class="fa fa-check"></i><b>13.6.3</b> Continuous by Categorical Interaction</a></li>
+</ul></li>
 <li class="chapter" data-level="13.7" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#marketing-interpretation"><i class="fa fa-check"></i><b>13.7</b> Marketing Interpretation</a></li>
 <li class="chapter" data-level="13.8" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#summary-2"><i class="fa fa-check"></i><b>13.8</b> Summary</a></li>
 <li class="chapter" data-level="13.9" data-path="standard-multinomial-logit-models.html"><a href="standard-multinomial-logit-models.html#whats-next-13"><i class="fa fa-check"></i><b>13.9</b> What’s Next</a></li>
@@ -545,38 +550,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[1] 1065   13</code></pre>
 <div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="descriptive-analysis.html#cb174-1" tabindex="-1"></a><span class="co"># Variable names</span></span>
 <span id="cb174-2"><a href="descriptive-analysis.html#cb174-2" tabindex="-1"></a><span class="fu">names</span>(airlinesat_small)</span></code></pre></div>
-<pre><code> [1] &quot;age&quot;            &quot;country&quot;        &quot;flight_class&quot;   &quot;flight_latest&quot; 
- [5] &quot;flight_purpose&quot; &quot;flight_type&quot;    &quot;gender&quot;         &quot;language&quot;      
- [9] &quot;nflights&quot;       &quot;status&quot;         &quot;nps&quot;            &quot;overall_sat&quot;   
+<pre><code> [1] &quot;age&quot;            &quot;country&quot;        &quot;flight_class&quot;   &quot;flight_latest&quot;  &quot;flight_purpose&quot; &quot;flight_type&quot;   
+ [7] &quot;gender&quot;         &quot;language&quot;       &quot;nflights&quot;       &quot;status&quot;         &quot;nps&quot;            &quot;overall_sat&quot;   
 [13] &quot;reputation&quot;    </code></pre>
 <div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="descriptive-analysis.html#cb176-1" tabindex="-1"></a><span class="co"># First few rows</span></span>
 <span id="cb176-2"><a href="descriptive-analysis.html#cb176-2" tabindex="-1"></a><span class="fu">head</span>(airlinesat_small)</span></code></pre></div>
-<pre><code>  age country flight_class            flight_latest flight_purpose
-1  30      ch      Economy within the last 6 months        Leisure
-2  55      ch     Business within the last 3 months       Business
-3  56      ch      Economy    within the last month       Business
-4  43      fr      Economy within the last 3 months        Leisure
-5  44      ch     Business     within the last week       Business
-6  40      ch        First    within the last month        Leisure
-    flight_type gender language nflights status nps overall_sat reputation
-1      Domestic   male   French        2   Blue   6           2          3
-2 International   male  English        6   Gold  10           6          6
-3      Domestic female  English        8   Blue   8           2          4
-4      Domestic female   French        7   Blue   8           4          6
-5 International female  English       25   Gold   6           2          5
-6 International   male   German       16   Gold   7           4          3</code></pre>
+<pre><code>  age country flight_class            flight_latest flight_purpose   flight_type gender language nflights status nps
+1  30      ch      Economy within the last 6 months        Leisure      Domestic   male   French        2   Blue   6
+2  55      ch     Business within the last 3 months       Business International   male  English        6   Gold  10
+3  56      ch      Economy    within the last month       Business      Domestic female  English        8   Blue   8
+4  43      fr      Economy within the last 3 months        Leisure      Domestic female   French        7   Blue   8
+5  44      ch     Business     within the last week       Business International female  English       25   Gold   6
+6  40      ch        First    within the last month        Leisure International   male   German       16   Gold   7
+  overall_sat reputation
+1           2          3
+2           6          6
+3           2          4
+4           4          6
+5           2          5
+6           4          3</code></pre>
 </div>
 <div id="missing-values-quick-checks" class="section level3 hasAnchor" number="6.1.2">
 <h3><span class="header-section-number">6.1.2</span> Missing values (quick checks)<a href="descriptive-analysis.html#missing-values-quick-checks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>It is also important to check for missing values, because they can have an adverse effect on some analyses. The <code>is.na()</code> function is often used for this, which returns a <code>TRUE</code> if a value is <code>NA</code>. Ultimately, this will tell which values in the data are missing to help decide how to handle them.</p>
 <div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="descriptive-analysis.html#cb178-1" tabindex="-1"></a><span class="co"># Missing values by variable</span></span>
 <span id="cb178-2"><a href="descriptive-analysis.html#cb178-2" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(airlinesat_small))</span></code></pre></div>
-<pre><code>           age        country   flight_class  flight_latest flight_purpose 
-             0              0              0              0              0 
-   flight_type         gender       language       nflights         status 
-             0              0              0              0              0 
-           nps    overall_sat     reputation 
-             0              0              0 </code></pre>
+<pre><code>           age        country   flight_class  flight_latest flight_purpose    flight_type         gender       language 
+             0              0              0              0              0              0              0              0 
+      nflights         status            nps    overall_sat     reputation 
+             0              0              0              0              0 </code></pre>
 <div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="descriptive-analysis.html#cb180-1" tabindex="-1"></a><span class="co"># Total missing values in the dataset</span></span>
 <span id="cb180-2"><a href="descriptive-analysis.html#cb180-2" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(airlinesat_small))</span></code></pre></div>
 <pre><code>[1] 0</code></pre>
@@ -770,27 +772,20 @@ Total
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   19.00   42.00   50.00   50.42   58.00  101.00 </code></pre>
 <div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="descriptive-analysis.html#cb202-1" tabindex="-1"></a><span class="fu">summary</span>(airlinesat_small)</span></code></pre></div>
-<pre><code>      age         country    flight_class                   flight_latest
- Min.   : 19.00   at:108   Business:185   within the last 12 months:139  
- 1st Qu.: 42.00   ch: 66   Economy :865   within the last 2 days   : 57  
- Median : 50.00   de:695   First   : 15   within the last 3 months :296  
- Mean   : 50.42   fr:  1                  within the last 6 months :187  
- 3rd Qu.: 58.00   us:195                  within the last month    :253  
- Max.   :101.00                           within the last week     :133  
-  flight_purpose        flight_type     gender       language  
- Business:525    Domestic     :558   female:280   English:233  
- Leisure :540    International:507   male  :785   French : 10  
-                                                  German :822  
-                                                               
-                                                               
-                                                               
-    nflights         status         nps         overall_sat     reputation   
- Min.   :  1.00   Blue  :677   Min.   : 1.00   Min.   :1.00   Min.   :1.000  
- 1st Qu.:  4.00   Gold  :143   1st Qu.: 6.00   1st Qu.:3.00   1st Qu.:4.000  
- Median :  8.00   Silver:245   Median : 8.00   Median :4.00   Median :5.000  
- Mean   : 13.42                Mean   : 7.52   Mean   :3.74   Mean   :4.841  
- 3rd Qu.: 16.00                3rd Qu.: 9.00   3rd Qu.:5.00   3rd Qu.:6.000  
- Max.   :457.00                Max.   :11.00   Max.   :7.00   Max.   :7.000  </code></pre>
+<pre><code>      age         country    flight_class                   flight_latest  flight_purpose        flight_type 
+ Min.   : 19.00   at:108   Business:185   within the last 12 months:139   Business:525    Domestic     :558  
+ 1st Qu.: 42.00   ch: 66   Economy :865   within the last 2 days   : 57   Leisure :540    International:507  
+ Median : 50.00   de:695   First   : 15   within the last 3 months :296                                      
+ Mean   : 50.42   fr:  1                  within the last 6 months :187                                      
+ 3rd Qu.: 58.00   us:195                  within the last month    :253                                      
+ Max.   :101.00                           within the last week     :133                                      
+    gender       language      nflights         status         nps         overall_sat     reputation   
+ female:280   English:233   Min.   :  1.00   Blue  :677   Min.   : 1.00   Min.   :1.00   Min.   :1.000  
+ male  :785   French : 10   1st Qu.:  4.00   Gold  :143   1st Qu.: 6.00   1st Qu.:3.00   1st Qu.:4.000  
+              German :822   Median :  8.00   Silver:245   Median : 8.00   Median :4.00   Median :5.000  
+                            Mean   : 13.42                Mean   : 7.52   Mean   :3.74   Mean   :4.841  
+                            3rd Qu.: 16.00                3rd Qu.: 9.00   3rd Qu.:5.00   3rd Qu.:6.000  
+                            Max.   :457.00                Max.   :11.00   Max.   :7.00   Max.   :7.000  </code></pre>
 <div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="descriptive-analysis.html#cb204-1" tabindex="-1"></a><span class="co"># Mean and SD (remove missing values if present)</span></span>
 <span id="cb204-2"><a href="descriptive-analysis.html#cb204-2" tabindex="-1"></a><span class="fu">mean</span>(airlinesat_small<span class="sc">$</span>age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>[1] 50.41972</code></pre>
